@@ -11,11 +11,16 @@ module HaskellWorks.Data.Succinct.Internal
     , BitLength(..)
     , BitRank(..)
     , BitSelect(..)
+    , Broadword(..)
     , PopCount(..)
     , Rank(..)
     , Select(..)
     , Shift(..)
     , TestBit(..)
+    , broadwordPopCount
+    , lte8
+    , gt8
+    , select9imp
     ) where
 
 import qualified Data.Bits as B
@@ -23,8 +28,6 @@ import           Data.Int
 import           Data.Word
 
 infixl 9 .?.
-
-
 infixl 8 .<., .>.
 infixl 7 .&.
 infixl 6 .^.
@@ -56,9 +59,30 @@ class BitWise a where
   (.&.) :: a -> a -> a
   (.|.) :: a -> a -> a
   (.^.) :: a -> a -> a
+  comp  :: a -> a
 
 class PopCount a where
   popCount :: a -> Int64
+
+class Broadword a where
+  bwL8 :: a
+  bwH8 :: a
+
+instance Broadword Word8 where
+  bwL8 = 0x01
+  bwH8 = 0x80
+
+instance Broadword Word16 where
+  bwL8 = 0x0101
+  bwH8 = 0x8080
+
+instance Broadword Word32 where
+  bwL8 = 0x01010101
+  bwH8 = 0x80808080
+
+instance Broadword Word64 where
+  bwL8 = 0x0101010101010101
+  bwH8 = 0x8080808080808080
 
 instance BitLength Word8 where
   bitLength _ = 8
@@ -100,21 +124,25 @@ instance BitWise Word8 where
   (.&.) = (B..&.)
   (.|.) = (B..|.)
   (.^.) = B.xor
+  comp  = B.complement
 
 instance BitWise Word16 where
   (.&.) = (B..&.)
   (.|.) = (B..|.)
   (.^.) = B.xor
+  comp  = B.complement
 
 instance BitWise Word32 where
   (.&.) = (B..&.)
   (.|.) = (B..|.)
   (.^.) = B.xor
+  comp  = B.complement
 
 instance BitWise Word64 where
   (.&.) = (B..&.)
   (.|.) = (B..|.)
   (.^.) = B.xor
+  comp  = B.complement
 
 instance Shift Word8  where
   (.<.) w n = B.shiftL w (fromIntegral n)
@@ -131,3 +159,81 @@ instance Shift Word32 where
 instance Shift Word64 where
   (.<.) w n = B.shiftL w (fromIntegral n)
   (.>.) w n = B.shiftR w (fromIntegral n)
+
+instance BitRank Word8 where
+  bitRank s v = popCount (((fromIntegral v .<. s) .&. 0xFF) .>. s :: Word8)
+
+instance BitRank Word16 where
+  bitRank s v = popCount (((fromIntegral v .<. s) .&. 0xFFFF) .>. s :: Word16)
+
+instance BitRank Word32 where
+  bitRank s v = popCount (((fromIntegral v .<. s) .&. 0xFFFFFFFF) .>. s :: Word32)
+
+instance BitRank Word64 where
+  -- bitRank s v = popCount (((fromIntegral v .<. s) .&. 0xFFFFFFFFFFFFFFFF) .>. s :: Word64)
+  bitRank s0 v =
+    -- let s = fromIntegral s0 :: Word64 in
+    -- Shift out bits after given position.
+    let r0 = v .<. (64 - s0) in -- Little-Endian.  Use .>. for Big-Endian
+    -- Count set bits in parallel.
+    let r1 = (r0 .&. 0x5555555555555555) + ((r0 .>. 1) .&. 0x5555555555555555) in
+    let r2 = (r1 .&. 0x3333333333333333) + ((r1 .>. 2) .&. 0x3333333333333333) in
+    let r3 = (r2 .&. 0x0f0f0f0f0f0f0f0f) + ((r2 .>. 4) .&. 0x0f0f0f0f0f0f0f0f) in
+    let r4 = r3 `mod` 255                                                      in
+    fromIntegral r4 :: Int64
+
+instance BitSelect Word64 where
+  bitSelect rn v =
+    -- Do a normal parallel bit count for a 64-bit integer,
+    -- but store all intermediate steps.
+    let a = (v .&. 0x5555555555555555) + ((v .>. 1) .&. 0x5555555555555555) in
+    let b = (a .&. 0x3333333333333333) + ((a .>. 2) .&. 0x3333333333333333) in
+    let c = (b .&. 0x0f0f0f0f0f0f0f0f) + ((b .>. 4) .&. 0x0f0f0f0f0f0f0f0f) in
+    let d = (c .&. 0x00ff00ff00ff00ff) + ((c .>. 8) .&. 0x00ff00ff00ff00ff) in
+    -- Now do branchless select!
+    let r0 = fromIntegral rn :: Word64                                      in
+    let s0 = 64 :: Word64                                                   in
+    let t0 = (d .>. 32) + (d .>. 48)                                        in
+    let s1 = s0 - ((t0 - r0) .&. 256) .>. 3                                 in
+    let r1 = r0 - (t0 .&. ((t0 - r0) .>. 8))                                in
+    let t1 =      (d .>. fromIntegral (s1 - 16)) .&. 0xff                   in
+    let s2 = s1 - ((t1 - r1) .&. 256) .>. 4                                 in
+    let r2 = r1 - (t1 .&. ((t1 - r1) .>. 8))                                in
+    let t2 =      (c .>. fromIntegral (s2 - 8))  .&. 0xf                    in
+    let s3 = s2 - ((t2 - r2) .&. 256) .>. 5                                 in
+    let r3 = r2 - (t2 .&. ((t2 - r2) .>. 8))                                in
+    let t3 =      (b .>. fromIntegral (s3 - 4))  .&. 0x7                    in
+    let s4 = s3 - ((t3 - r3) .&. 256) .>. 6                                 in
+    let r4 = r3 - (t3 .&. ((t3 - r3) .>. 8))                                in
+    let t4 =      (a .>. fromIntegral (s4 - 2))  .&. 0x3                    in
+    let s5 = s4 - ((t4 - r4) .&. 256) .>. 7                                 in
+    let r5 = r4 - (t4 .&. ((t4 - r4) .>. 8))                                in
+    let t5 =      (v .>. fromIntegral (s5 - 1))  .&. 0x1                    in
+    let s6 = s5 - ((t5 - r5) .&. 256) .>. 8                                 in
+    let s7 =      65 - s6                                                   in
+    fromIntegral s7
+
+select9imp :: Integral a => a -> Word64 -> Int64
+select9imp r v =
+  let r0 = fromIntegral r :: Word64 in
+  let s0 = v - ((v .&. 0xAAAAAAAAAAAAAAAA) .>. 1) in
+  let s1 = (s0 .&. 0x3333333333333333) + ((v .>. 2) .&. 0x3333333333333333) in
+  let s2 = ((s1 + (s1 .>. 4)) .&. 0x0F0F0F0F0F0F0F0F0) * bwL8 in
+  let b  = ((s2 `lte8` (r0 * bwL8)) .>. 7) * bwL8.>. 53 .&. 7 in
+  let l  = r0 - (((s2 .<. 8) .>. fromIntegral b) .&. 0xFF) in
+  let s  = (((v.>. fromIntegral b .&. 0xFF) * bwL8 .&. 0x8040201008040201 `gt8` 0) .>. 7) * bwL8 in
+  let z = b + (((s `lte8` l * bwL8).>. 7) * bwL8 .>. 56) in
+  fromIntegral z :: Int64
+
+lte8 :: (Broadword a, BitWise a, Num a) => a -> a -> a
+lte8 x y = ((y .|. bwH8) - (x .&. comp bwH8)) .|. x .^. y .^. (x .&. comp y) .&. bwH8
+
+gt8 :: (Broadword a, BitWise a, Num a) => a -> a -> a
+gt8 x y = ((x .|. bwH8) - bwL8) .|. x .&. bwH8
+
+broadwordPopCount :: Word64 -> Int64
+broadwordPopCount w =
+    let x = w - (w .&. 0xAAAAAAAAAAAAAAAA) .>. 1 in
+    let y = (x .&. 0x3333333333333333) + ((x .>. 2) .&. 0x3333333333333333) in
+    let z = (y + (y .>. 4)) .&. 0x0F0F0F0F0F0F0F0F0 in
+    fromIntegral (z * bwL8 .>. 56) :: Int64

@@ -29,8 +29,45 @@ newtype SimpleBitVector16 = SimpleBitVector16 (Vector Word16) deriving (Eq, Show
 newtype SimpleBitVector32 = SimpleBitVector32 (Vector Word32) deriving (Eq, Show)
 newtype SimpleBitVector64 = SimpleBitVector64 (Vector Word64) deriving (Eq, Show)
 
--- rankW8b :: Word8 -> Int64 -> Int64
--- rankW8b = undefined
+instance TestBit SimpleBitVector8 where
+  SimpleBitVector8  v .?. n = case n `quotRem` bitLength (v ! 0) of
+    (q, r) -> (v ! fromIntegral q) .?. fromIntegral r
+
+instance TestBit SimpleBitVector16 where
+  SimpleBitVector16 v .?. n = case n `quotRem` bitLength (v ! 0) of
+    (q, r) -> (v ! fromIntegral q) .?. fromIntegral r
+
+instance TestBit SimpleBitVector32 where
+  SimpleBitVector32 v .?. n = case n `quotRem` bitLength (v ! 0) of
+    (q, r) -> (v ! fromIntegral q) .?. fromIntegral r
+
+instance TestBit SimpleBitVector64 where
+  SimpleBitVector64 v .?. n = case n `quotRem` bitLength (v ! 0) of
+    (q, r) -> (v ! fromIntegral q) .?. fromIntegral r
+
+instance BitRank SimpleBitVector8 where
+  bitRank n (SimpleBitVector8  v) = rankW8s (toList v) n
+
+instance BitRank SimpleBitVector16 where
+  bitRank n (SimpleBitVector16 v) = rankW16s (toList v) n
+
+instance BitRank SimpleBitVector32 where
+  bitRank n (SimpleBitVector32 v) = rankW32s (toList v) n
+
+instance BitRank SimpleBitVector64 where
+  bitRank n (SimpleBitVector64 v) = rankW64s (toList v) n
+
+instance BitSelect SimpleBitVector8 where
+  bitSelect n (SimpleBitVector8  v) = selectW8s (toList v) n 0
+
+instance BitSelect SimpleBitVector16 where
+  bitSelect n (SimpleBitVector16 v) = selectW16s (toList v) n
+
+instance BitSelect SimpleBitVector32 where
+  bitSelect n (SimpleBitVector32 v) = selectW32s (toList v) n
+
+instance BitSelect SimpleBitVector64 where
+  bitSelect n (SimpleBitVector64 v) = selectW64s (toList v) n
 
 rankW8s :: [Word8] -> Int64 -> Int64
 rankW8s ws n = if remainder == 0
@@ -76,33 +113,19 @@ rankW64s ws n = if remainder == 0
     predRank = P.sum (P.map (fromIntegral . popCount) ls)
     r = headDef 0 rs
 
-instance TestBit SimpleBitVector8 where
-  SimpleBitVector8  v .?. n = case n `quotRem` bitLength (v ! 0) of
-    (q, r) -> (v ! fromIntegral q) .?. fromIntegral r
+selectW8s :: [Word8] -> Int64 -> Int64 -> Int64
+selectW8s [] _ r = r + 1
+selectW8s (w:ws) n r = if pc < n
+    then selectW8s ws (n - pc) (r + 8)
+    else undefined
+  where
+    pc = popCount w
 
-instance TestBit SimpleBitVector16 where
-  SimpleBitVector16 v .?. n = case n `quotRem` bitLength (v ! 0) of
-    (q, r) -> (v ! fromIntegral q) .?. fromIntegral r
+selectW16s :: [Word16] -> Int64 -> Int64
+selectW16s ws n = undefined
 
-instance TestBit SimpleBitVector32 where
-  SimpleBitVector32 v .?. n = case n `quotRem` bitLength (v ! 0) of
-    (q, r) -> (v ! fromIntegral q) .?. fromIntegral r
+selectW32s :: [Word32] -> Int64 -> Int64
+selectW32s ws n = undefined
 
-instance TestBit SimpleBitVector64 where
-  SimpleBitVector64 v .?. n = case n `quotRem` bitLength (v ! 0) of
-    (q, r) -> (v ! fromIntegral q) .?. fromIntegral r
-
-instance BitRank SimpleBitVector8 where
-  bitRank n (SimpleBitVector8  v) = rankW8s (toList v) n
-
-instance BitRank SimpleBitVector16 where
-  bitRank n (SimpleBitVector16 v) = rankW16s (toList v) n
-
-instance BitRank SimpleBitVector32 where
-  bitRank n (SimpleBitVector32 v) = rankW32s (toList v) n
-
-instance BitRank SimpleBitVector64 where
-  bitRank n (SimpleBitVector64 v) = rankW64s (toList v) n
-
-instance BitSelect SimpleBitVector64 where
-  bitSelect = undefined
+selectW64s :: [Word64] -> Int64 -> Int64
+selectW64s ws n = undefined
