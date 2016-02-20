@@ -220,6 +220,10 @@ instance LeBitRank Word64 where
     let r4 = r3 `mod` 255                                                       in
     fromIntegral r4 :: Int64
 
+-- TODO: Implement NOT interms of select for word-16
+instance LeBitSelect Word8 where
+  leBitSelect rn v = leBitSelect rn (fromIntegral v :: Word16)
+
 -- TODO: Remove redundant code to optimise
 instance LeBitSelect Word16 where
   leBitSelect rn v =
@@ -404,8 +408,8 @@ instance BitRank Word32 where
 instance BitRank Word64 where
   bitRank = leBitRank
 
--- instance BitSelect Word8 where
---   bitSelect = leBitSelect
+instance BitSelect Word8 where
+  bitSelect = leBitSelect
 
 instance BitSelect Word16 where
   bitSelect = leBitSelect
