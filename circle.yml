@@ -1,0 +1,21 @@
+machine:
+  ghc:
+    version: 7.10.2
+
+dependencies:
+  cache_directories:
+    - "~/.stack"
+    - "~/conduit-tokenize-attoparsec/.stack-work"
+  pre:
+    - wget https://github.com/commercialhaskell/stack/releases/download/v0.1.8.0/stack-0.1.8.0-linux-x86_64.tar.gz -O /tmp/stack.tar.gz
+    - tar -C /tmp -xf /tmp/stack.tar.gz && chmod +x /tmp/stack-*/stack
+    - sudo mv /tmp/stack-*/stack /usr/bin/stack
+  override:
+    - stack setup
+    - stack clean
+    - stack build
+
+test:
+  override:
+    - stack clean
+    - stack test
