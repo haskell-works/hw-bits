@@ -7,8 +7,11 @@ module HaskellWorks.Data.Succinct
     ( -- * Rank & Select
       BitRank(..)
     , BitSelect(..)
+    , BitWise(..)
+    , PopCount(..)
     , Rank(..)
     , Select(..)
+    , Shift(..)
     , SimpleBitVector64(..)
     , TestBit(..)
     ) where
