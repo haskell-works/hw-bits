@@ -27,12 +27,16 @@ executable hw-succinct-example
 library
   hs-source-dirs:       src
   exposed-modules:      HaskellWorks.Data.Succinct
+                      , HaskellWorks.Data.Succinct.Internal
+                      , HaskellWorks.Data.Succinct.Simple
   build-depends:        base                            >= 4.7  && < 5
                       , attoparsec                      >= 0.10
                       , bytestring
                       , conduit                         >= 1.1  && < 1.3
-                      , text
                       , resourcet                       >= 1.1
+                      , safe
+                      , text
+                      , vector
 
   default-language:     Haskell2010
   ghc-options:          -rtsopts -with-rtsopts=-N -Wall
