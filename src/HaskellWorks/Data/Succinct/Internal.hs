@@ -406,12 +406,12 @@ instance BitRank Word64 where
 
 -- instance BitSelect Word8 where
 --   bitSelect = leBitSelect
---
--- instance BitSelect Word16 where
---   bitSelect = leBitSelect
---
--- instance BitSelect Word32 where
---   bitSelect = leBitSelect
+
+instance BitSelect Word16 where
+  bitSelect = leBitSelect
+
+instance BitSelect Word32 where
+  bitSelect = leBitSelect
 
 instance BitSelect Word64 where
   bitSelect = leBitSelect
