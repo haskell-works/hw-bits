@@ -177,17 +177,40 @@ instance Shift Word64 where
   (.>.) w n = B.shiftR w (fromIntegral n)
 
 instance LeBitRank Word8 where
-  leBitRank s v = popCount (((fromIntegral v .<. s) .&. 0xFF) .>. s :: Word8)
+  leBitRank s0 v =
+    -- Shift out bits after given position.
+    let r0 = v .<. (8 - s0) in
+    -- Count set bits in parallel.
+    let r1 = (r0 .&. 0x55) + ((r0 .>. 1) .&. 0x55)  in
+    let r2 = (r1 .&. 0x33) + ((r1 .>. 2) .&. 0x33)  in
+    let r3 = (r2 .&. 0x0f) + ((r2 .>. 4) .&. 0x0f)  in
+    let r4 = r3 `mod` 255                           in
+    fromIntegral r4 :: Int64
 
 instance LeBitRank Word16 where
-  leBitRank s v = popCount (((fromIntegral v .<. s) .&. 0xFFFF) .>. s :: Word16)
+  leBitRank s0 v =
+    -- Shift out bits after given position.
+    let r0 = v .<. (16 - s0) in
+    -- Count set bits in parallel.
+    let r1 = (r0 .&. 0x5555) + ((r0 .>. 1) .&. 0x5555)  in
+    let r2 = (r1 .&. 0x3333) + ((r1 .>. 2) .&. 0x3333)  in
+    let r3 = (r2 .&. 0x0f0f) + ((r2 .>. 4) .&. 0x0f0f)  in
+    let r4 = r3 `mod` 255                               in
+    fromIntegral r4 :: Int64
 
 instance LeBitRank Word32 where
-  leBitRank s v = popCount (((fromIntegral v .<. s) .&. 0xFFFFFFFF) .>. s :: Word32)
+  leBitRank s0 v =
+    -- Shift out bits after given position.
+    let r0 = v .<. (32 - s0) in
+    -- Count set bits in parallel.
+    let r1 = (r0 .&. 0x55555555) + ((r0 .>. 1) .&. 0x55555555)  in
+    let r2 = (r1 .&. 0x33333333) + ((r1 .>. 2) .&. 0x33333333)  in
+    let r3 = (r2 .&. 0x0f0f0f0f) + ((r2 .>. 4) .&. 0x0f0f0f0f)  in
+    let r4 = r3 `mod` 255                                       in
+    fromIntegral r4 :: Int64
 
 instance LeBitRank Word64 where
   leBitRank s0 v =
-    -- let s = fromIntegral s0 :: Word64 in
     -- Shift out bits after given position.
     let r0 = v .<. (64 - s0) in
     -- Count set bits in parallel.
@@ -229,6 +252,39 @@ instance LeBitSelect Word64 where
     let s6 = s5 - ((t5 - r5) .&. 256) .>. 8                                     in
     fromIntegral s6
 
+instance BeBitRank Word8 where
+  beBitRank s0 v =
+    -- Shift out bits after given position.
+    let r0 = v .>. (8 - s0) in
+    -- Count set bits in parallel.
+    let r1 = (r0 .&. 0x55) + ((r0 .>. 1) .&. 0x55)  in
+    let r2 = (r1 .&. 0x33) + ((r1 .>. 2) .&. 0x33)  in
+    let r3 = (r2 .&. 0x0f) + ((r2 .>. 4) .&. 0x0f)  in
+    let r4 = r3 `mod` 255                           in
+    fromIntegral r4 :: Int64
+
+instance BeBitRank Word16 where
+  beBitRank s0 v =
+    -- Shift out bits after given position.
+    let r0 = v .>. (16 - s0) in
+    -- Count set bits in parallel.
+    let r1 = (r0 .&. 0x5555) + ((r0 .>. 1) .&. 0x5555)  in
+    let r2 = (r1 .&. 0x3333) + ((r1 .>. 2) .&. 0x3333)  in
+    let r3 = (r2 .&. 0x0f0f) + ((r2 .>. 4) .&. 0x0f0f)  in
+    let r4 = r3 `mod` 255                               in
+    fromIntegral r4 :: Int64
+
+instance BeBitRank Word32 where
+  beBitRank s0 v =
+    -- Shift out bits after given position.
+    let r0 = v .>. (32 - s0) in
+    -- Count set bits in parallel.
+    let r1 = (r0 .&. 0x55555555) + ((r0 .>. 1) .&. 0x55555555)  in
+    let r2 = (r1 .&. 0x33333333) + ((r1 .>. 2) .&. 0x33333333)  in
+    let r3 = (r2 .&. 0x0f0f0f0f) + ((r2 .>. 4) .&. 0x0f0f0f0f)  in
+    let r4 = r3 `mod` 255                                       in
+    fromIntegral r4 :: Int64
+
 instance BeBitRank Word64 where
   beBitRank s0 v =
     -- let s = fromIntegral s0 :: Word64 in
@@ -240,6 +296,7 @@ instance BeBitRank Word64 where
     let r3 = (r2 .&. 0x0f0f0f0f0f0f0f0f) + ((r2 .>. 4) .&. 0x0f0f0f0f0f0f0f0f)  in
     let r4 = r3 `mod` 255                                                       in
     fromIntegral r4 :: Int64
+
 
 instance BeBitSelect Word64 where
   beBitSelect rn v =
