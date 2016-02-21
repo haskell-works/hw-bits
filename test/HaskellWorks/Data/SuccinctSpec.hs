@@ -49,16 +49,16 @@ spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
     popCount (-1 :: Word32) `shouldBe` 32
     popCount (-1 :: Word64) `shouldBe` 64
   it "bitRank for Word16 and Word64 should give same answer for bits 0-7" $ property $
-    \(I64_0_8  i) (w :: Word8 ) -> bitRank i w == bitRank i (fromIntegral w :: Word64)
+    \(I64_0_8  i) (w :: Word8 ) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
   it "bitRank for Word16 and Word64 should give same answer for bits 0-15" $ property $
-    \(I64_0_16 i) (w :: Word16) -> bitRank i w == bitRank i (fromIntegral w :: Word64)
+    \(I64_0_16 i) (w :: Word16) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
   it "bitRank for Word32 and Word64 should give same answer for bits 0-31" $ property $
-    \(I64_0_32 i) (w :: Word32) -> bitRank i w == bitRank i (fromIntegral w :: Word64)
+    \(I64_0_32 i) (w :: Word32) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
   it "bitRank for Word32 and Word64 should give same answer for bits 32-64" $ property $
     \(I64_0_32 i) (v :: Word32) (w :: Word32) ->
       let v64 = fromIntegral v :: Word64 in
       let w64 = fromIntegral w :: Word64 in
-      bitRank i v + popCount w == bitRank (i + 32) ((v64 .<. 32) .|. w64)
+      bitRank v i + popCount w == bitRank ((v64 .<. 32) .|. w64) (i + 32)
   it "bitRank and bitSelect for Word64 form a galois connection" $ property $
     \(I64_0_32 i) (w :: Word32) -> 1 <= i && i <= popCount w ==>
-      bitRank (bitSelect i w) w == i && bitSelect (bitRank i w) w <= i
+      bitRank w (bitSelect w i) == i && bitSelect w (bitRank w i) <= i

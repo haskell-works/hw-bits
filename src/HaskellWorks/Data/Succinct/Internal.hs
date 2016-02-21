@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 -- |
@@ -23,36 +24,40 @@ module HaskellWorks.Data.Succinct.Internal
     , TestBit(..)
     ) where
 
-import qualified Data.Bits as B
+import qualified Data.Bits            as B
 import           Data.Int
 import           Data.Word
 
+-- We pervasively use precedence to avoid excessive parentheses, and we use
+-- the same precedence conventions of the C programming language: arithmetic
+-- operators come first, ordered in the standard way, followed by shifts,
+-- followed by logical operators; ⊕ sits between | and &.
 infixl 9 .?.
 infixl 8 .<., .>.
-infixl 7 .&.
-infixl 6 .^.
-infixl 5 .|.
+infixl 7 .&.        -- Bitwise AND.  eg. ∧
+infixl 6 .^.        -- Bitwise XOR.  eg. ⊕
+infixl 5 .|.        -- Bitwise OR.   eg. ∨
 
 class BeBitRank v where
-  beBitRank :: Int64 -> v -> Int64
+  beBitRank :: v -> Int64 -> Int64
 
 class BeBitSelect v where
-  beBitSelect :: Int64 -> v -> Int64
+  beBitSelect :: v -> Int64 -> Int64
 
 class BitLength v where
   bitLength :: v -> Int64
 
 class BitRank v where
-  bitRank :: Int64 -> v -> Int64
+  bitRank :: v -> Int64 -> Int64
 
 class BitSelect v where
-  bitSelect :: Int64 -> v -> Int64
+  bitSelect :: v -> Int64 -> Int64
 
 class LeBitRank v where
-  leBitRank :: Int64 -> v -> Int64
+  leBitRank :: v -> Int64 -> Int64
 
 class LeBitSelect v where
-  leBitSelect :: Int64 -> v -> Int64
+  leBitSelect :: v -> Int64 -> Int64
 
 class Rank v a where
   rank :: Eq a => Int64 -> a -> v -> Int64
@@ -173,7 +178,7 @@ instance Shift Word64 where
   (.>.) w n = B.shiftR w (fromIntegral n)
 
 instance LeBitRank Word8 where
-  leBitRank s0 v =
+  leBitRank v s0 =
     -- Shift out bits after given position.
     let r0 = v .<. (8 - s0) in
     -- Count set bits in parallel.
@@ -184,7 +189,7 @@ instance LeBitRank Word8 where
     fromIntegral r4 :: Int64
 
 instance LeBitRank Word16 where
-  leBitRank s0 v =
+  leBitRank v s0 =
     -- Shift out bits after given position.
     let r0 = v .<. (16 - s0) in
     -- Count set bits in parallel.
@@ -195,7 +200,7 @@ instance LeBitRank Word16 where
     fromIntegral r4 :: Int64
 
 instance LeBitRank Word32 where
-  leBitRank s0 v =
+  leBitRank v s0 =
     -- Shift out bits after given position.
     let r0 = v .<. (32 - s0) in
     -- Count set bits in parallel.
@@ -206,7 +211,7 @@ instance LeBitRank Word32 where
     fromIntegral r4 :: Int64
 
 instance LeBitRank Word64 where
-  leBitRank s0 v =
+  leBitRank v s0 =
     -- Shift out bits after given position.
     let r0 = v .<. (64 - s0) in
     -- Count set bits in parallel.
@@ -218,11 +223,11 @@ instance LeBitRank Word64 where
 
 -- TODO: Implement NOT interms of select for word-16
 instance LeBitSelect Word8 where
-  leBitSelect rn v = leBitSelect rn (fromIntegral v :: Word16)
+  leBitSelect v = leBitSelect (fromIntegral v :: Word16)
 
 -- TODO: Remove redundant code to optimise
 instance LeBitSelect Word16 where
-  leBitSelect rn v =
+  leBitSelect v rn =
     -- Do a normal parallel bit count for a 64-bit integer,
     -- but store all intermediate steps.
     let a = (v .&. 0x5555) + ((v .>.  1) .&. 0x5555)    in
@@ -253,7 +258,7 @@ instance LeBitSelect Word16 where
 
 -- TODO: Remove redundant code to optimise
 instance LeBitSelect Word32 where
-  leBitSelect rn v =
+  leBitSelect v rn =
     -- Do a normal parallel bit count for a 64-bit integer,
     -- but store all intermediate steps.
     let a = (v .&. 0x55555555) + ((v .>.  1) .&. 0x55555555)    in
@@ -284,7 +289,7 @@ instance LeBitSelect Word32 where
     fromIntegral s6
 
 instance LeBitSelect Word64 where
-  leBitSelect rn v =
+  leBitSelect v rn =
     -- Do a normal parallel bit count for a 64-bit integer,
     -- but store all intermediate steps.
     let a = (v .&. 0x5555555555555555) + ((v .>.  1) .&. 0x5555555555555555)    in
@@ -316,7 +321,7 @@ instance LeBitSelect Word64 where
     fromIntegral s6
 
 instance BeBitRank Word8 where
-  beBitRank s0 v =
+  beBitRank v s0 =
     -- Shift out bits after given position.
     let r0 = v .>. (8 - s0) in
     -- Count set bits in parallel.
@@ -327,7 +332,7 @@ instance BeBitRank Word8 where
     fromIntegral r4 :: Int64
 
 instance BeBitRank Word16 where
-  beBitRank s0 v =
+  beBitRank v s0 =
     -- Shift out bits after given position.
     let r0 = v .>. (16 - s0) in
     -- Count set bits in parallel.
@@ -338,7 +343,7 @@ instance BeBitRank Word16 where
     fromIntegral r4 :: Int64
 
 instance BeBitRank Word32 where
-  beBitRank s0 v =
+  beBitRank v s0 =
     -- Shift out bits after given position.
     let r0 = v .>. (32 - s0) in
     -- Count set bits in parallel.
@@ -349,7 +354,7 @@ instance BeBitRank Word32 where
     fromIntegral r4 :: Int64
 
 instance BeBitRank Word64 where
-  beBitRank s0 v =
+  beBitRank v s0 =
     -- let s = fromIntegral s0 :: Word64 in
     -- Shift out bits after given position.
     let r0 = v .>. (64 - s0) in
@@ -362,7 +367,7 @@ instance BeBitRank Word64 where
 
 
 instance BeBitSelect Word64 where
-  beBitSelect rn v =
+  beBitSelect v rn =
     -- Do a normal parallel bit count for a 64-bit integer,
     -- but store all intermediate steps.
     let a = (v .&. 0x5555555555555555) + ((v .>.  1) .&. 0x5555555555555555)    in

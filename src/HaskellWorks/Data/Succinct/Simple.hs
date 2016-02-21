@@ -1,10 +1,10 @@
 {-# LANGUAGE FlexibleContexts           #-}
 {-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE RankNTypes                 #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE ScopedTypeVariables        #-}
+{-# LANGUAGE MultiParamTypeClasses      #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
+{-# LANGUAGE RankNTypes                 #-}
+{-# LANGUAGE ScopedTypeVariables        #-}
 
 -- |
 -- Copyright: 2016 John Ky
@@ -13,15 +13,17 @@
 -- Succinct operations.
 module HaskellWorks.Data.Succinct.Simple
     ( -- * Simple bit vector types
-      SimpleBitVector64(..)
+      SimpleBitVector8(..)
+    , SimpleBitVector16(..)
+    , SimpleBitVector32(..)
+    , SimpleBitVector64(..)
     ) where
 
--- import           Data.Bits
 import           Data.Int
 import           Data.Vector
 import           Data.Word
 import           HaskellWorks.Data.Succinct.Internal
-import           Prelude as P
+import           Prelude                             as P
 import           Safe
 
 newtype SimpleBitVector8  = SimpleBitVector8  (Vector Word8 ) deriving (Eq, Show)
@@ -46,35 +48,35 @@ instance TestBit SimpleBitVector64 where
     (q, r) -> (v ! fromIntegral q) .?. fromIntegral r
 
 instance BitRank SimpleBitVector8 where
-  bitRank n (SimpleBitVector8  v) = rankW8s (toList v) n
+  bitRank (SimpleBitVector8  v) = rankW8s (toList v)
 
 instance BitRank SimpleBitVector16 where
-  bitRank n (SimpleBitVector16 v) = rankW16s (toList v) n
+  bitRank (SimpleBitVector16 v) = rankW16s (toList v)
 
 instance BitRank SimpleBitVector32 where
-  bitRank n (SimpleBitVector32 v) = rankW32s (toList v) n
+  bitRank (SimpleBitVector32 v) = rankW32s (toList v)
 
 instance BitRank SimpleBitVector64 where
-  bitRank n (SimpleBitVector64 v) = rankW64s (toList v) n
+  bitRank (SimpleBitVector64 v) = rankW64s (toList v)
 
 instance BitSelect SimpleBitVector8 where
-  bitSelect n (SimpleBitVector8  v) = selectW8s (toList v) n 0
+  bitSelect (SimpleBitVector8  v) n = selectW8s (toList v) n 0
 
 instance BitSelect SimpleBitVector16 where
-  bitSelect n (SimpleBitVector16 v) = selectW16s (toList v) n
+  bitSelect (SimpleBitVector16 v) = selectW16s (toList v)
 
 instance BitSelect SimpleBitVector32 where
-  bitSelect n (SimpleBitVector32 v) = selectW32s (toList v) n
+  bitSelect (SimpleBitVector32 v) = selectW32s (toList v)
 
 instance BitSelect SimpleBitVector64 where
-  bitSelect n (SimpleBitVector64 v) = selectW64s (toList v) n
+  bitSelect (SimpleBitVector64 v) = selectW64s (toList v)
 
 rankW8s :: [Word8] -> Int64 -> Int64
 rankW8s ws n = if remainder == 0
     then predRank
-    else predRank + fromIntegral (popCount wordPart)
+    else predRank + partRank
   where
-    wordPart = ((fromIntegral r .<. remainder) .&. 0xff) .>. remainder :: Word8
+    partRank = bitRank r remainder
     remainder = n `mod` 8
     (ls, rs) = P.splitAt (fromIntegral $ n `quot` 8) ws
     predRank = P.sum (P.map (fromIntegral . popCount) ls)
@@ -83,9 +85,9 @@ rankW8s ws n = if remainder == 0
 rankW16s :: [Word16] -> Int64 -> Int64
 rankW16s ws n = if remainder == 0
     then predRank
-    else predRank + fromIntegral (popCount wordPart)
+    else predRank + partRank
   where
-    wordPart = ((fromIntegral r .<. remainder) .&. 0xffff) .>. remainder :: Word16
+    partRank = bitRank r remainder
     remainder = n `mod` 16
     (ls, rs) = P.splitAt (fromIntegral $ n `quot` 16) ws
     predRank = P.sum (P.map (fromIntegral . popCount) ls)
@@ -94,9 +96,9 @@ rankW16s ws n = if remainder == 0
 rankW32s :: [Word32] -> Int64 -> Int64
 rankW32s ws n = if remainder == 0
     then predRank
-    else predRank + fromIntegral (popCount wordPart)
+    else predRank + partRank
   where
-    wordPart = ((fromIntegral r .<. remainder) .&. 0xffffffff) .>. remainder :: Word32
+    partRank = bitRank r remainder
     remainder = n `mod` 32
     (ls, rs) = P.splitAt (fromIntegral $ n `quot` 32) ws
     predRank = P.sum (P.map (fromIntegral . popCount) ls)
@@ -105,9 +107,9 @@ rankW32s ws n = if remainder == 0
 rankW64s :: [Word64] -> Int64 -> Int64
 rankW64s ws n = if remainder == 0
     then predRank
-    else predRank + fromIntegral (popCount wordPart)
+    else predRank + partRank
   where
-    wordPart = ((fromIntegral r .<. remainder) .&. 0xffffffffffffffff) .>. remainder :: Word64
+    partRank = bitRank r remainder
     remainder = n `mod` 64
     (ls, rs) = P.splitAt (fromIntegral $ n `quot` 64) ws
     predRank = P.sum (P.map (fromIntegral . popCount) ls)
