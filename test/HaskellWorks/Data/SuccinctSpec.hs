@@ -12,30 +12,55 @@ import           Test.QuickCheck
 
 {-# ANN module "HLint: ignore Redundant do" #-}
 
-newtype I64_0_8  = I64_0_8  Int64 deriving (Eq,Show)
-newtype I64_0_16 = I64_0_16 Int64 deriving (Eq,Show)
-newtype I64_0_32 = I64_0_32 Int64 deriving (Eq,Show)
-newtype I64_0_64 = I64_0_64 Int64 deriving (Eq,Show)
+newtype Position_0_8  = Position_0_8  Position deriving (Eq, Show)
+newtype Position_0_16 = Position_0_16 Position deriving (Eq, Show)
+newtype Position_0_32 = Position_0_32 Position deriving (Eq, Show)
+newtype Position_0_64 = Position_0_64 Position deriving (Eq, Show)
 
-instance Arbitrary I64_0_8 where
+instance Arbitrary Position_0_8 where
   arbitrary = do
-     n <- choose (0, 8)
-     return (I64_0_8 n)
+     n <- choose (0, 8 :: Int64)
+     return (Position_0_8 (Position n))
 
-instance Arbitrary I64_0_16 where
+instance Arbitrary Position_0_16 where
  arbitrary = do
-    n <- choose (0, 16)
-    return (I64_0_16 n)
+    n <- choose (0, 16 :: Int64)
+    return (Position_0_16 (Position n))
 
-instance Arbitrary I64_0_32 where
+instance Arbitrary Position_0_32 where
  arbitrary = do
-    n <- choose (0, 32)
-    return (I64_0_32 n)
+    n <- choose (0, 32 :: Int64)
+    return (Position_0_32 (Position n))
 
-instance Arbitrary I64_0_64 where
+instance Arbitrary Position_0_64 where
  arbitrary = do
-    n <- choose (0, 64)
-    return (I64_0_64 n)
+    n <- choose (0, 64 :: Int64)
+    return (Position_0_64 (Position n))
+
+newtype Count_0_8  = Count_0_8  Count deriving (Eq, Show)
+newtype Count_0_16 = Count_0_16 Count deriving (Eq, Show)
+newtype Count_0_32 = Count_0_32 Count deriving (Eq, Show)
+newtype Count_0_64 = Count_0_64 Count deriving (Eq, Show)
+
+instance Arbitrary Count_0_8 where
+  arbitrary = do
+     n <- choose (0, 8 :: Word64)
+     return (Count_0_8 (Count n))
+
+instance Arbitrary Count_0_16 where
+ arbitrary = do
+    n <- choose (0, 16 :: Word64)
+    return (Count_0_16 (Count n))
+
+instance Arbitrary Count_0_32 where
+ arbitrary = do
+    n <- choose (0, 32 :: Word64)
+    return (Count_0_32 (Count n))
+
+instance Arbitrary Count_0_64 where
+ arbitrary = do
+    n <- choose (0, 64 :: Word64)
+    return (Count_0_64 (Count n))
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
@@ -48,16 +73,16 @@ spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
   it "popCount for Word64 matches Data.Bits implementation" $ property $
     \(w :: Word64) -> popCount w == fromIntegral (B.popCount w)
   it "bitRank for Word16 and Word64 should give same answer for bits 0-7" $ property $
-    \(I64_0_8  i) (w :: Word8 ) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
+    \(Position_0_8  i) (w :: Word8 ) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
   it "bitRank for Word16 and Word64 should give same answer for bits 0-15" $ property $
-    \(I64_0_16 i) (w :: Word16) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
+    \(Position_0_16 i) (w :: Word16) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
   it "bitRank for Word32 and Word64 should give same answer for bits 0-31" $ property $
-    \(I64_0_32 i) (w :: Word32) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
+    \(Position_0_32 i) (w :: Word32) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
   it "bitRank for Word32 and Word64 should give same answer for bits 32-64" $ property $
-    \(I64_0_32 i) (v :: Word32) (w :: Word32) ->
+    \(Position_0_32 i) (v :: Word32) (w :: Word32) ->
       let v64 = fromIntegral v :: Word64 in
       let w64 = fromIntegral w :: Word64 in
       bitRank v i + popCount w == bitRank ((v64 .<. 32) .|. w64) (i + 32)
   it "bitRank and bitSelect for Word64 form a galois connection" $ property $
-    \(I64_0_32 i) (w :: Word32) -> 1 <= i && i <= popCount w ==>
-      bitRank w (bitSelect w i) == i && bitSelect w (bitRank w i) <= i
+    \(Count_0_32 i) (w :: Word32) -> 1 <= i && i <= popCount w ==>
+      bitRank w (bitSelect w i) == i && bitSelect w (bitRank w (fromIntegral i)) <= (fromIntegral i)

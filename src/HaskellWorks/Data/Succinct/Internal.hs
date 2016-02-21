@@ -42,43 +42,46 @@ infixl 7 .&.        -- Bitwise AND.  eg. ∧
 infixl 6 .^.        -- Bitwise XOR.  eg. ⊕
 infixl 5 .|.        -- Bitwise OR.   eg. ∨
 
-newtype Count = Count { getCount :: Word64 } deriving (Eq, Num, Ord)
+newtype Count = Count { getCount :: Word64 } deriving (Eq, Num, Ord, Enum, Real, Integral, Show)
 
-newtype Position = Position { getPosition :: Int } deriving (Eq, Num, Ord)
+newtype Position = Position { getPosition :: Int64 } deriving (Eq, Num, Ord, Enum, Real, Integral, Show)
 
 class BeBitRank v where
-  beBitRank :: v -> Int64 -> Int64
+  beBitRank :: v -> Position -> Count
 
 class BeBitSelect v where
-  beBitSelect :: v -> Int64 -> Int64
+  beBitSelect :: v -> Count -> Position
 
 class BitLength v where
-  bitLength :: v -> Int64
+  bitLength :: v -> Count
+
+  endPosition :: v -> Position
+  endPosition = Position . fromIntegral . getCount . bitLength
 
 class BitRank v where
-  bitRank :: v -> Int64 -> Int64
+  bitRank :: v -> Position -> Count
 
 class BitSelect v where
-  bitSelect :: v -> Int64 -> Int64
+  bitSelect :: v -> Count -> Position
 
 class LeBitRank v where
-  leBitRank :: v -> Int64 -> Int64
+  leBitRank :: v -> Position -> Count
 
 class LeBitSelect v where
-  leBitSelect :: v -> Int64 -> Int64
+  leBitSelect :: v -> Count -> Position
 
 class Rank v a where
-  rank :: Eq a => Int64 -> a -> v -> Int64
+  rank :: Eq a => Position -> a -> v -> Count
 
 class Select v where
-  select :: Eq a => Int64 -> v -> a -> Int64
+  select :: Eq a => Count -> v -> a -> Position
 
 class Shift a where
   (.<.) :: a -> Int64 -> a
   (.>.) :: a -> Int64 -> a
 
 class TestBit a where
-  (.?.) :: a -> Int64 -> Bool
+  (.?.) :: a -> Position -> Bool
 
 class BitWise a where
   (.&.) :: a -> a -> a
@@ -87,7 +90,7 @@ class BitWise a where
   comp  :: a -> a
 
 class PopCount a where
-  popCount :: a -> Int64
+  popCount :: a -> Count
 
 class Broadword a where
   bwL8 :: a
@@ -138,19 +141,19 @@ instance BitLength Word64 where
   {-# INLINABLE bitLength #-}
 
 instance TestBit Word8 where
-  (.?.) w n = B.testBit w (fromIntegral n)
+  (.?.) w n = B.testBit w (fromIntegral (getPosition n))
   {-# INLINABLE (.?.) #-}
 
 instance TestBit Word16 where
-  (.?.) w n = B.testBit w (fromIntegral n)
+  (.?.) w n = B.testBit w (fromIntegral (getPosition n))
   {-# INLINABLE (.?.) #-}
 
 instance TestBit Word32 where
-  (.?.) w n = B.testBit w (fromIntegral n)
+  (.?.) w n = B.testBit w (fromIntegral (getPosition n))
   {-# INLINABLE (.?.) #-}
 
 instance TestBit Word64 where
-  (.?.) w n = B.testBit w (fromIntegral n)
+  (.?.) w n = B.testBit w (fromIntegral (getPosition n))
   {-# INLINABLE (.?.) #-}
 
 instance PopCount Word8 where
@@ -252,49 +255,49 @@ instance Shift Word64 where
 instance LeBitRank Word8 where
   leBitRank v s0 =
     -- Shift out bits after given position.
-    let r0 = v .<. (8 - s0) in
+    let r0 = v .<. (8 - getPosition s0) in
     -- Count set bits in parallel.
     let r1 = (r0 .&. 0x55) + ((r0 .>. 1) .&. 0x55)  in
     let r2 = (r1 .&. 0x33) + ((r1 .>. 2) .&. 0x33)  in
     let r3 = (r2 .&. 0x0f) + ((r2 .>. 4) .&. 0x0f)  in
     let r4 = r3 `mod` 255                           in
-    fromIntegral r4 :: Int64
+    Count $ fromIntegral r4
   {-# INLINABLE leBitRank #-}
 
 instance LeBitRank Word16 where
   leBitRank v s0 =
     -- Shift out bits after given position.
-    let r0 = v .<. (16 - s0) in
+    let r0 = v .<. (16 - getPosition s0) in
     -- Count set bits in parallel.
     let r1 = (r0 .&. 0x5555) + ((r0 .>. 1) .&. 0x5555)  in
     let r2 = (r1 .&. 0x3333) + ((r1 .>. 2) .&. 0x3333)  in
     let r3 = (r2 .&. 0x0f0f) + ((r2 .>. 4) .&. 0x0f0f)  in
     let r4 = r3 `mod` 255                               in
-    fromIntegral r4 :: Int64
+    Count $ fromIntegral r4
   {-# INLINABLE leBitRank #-}
 
 instance LeBitRank Word32 where
   leBitRank v s0 =
     -- Shift out bits after given position.
-    let r0 = v .<. (32 - s0) in
+    let r0 = v .<. (32 - getPosition s0) in
     -- Count set bits in parallel.
     let r1 = (r0 .&. 0x55555555) + ((r0 .>. 1) .&. 0x55555555)  in
     let r2 = (r1 .&. 0x33333333) + ((r1 .>. 2) .&. 0x33333333)  in
     let r3 = (r2 .&. 0x0f0f0f0f) + ((r2 .>. 4) .&. 0x0f0f0f0f)  in
     let r4 = r3 `mod` 255                                       in
-    fromIntegral r4 :: Int64
+    Count $ fromIntegral r4
   {-# INLINABLE leBitRank #-}
 
 instance LeBitRank Word64 where
   leBitRank v s0 =
     -- Shift out bits after given position.
-    let r0 = v .<. (64 - s0) in
+    let r0 = v .<. (64 - getPosition s0) in
     -- Count set bits in parallel.
     let r1 = (r0 .&. 0x5555555555555555) + ((r0 .>. 1) .&. 0x5555555555555555)  in
     let r2 = (r1 .&. 0x3333333333333333) + ((r1 .>. 2) .&. 0x3333333333333333)  in
     let r3 = (r2 .&. 0x0f0f0f0f0f0f0f0f) + ((r2 .>. 4) .&. 0x0f0f0f0f0f0f0f0f)  in
     let r4 = r3 `mod` 255                                                       in
-    fromIntegral r4 :: Int64
+    Count $ fromIntegral r4
   {-# INLINABLE leBitRank #-}
 
 -- TODO: Implement NOT interms of select for word-16
@@ -312,7 +315,7 @@ instance LeBitSelect Word16 where
     let c = (b .&. 0x0f0f) + ((b .>.  4) .&. 0x0f0f)    in
     let d = (c .&. 0x00ff) + ((c .>.  8) .&. 0x00ff)    in
     -- Now do branchless select!
-    let r0 = d + 1 - (fromIntegral rn :: Word16)                                in
+    let r0 = d + 1 - (fromIntegral (getCount rn) :: Word16)                     in
     let s0 = 64 :: Word16                                                       in
     let t0 = (d .>. 32) + (d .>. 48)                                            in
     let s1 = s0 - ((t0 - r0) .&. 256) .>. 3                                     in
@@ -345,7 +348,7 @@ instance LeBitSelect Word32 where
     let d = (c .&. 0x00ff00ff) + ((c .>.  8) .&. 0x00ff00ff)    in
     let e = (d .&. 0x000000ff) + ((d .>. 16) .&. 0x000000ff)    in
     -- Now do branchless select!
-    let r0 = e + 1 - (fromIntegral rn :: Word32)                                in
+    let r0 = e + 1 - (fromIntegral (getCount rn) :: Word32)                     in
     let s0 = 64 :: Word32                                                       in
     let t0 = (d .>. 32) + (d .>. 48)                                            in
     let s1 = s0 - ((t0 - r0) .&. 256) .>. 3                                     in
@@ -378,7 +381,7 @@ instance LeBitSelect Word64 where
     let e = (d .&. 0x000000ff000000ff) + ((d .>. 16) .&. 0x000000ff000000ff)    in
     let f = (e .&. 0x00000000000000ff) + ((e .>. 32) .&. 0x00000000000000ff)    in
     -- Now do branchless select!
-    let r0 = f + 1 - (fromIntegral rn :: Word64)                                in
+    let r0 = f + 1 - (fromIntegral (getCount rn) :: Word64)                     in
     let s0 = 64 :: Word64                                                       in
     let t0 = (d .>. 32) + (d .>. 48)                                            in
     let s1 = s0 - ((t0 - r0) .&. 256) .>. 3                                     in
@@ -403,50 +406,50 @@ instance LeBitSelect Word64 where
 instance BeBitRank Word8 where
   beBitRank v s0 =
     -- Shift out bits after given position.
-    let r0 = v .>. (8 - s0) in
+    let r0 = v .>. (8 - getPosition s0) in
     -- Count set bits in parallel.
     let r1 = (r0 .&. 0x55) + ((r0 .>. 1) .&. 0x55)  in
     let r2 = (r1 .&. 0x33) + ((r1 .>. 2) .&. 0x33)  in
     let r3 = (r2 .&. 0x0f) + ((r2 .>. 4) .&. 0x0f)  in
     let r4 = r3 `mod` 255                           in
-    fromIntegral r4 :: Int64
+    Count $ fromIntegral r4
   {-# INLINABLE beBitRank #-}
 
 instance BeBitRank Word16 where
   beBitRank v s0 =
     -- Shift out bits after given position.
-    let r0 = v .>. (16 - s0) in
+    let r0 = v .>. (16 - getPosition s0) in
     -- Count set bits in parallel.
     let r1 = (r0 .&. 0x5555) + ((r0 .>. 1) .&. 0x5555)  in
     let r2 = (r1 .&. 0x3333) + ((r1 .>. 2) .&. 0x3333)  in
     let r3 = (r2 .&. 0x0f0f) + ((r2 .>. 4) .&. 0x0f0f)  in
     let r4 = r3 `mod` 255                               in
-    fromIntegral r4 :: Int64
+    Count $ fromIntegral r4
   {-# INLINABLE beBitRank #-}
 
 instance BeBitRank Word32 where
   beBitRank v s0 =
     -- Shift out bits after given position.
-    let r0 = v .>. (32 - s0) in
+    let r0 = v .>. (32 - getPosition s0) in
     -- Count set bits in parallel.
     let r1 = (r0 .&. 0x55555555) + ((r0 .>. 1) .&. 0x55555555)  in
     let r2 = (r1 .&. 0x33333333) + ((r1 .>. 2) .&. 0x33333333)  in
     let r3 = (r2 .&. 0x0f0f0f0f) + ((r2 .>. 4) .&. 0x0f0f0f0f)  in
     let r4 = r3 `mod` 255                                       in
-    fromIntegral r4 :: Int64
+    Count $ fromIntegral r4
   {-# INLINABLE beBitRank #-}
 
 instance BeBitRank Word64 where
   beBitRank v s0 =
     -- let s = fromIntegral s0 :: Word64 in
     -- Shift out bits after given position.
-    let r0 = v .>. (64 - s0) in
+    let r0 = v .>. (64 - getPosition s0) in
     -- Count set bits in parallel.
     let r1 = (r0 .&. 0x5555555555555555) + ((r0 .>. 1) .&. 0x5555555555555555)  in
     let r2 = (r1 .&. 0x3333333333333333) + ((r1 .>. 2) .&. 0x3333333333333333)  in
     let r3 = (r2 .&. 0x0f0f0f0f0f0f0f0f) + ((r2 .>. 4) .&. 0x0f0f0f0f0f0f0f0f)  in
     let r4 = r3 `mod` 255                                                       in
-    fromIntegral r4 :: Int64
+    Count $ fromIntegral r4
   {-# INLINABLE beBitRank #-}
 
 instance BeBitSelect Word64 where
@@ -458,7 +461,7 @@ instance BeBitSelect Word64 where
     let c = (b .&. 0x0f0f0f0f0f0f0f0f) + ((b .>.  4) .&. 0x0f0f0f0f0f0f0f0f)    in
     let d = (c .&. 0x00ff00ff00ff00ff) + ((c .>.  8) .&. 0x00ff00ff00ff00ff)    in
     -- Now do branchless select!
-    let r0 = fromIntegral rn :: Word64                                          in
+    let r0 = fromIntegral (getCount rn) :: Word64                               in
     let s0 = 64 :: Word64                                                       in
     let t0 = (d .>. 32) + (d .>. 48)                                            in
     let s1 = s0 - ((t0 - r0) .&. 256) .>. 3                                     in
