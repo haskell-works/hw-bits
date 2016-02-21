@@ -17,4 +17,5 @@ module HaskellWorks.Data.Succinct
     ) where
 
 import           HaskellWorks.Data.Succinct.Internal
+import           HaskellWorks.Data.Succinct.Rank9
 import           HaskellWorks.Data.Succinct.Simple

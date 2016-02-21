@@ -28,6 +28,7 @@ library
   hs-source-dirs:       src
   exposed-modules:      HaskellWorks.Data.Succinct
                       , HaskellWorks.Data.Succinct.Internal
+                      , HaskellWorks.Data.Succinct.Rank9
                       , HaskellWorks.Data.Succinct.Simple
   build-depends:        base                            >= 4.7  && < 5
                       , attoparsec                      >= 0.10
