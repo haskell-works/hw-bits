@@ -48,101 +48,45 @@ instance TestBit SimpleBitVector64 where
     (q, r) -> (v ! fromIntegral q) .?. fromIntegral r
 
 instance BitRank SimpleBitVector8 where
-  bitRank (SimpleBitVector8  v) = rankW8s (toList v)
+  bitRank (SimpleBitVector8  v) = rankWords (toList v)
 
 instance BitRank SimpleBitVector16 where
-  bitRank (SimpleBitVector16 v) = rankW16s (toList v)
+  bitRank (SimpleBitVector16 v) = rankWords (toList v)
 
 instance BitRank SimpleBitVector32 where
-  bitRank (SimpleBitVector32 v) = rankW32s (toList v)
+  bitRank (SimpleBitVector32 v) = rankWords (toList v)
 
 instance BitRank SimpleBitVector64 where
-  bitRank (SimpleBitVector64 v) = rankW64s (toList v)
+  bitRank (SimpleBitVector64 v) = rankWords (toList v)
 
 instance BitSelect SimpleBitVector8 where
-  bitSelect (SimpleBitVector8  v) = selectW8s 0 (toList v)
+  bitSelect (SimpleBitVector8  v) = selectWords 0 (toList v)
 
 instance BitSelect SimpleBitVector16 where
-  bitSelect (SimpleBitVector16 v) = selectW16s 0 (toList v)
+  bitSelect (SimpleBitVector16 v) = selectWords 0 (toList v)
 
 instance BitSelect SimpleBitVector32 where
-  bitSelect (SimpleBitVector32 v) = selectW32s 0 (toList v)
+  bitSelect (SimpleBitVector32 v) = selectWords 0 (toList v)
 
 instance BitSelect SimpleBitVector64 where
-  bitSelect (SimpleBitVector64 v) = selectW64s 0 (toList v)
+  bitSelect (SimpleBitVector64 v) = selectWords 0 (toList v)
 
-rankW8s :: [Word8] -> Int64 -> Int64
-rankW8s ws n = if remainder == 0
+rankWords :: (Num a, PopCount a, BitRank a, BitLength a) => [a] -> Int64 -> Int64
+rankWords ws n = if remainder == 0
     then predRank
     else predRank + partRank
   where
     partRank = bitRank r remainder
-    remainder = n `mod` 8
-    (ls, rs) = P.splitAt (fromIntegral $ n `quot` 8) ws
+    remainder = n `mod` bitLen
+    (ls, rs) = P.splitAt (fromIntegral $ n `quot` bitLen) ws
     predRank = P.sum (P.map (fromIntegral . popCount) ls)
     r = headDef 0 rs
+    bitLen = bitLength (P.head ws)
 
-rankW16s :: [Word16] -> Int64 -> Int64
-rankW16s ws n = if remainder == 0
-    then predRank
-    else predRank + partRank
-  where
-    partRank = bitRank r remainder
-    remainder = n `mod` 16
-    (ls, rs) = P.splitAt (fromIntegral $ n `quot` 16) ws
-    predRank = P.sum (P.map (fromIntegral . popCount) ls)
-    r = headDef 0 rs
-
-rankW32s :: [Word32] -> Int64 -> Int64
-rankW32s ws n = if remainder == 0
-    then predRank
-    else predRank + partRank
-  where
-    partRank = bitRank r remainder
-    remainder = n `mod` 32
-    (ls, rs) = P.splitAt (fromIntegral $ n `quot` 32) ws
-    predRank = P.sum (P.map (fromIntegral . popCount) ls)
-    r = headDef 0 rs
-
-rankW64s :: [Word64] -> Int64 -> Int64
-rankW64s ws n = if remainder == 0
-    then predRank
-    else predRank + partRank
-  where
-    partRank = bitRank r remainder
-    remainder = n `mod` 64
-    (ls, rs) = P.splitAt (fromIntegral $ n `quot` 64) ws
-    predRank = P.sum (P.map (fromIntegral . popCount) ls)
-    r = headDef 0 rs
-
-selectW8s :: Int64 -> [Word8] -> Int64 -> Int64
-selectW8s _ [] r = r + 1
-selectW8s n (w:ws) r = if pc < n
-    then selectW8s (n - pc) ws (r + bitLength w)
-    else bitSelect w n + r
-  where
-    pc = popCount w
-
-selectW16s :: Int64 -> [Word16] -> Int64 -> Int64
-selectW16s _ [] r = r + 1
-selectW16s n (w:ws) r = if pc < n
-    then selectW16s (n - pc) ws (r + bitLength w)
-    else bitSelect w n + r
-  where
-    pc = popCount w
-
-selectW32s :: Int64 -> [Word32] -> Int64 -> Int64
-selectW32s _ [] r = r + 1
-selectW32s n (w:ws) r = if pc < n
-    then selectW32s (n - pc) ws (r + bitLength w)
-    else bitSelect w n + r
-  where
-    pc = popCount w
-
-selectW64s :: Int64 -> [Word64] -> Int64 -> Int64
-selectW64s _ [] r = r + 1
-selectW64s n (w:ws) r = if pc < n
-    then selectW64s (n - pc) ws (r + bitLength w)
+selectWords :: (PopCount v, BitSelect v, BitLength v) => Int64 -> [v] -> Int64 -> Int64
+selectWords _ [] r = r + 1
+selectWords n (w:ws) r = if pc < n
+    then selectWords (n - pc) ws (r + bitLength w)
     else bitSelect w n + r
   where
     pc = popCount w
