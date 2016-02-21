@@ -28,7 +28,7 @@ module HaskellWorks.Data.Succinct.Internal
     , TestBit(..)
     ) where
 
-import qualified Data.Bits            as B
+import qualified Data.Bits as B
 import           Data.Int
 import           Data.Word
 
@@ -157,19 +157,35 @@ instance TestBit Word64 where
   {-# INLINABLE (.?.) #-}
 
 instance PopCount Word8 where
-  popCount = fromIntegral . B.popCount
+  popCount x0 = Count (fromIntegral x3)
+    where
+      x1 = x0 - ((x0 .&. 0xaa) .>. 1)
+      x2 = (x1 .&. 0x33) + ((x1 .>. 2) .&. 0x33)
+      x3 = (x2 + (x2 .>. 4)) .&. 0x0f
   {-# INLINABLE popCount #-}
 
 instance PopCount Word16 where
-  popCount = fromIntegral . B.popCount
+  popCount x0 = Count (fromIntegral ((x3 * 0x0101) .>. 8))
+    where
+      x1 = x0 - ((x0 .&. 0xaaaa) .>. 1)
+      x2 = (x1 .&. 0x3333) + ((x1 .>. 2) .&. 0x3333)
+      x3 = (x2 + (x2 .>. 4)) .&. 0x0f0f
   {-# INLINABLE popCount #-}
 
 instance PopCount Word32 where
-  popCount = fromIntegral . B.popCount
+  popCount x0 = Count (fromIntegral ((x3 * 0x01010101) .>. 24))
+    where
+      x1 = x0 - ((x0 .&. 0xaaaaaaaa) .>. 1)
+      x2 = (x1 .&. 0x33333333) + ((x1 .>. 2) .&. 0x33333333)
+      x3 = (x2 + (x2 .>. 4)) .&. 0x0f0f0f0f
   {-# INLINABLE popCount #-}
 
 instance PopCount Word64 where
-  popCount = fromIntegral . B.popCount
+  popCount x0 = Count ((x3 * 0x0101010101010101) .>. 56)
+    where
+      x1 = x0 - ((x0 .&. 0xaaaaaaaaaaaaaaaa) .>. 1)
+      x2 = (x1 .&. 0x3333333333333333) + ((x1 .>. 2) .&. 0x3333333333333333)
+      x3 = (x2 + (x2 .>. 4)) .&. 0x0f0f0f0f0f0f0f0f
   {-# INLINABLE popCount #-}
 
 instance BitWise Word8 where
