@@ -21,6 +21,9 @@ module HaskellWorks.Data.Succinct.Internal
     , LeBitSelect(..)
     , Rank(..)
     , Select(..)
+      -- * Nearest Neighbour Dictionary
+    , bitPred
+    , bitSucc
       -- * Bit map
     , BitLength(..)
     , BitWise(..)
@@ -45,21 +48,17 @@ infixl 7 .&.        -- Bitwise AND.  eg. ∧
 infixl 6 .^.        -- Bitwise XOR.  eg. ⊕
 infixl 5 .|.        -- Bitwise OR.   eg. ∨
 
-newtype Count = Count { getCount :: Word64 } deriving (Eq, Num, Ord, Enum, Real, Integral, Show)
+newtype Count = Count { getCount :: Word64 }
+  deriving (Eq, Num, Ord, Enum, Real, Integral, Show)
 
-newtype Position = Position { getPosition :: Int64 } deriving (Eq, Num, Ord, Enum, Real, Integral, Show)
+newtype Position = Position { getPosition :: Int64 }
+  deriving (Eq, Num, Ord, Enum, Real, Integral, Show)
 
 class BeBitRank v where
   beBitRank :: v -> Position -> Count
 
 class BeBitSelect v where
   beBitSelect :: v -> Count -> Position
-
-class BitLength v where
-  bitLength :: v -> Count
-
-  endPosition :: v -> Position
-  endPosition = Position . fromIntegral . getCount . bitLength
 
 class BitRank v where
   bitRank :: v -> Position -> Count
@@ -78,6 +77,12 @@ class Rank v a where
 
 class Select v where
   select :: Eq a => Count -> v -> a -> Position
+
+class BitLength v where
+  bitLength :: v -> Count
+
+  endPosition :: v -> Position
+  endPosition = Position . fromIntegral . getCount . bitLength
 
 class Shift a where
   (.<.) :: a -> Int64 -> a
@@ -98,6 +103,18 @@ class PopCount a where
 class Broadword a where
   bwL8 :: a
   bwH8 :: a
+
+--------------------------------------------------------------------------------
+-- Nearest Neighbour Dictionary
+
+bitPred :: (BitRank v, BitSelect v) => v -> Position -> Position
+bitPred v p = bitSelect v (bitRank v p - 1)
+
+bitSucc :: (BitRank v, BitSelect v) => v -> Position -> Position
+bitSucc v p = bitSelect v (bitRank v p + 1)
+
+--------------------------------------------------------------------------------
+-- Instances
 
 instance Broadword Word8 where
   bwL8 = 0x01
