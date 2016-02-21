@@ -9,23 +9,26 @@
 --
 -- Succinct operations.
 module HaskellWorks.Data.Succinct.Internal
-    ( -- * Rank & Select
-      BeBitRank(..)
+    ( -- * Count & Positioning
+      Count(..)
+    , Position(..)
+      -- * Rank & Select
+    , BeBitRank(..)
     , BeBitSelect(..)
-    , BitLength(..)
     , BitRank(..)
     , BitSelect(..)
-    , BitWise(..)
-    , Broadword(..)
-    , Count(..)
     , LeBitRank(..)
     , LeBitSelect(..)
-    , PopCount(..)
-    , Position(..)
     , Rank(..)
     , Select(..)
+      -- * Bit map
+    , BitLength(..)
+    , BitWise(..)
+    , PopCount(..)
     , Shift(..)
     , TestBit(..)
+      -- * Bit manipulation
+    , Broadword(..)
     ) where
 
 import qualified Data.Bits as B
