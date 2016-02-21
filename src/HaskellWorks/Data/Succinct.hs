@@ -4,20 +4,11 @@
 --
 -- Succinct operations.
 module HaskellWorks.Data.Succinct
-    ( -- * Rank & Select
-      BitRank(..)
-    , BitSelect(..)
-    , BitWise(..)
-    , Count(..)
-    , PopCount(..)
-    , Position(..)
-    , Rank(..)
-    , Select(..)
-    , Shift(..)
-    , Simple(..)
-    , TestBit(..)
+    ( module X
     ) where
 
-import           HaskellWorks.Data.Succinct.Internal
-import           HaskellWorks.Data.Succinct.Rank9
-import           HaskellWorks.Data.Succinct.Simple
+import           HaskellWorks.Data.Succinct.BalancedParens   as X
+import           HaskellWorks.Data.Succinct.Internal         as X
+import           HaskellWorks.Data.Succinct.NearestNeighbour as X
+import           HaskellWorks.Data.Succinct.Positioning      as X
+import           HaskellWorks.Data.Succinct.RankSelect       as X

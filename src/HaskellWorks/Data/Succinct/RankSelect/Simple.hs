@@ -11,18 +11,19 @@
 -- License: MIT
 --
 -- Succinct operations.
-module HaskellWorks.Data.Succinct.Simple
+module HaskellWorks.Data.Succinct.RankSelect.Simple
     ( -- * Simple bit vector types
       Simple(..)
     ) where
 
-import           Data.Int
-import qualified Data.Vector                         as DV
-import qualified Data.Vector.Storable                as DVS
+import qualified Data.Vector                            as DV
+import qualified Data.Vector.Storable                   as DVS
 import           Data.Word
 import           HaskellWorks.Data.MonoList
 import           HaskellWorks.Data.Succinct.Internal
-import qualified Prelude                             as P
+import           HaskellWorks.Data.Succinct.Positioning
+import           HaskellWorks.Data.Succinct.RankSelect.Internal
+import qualified Prelude                                as P
 import           Safe
 
 newtype Simple a = Simple a deriving (P.Eq, P.Show)
