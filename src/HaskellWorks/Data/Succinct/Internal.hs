@@ -24,6 +24,8 @@ module HaskellWorks.Data.Succinct.Internal
       -- * Nearest Neighbour Dictionary
     , bitPred
     , bitSucc
+      -- * Balanced Parentheses
+    , BalancedParens(..)
       -- * Bit map
     , BitLength(..)
     , BitWise(..)
@@ -103,6 +105,11 @@ class PopCount a where
 class Broadword a where
   bwL8 :: a
   bwH8 :: a
+
+class BalancedParens v where
+  findOpen :: v -> Position -> Position
+  findClose :: v -> Position -> Position
+  enclose :: v -> Position -> Position
 
 --------------------------------------------------------------------------------
 -- Nearest Neighbour Dictionary
