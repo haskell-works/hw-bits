@@ -60,16 +60,16 @@ instance BitRank SimpleBitVector64 where
   bitRank (SimpleBitVector64 v) = rankW64s (toList v)
 
 instance BitSelect SimpleBitVector8 where
-  bitSelect (SimpleBitVector8  v) n = selectW8s (toList v) n 0
+  bitSelect (SimpleBitVector8  v) = selectW8s 0 (toList v)
 
 instance BitSelect SimpleBitVector16 where
-  bitSelect (SimpleBitVector16 v) = selectW16s (toList v)
+  bitSelect (SimpleBitVector16 v) = selectW16s 0 (toList v)
 
 instance BitSelect SimpleBitVector32 where
-  bitSelect (SimpleBitVector32 v) = selectW32s (toList v)
+  bitSelect (SimpleBitVector32 v) = selectW32s 0 (toList v)
 
 instance BitSelect SimpleBitVector64 where
-  bitSelect (SimpleBitVector64 v) = selectW64s (toList v)
+  bitSelect (SimpleBitVector64 v) = selectW64s 0 (toList v)
 
 rankW8s :: [Word8] -> Int64 -> Int64
 rankW8s ws n = if remainder == 0
@@ -115,19 +115,34 @@ rankW64s ws n = if remainder == 0
     predRank = P.sum (P.map (fromIntegral . popCount) ls)
     r = headDef 0 rs
 
-selectW8s :: [Word8] -> Int64 -> Int64 -> Int64
-selectW8s [] _ r = r + 1
-selectW8s (w:ws) n r = if pc < n
-    then selectW8s ws (n - pc) (r + 8)
-    else undefined
+selectW8s :: Int64 -> [Word8] -> Int64 -> Int64
+selectW8s _ [] r = r + 1
+selectW8s n (w:ws) r = if pc < n
+    then selectW8s (n - pc) ws (r + bitLength w)
+    else bitSelect w n + r
   where
     pc = popCount w
 
-selectW16s :: [Word16] -> Int64 -> Int64
-selectW16s ws n = undefined
+selectW16s :: Int64 -> [Word16] -> Int64 -> Int64
+selectW16s _ [] r = r + 1
+selectW16s n (w:ws) r = if pc < n
+    then selectW16s (n - pc) ws (r + bitLength w)
+    else bitSelect w n + r
+  where
+    pc = popCount w
 
-selectW32s :: [Word32] -> Int64 -> Int64
-selectW32s ws n = undefined
+selectW32s :: Int64 -> [Word32] -> Int64 -> Int64
+selectW32s _ [] r = r + 1
+selectW32s n (w:ws) r = if pc < n
+    then selectW32s (n - pc) ws (r + bitLength w)
+    else bitSelect w n + r
+  where
+    pc = popCount w
 
-selectW64s :: [Word64] -> Int64 -> Int64
-selectW64s ws n = undefined
+selectW64s :: Int64 -> [Word64] -> Int64 -> Int64
+selectW64s _ [] r = r + 1
+selectW64s n (w:ws) r = if pc < n
+    then selectW64s (n - pc) ws (r + bitLength w)
+    else bitSelect w n + r
+  where
+    pc = popCount w
