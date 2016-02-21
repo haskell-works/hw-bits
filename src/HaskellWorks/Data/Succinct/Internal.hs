@@ -1,6 +1,7 @@
-{-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE TypeFamilies               #-}
 
 -- |
 -- Copyright: 2016 John Ky
@@ -16,9 +17,11 @@ module HaskellWorks.Data.Succinct.Internal
     , BitSelect(..)
     , BitWise(..)
     , Broadword(..)
+    , Count(..)
     , LeBitRank(..)
     , LeBitSelect(..)
     , PopCount(..)
+    , Position(..)
     , Rank(..)
     , Select(..)
     , Shift(..)
@@ -38,6 +41,10 @@ infixl 8 .<., .>.
 infixl 7 .&.        -- Bitwise AND.  eg. ∧
 infixl 6 .^.        -- Bitwise XOR.  eg. ⊕
 infixl 5 .|.        -- Bitwise OR.   eg. ∨
+
+newtype Count = Count { getCount :: Word64 } deriving (Eq, Num, Ord)
+
+newtype Position = Position { getPosition :: Int } deriving (Eq, Num, Ord)
 
 class BeBitRank v where
   beBitRank :: v -> Int64 -> Int64
