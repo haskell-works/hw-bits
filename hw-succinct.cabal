@@ -29,12 +29,14 @@ library
   exposed-modules:      HaskellWorks.Data.MonoList
                       , HaskellWorks.Data.Succinct
                       , HaskellWorks.Data.Succinct.BalancedParens
-                      , HaskellWorks.Data.Succinct.Internal
+                      , HaskellWorks.Data.Succinct.BalancedParens.Internal
+                      , HaskellWorks.Data.Succinct.BalancedParens.Simple
+                      , HaskellWorks.Data.Succinct.BitWise
                       , HaskellWorks.Data.Succinct.NearestNeighbour
                       , HaskellWorks.Data.Succinct.Positioning
-                      , HaskellWorks.Data.Succinct.Rank9
                       , HaskellWorks.Data.Succinct.RankSelect
                       , HaskellWorks.Data.Succinct.RankSelect.Internal
+                      , HaskellWorks.Data.Succinct.RankSelect.Rank9
                       , HaskellWorks.Data.Succinct.RankSelect.Simple
   build-depends:        base                            >= 4.7  && < 5
                       , attoparsec                      >= 0.10

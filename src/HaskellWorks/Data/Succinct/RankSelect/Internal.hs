@@ -13,7 +13,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Internal
     ) where
 
 import           Data.Word
-import           HaskellWorks.Data.Succinct.Internal
+import           HaskellWorks.Data.Succinct.BitWise
 import           HaskellWorks.Data.Succinct.Positioning
 
 class BeBitRank v where

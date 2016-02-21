@@ -7,7 +7,7 @@
 -- License: MIT
 --
 -- Succinct operations.
-module HaskellWorks.Data.Succinct.Internal
+module HaskellWorks.Data.Succinct.BitWise
     ( -- * Bit map
       BitLength(..)
     , BitWise(..)

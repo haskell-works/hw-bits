@@ -16,14 +16,14 @@ module HaskellWorks.Data.Succinct.RankSelect.Simple
       Simple(..)
     ) where
 
-import qualified Data.Vector                            as DV
-import qualified Data.Vector.Storable                   as DVS
+import qualified Data.Vector                                    as DV
+import qualified Data.Vector.Storable                           as DVS
 import           Data.Word
 import           HaskellWorks.Data.MonoList
-import           HaskellWorks.Data.Succinct.Internal
+import           HaskellWorks.Data.Succinct.BitWise
 import           HaskellWorks.Data.Succinct.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Internal
-import qualified Prelude                                as P
+import qualified Prelude                                        as P
 import           Safe
 
 newtype Simple a = Simple a deriving (P.Eq, P.Show)
