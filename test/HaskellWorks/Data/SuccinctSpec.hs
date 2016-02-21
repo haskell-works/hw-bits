@@ -3,6 +3,7 @@
 
 module HaskellWorks.Data.SuccinctSpec (spec) where
 
+import qualified Data.Bits as B
 import           Data.Int
 import           Data.Word
 import           HaskellWorks.Data.Succinct
@@ -38,16 +39,14 @@ instance Arbitrary I64_0_64 where
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
-  it "popCount 0 == 0 for all word sizes" $ do
-    popCount (0 :: Word8 ) `shouldBe` 0
-    popCount (0 :: Word16) `shouldBe` 0
-    popCount (0 :: Word32) `shouldBe` 0
-    popCount (0 :: Word64) `shouldBe` 0
-  it "popCount -1 == bitLength for all word sizes" $ do
-    popCount (-1 :: Word8 ) `shouldBe` 8
-    popCount (-1 :: Word16) `shouldBe` 16
-    popCount (-1 :: Word32) `shouldBe` 32
-    popCount (-1 :: Word64) `shouldBe` 64
+  it "popCount for Word8 matches Data.Bits implementation" $ property $
+    \(w :: Word8 ) -> popCount w == fromIntegral (B.popCount w)
+  it "popCount for Word16 matches Data.Bits implementation" $ property $
+    \(w :: Word16) -> popCount w == fromIntegral (B.popCount w)
+  it "popCount for Word32 matches Data.Bits implementation" $ property $
+    \(w :: Word32) -> popCount w == fromIntegral (B.popCount w)
+  it "popCount for Word64 matches Data.Bits implementation" $ property $
+    \(w :: Word64) -> popCount w == fromIntegral (B.popCount w)
   it "bitRank for Word16 and Word64 should give same answer for bits 0-7" $ property $
     \(I64_0_8  i) (w :: Word8 ) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
   it "bitRank for Word16 and Word64 should give same answer for bits 0-15" $ property $
