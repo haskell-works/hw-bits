@@ -12,7 +12,7 @@ module HaskellWorks.Data.Succinct
     , Rank(..)
     , Select(..)
     , Shift(..)
-    , SimpleBitVector64(..)
+    , Simple(..)
     , TestBit(..)
     ) where
 
