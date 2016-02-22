@@ -37,6 +37,8 @@ library
                       , HaskellWorks.Data.Succinct.RankSelect
                       , HaskellWorks.Data.Succinct.RankSelect.Internal
                       , HaskellWorks.Data.Succinct.RankSelect.Rank9
+                      , HaskellWorks.Data.Succinct.RankSelect.Rank9.Native
+                      , HaskellWorks.Data.Succinct.RankSelect.Rank9.Storable
                       , HaskellWorks.Data.Succinct.RankSelect.Simple
   build-depends:        base                            >= 4.7  && < 5
                       , attoparsec                      >= 0.10
