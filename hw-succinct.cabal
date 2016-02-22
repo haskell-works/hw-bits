@@ -26,7 +26,7 @@ executable hw-succinct-example
 
 library
   hs-source-dirs:       src
-  exposed-modules:      HaskellWorks.Data.MonoList
+  exposed-modules:      HaskellWorks.Data.VectorLike
                       , HaskellWorks.Data.Succinct
                       , HaskellWorks.Data.Succinct.BalancedParens
                       , HaskellWorks.Data.Succinct.BalancedParens.Internal

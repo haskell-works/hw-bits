@@ -19,7 +19,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Simple
 import qualified Data.Vector                                    as DV
 import qualified Data.Vector.Storable                           as DVS
 import           Data.Word
-import           HaskellWorks.Data.MonoList
+import           HaskellWorks.Data.VectorLike
 import           HaskellWorks.Data.Succinct.BitWise
 import           HaskellWorks.Data.Succinct.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Internal
@@ -49,35 +49,35 @@ instance TestBit (Simple (DV.Vector Word64)) where
   {-# INLINABLE (.?.) #-}
 
 instance BitRank (Simple (DV.Vector Word8)) where
-  bitRank (Simple v) = rankWords (monoList v)
+  bitRank (Simple v) = rankWords (toList v)
   {-# INLINABLE bitRank #-}
 
 instance BitRank (Simple (DV.Vector Word16)) where
-  bitRank (Simple v) = rankWords (monoList v)
+  bitRank (Simple v) = rankWords (toList v)
   {-# INLINABLE bitRank #-}
 
 instance BitRank (Simple (DV.Vector Word32)) where
-  bitRank (Simple v) = rankWords (monoList v)
+  bitRank (Simple v) = rankWords (toList v)
   {-# INLINABLE bitRank #-}
 
 instance BitRank (Simple (DV.Vector Word64)) where
-  bitRank (Simple v) = rankWords (monoList v)
+  bitRank (Simple v) = rankWords (toList v)
   {-# INLINABLE bitRank #-}
 
 instance BitSelect (Simple (DV.Vector Word8)) where
-  bitSelect (Simple v) = selectWords 0 (monoList v)
+  bitSelect (Simple v) = selectWords 0 (toList v)
   {-# INLINABLE bitSelect #-}
 
 instance BitSelect (Simple (DV.Vector Word16))  where
-  bitSelect (Simple v) = selectWords 0 (monoList v)
+  bitSelect (Simple v) = selectWords 0 (toList v)
   {-# INLINABLE bitSelect #-}
 
 instance BitSelect (Simple (DV.Vector Word32))  where
-  bitSelect (Simple v) = selectWords 0 (monoList v)
+  bitSelect (Simple v) = selectWords 0 (toList v)
   {-# INLINABLE bitSelect #-}
 
 instance BitSelect (Simple (DV.Vector Word64))  where
-  bitSelect (Simple v) = selectWords 0 (monoList v)
+  bitSelect (Simple v) = selectWords 0 (toList v)
   {-# INLINABLE bitSelect #-}
 
 instance TestBit (Simple (DVS.Vector Word8)) where
@@ -101,35 +101,35 @@ instance TestBit (Simple (DVS.Vector Word64)) where
   {-# INLINABLE (.?.) #-}
 
 instance BitRank (Simple (DVS.Vector Word8)) where
-  bitRank (Simple v) = rankWords (monoList v)
+  bitRank (Simple v) = rankWords (toList v)
   {-# INLINABLE bitRank #-}
 
 instance BitRank (Simple (DVS.Vector Word16)) where
-  bitRank (Simple v) = rankWords (monoList v)
+  bitRank (Simple v) = rankWords (toList v)
   {-# INLINABLE bitRank #-}
 
 instance BitRank (Simple (DVS.Vector Word32)) where
-  bitRank (Simple v) = rankWords (monoList v)
+  bitRank (Simple v) = rankWords (toList v)
   {-# INLINABLE bitRank #-}
 
 instance BitRank (Simple (DVS.Vector Word64)) where
-  bitRank (Simple v) = rankWords (monoList v)
+  bitRank (Simple v) = rankWords (toList v)
   {-# INLINABLE bitRank #-}
 
 instance BitSelect (Simple (DVS.Vector Word8)) where
-  bitSelect (Simple v) = selectWords 0 (monoList v)
+  bitSelect (Simple v) = selectWords 0 (toList v)
   {-# INLINABLE bitSelect #-}
 
 instance BitSelect (Simple (DVS.Vector Word16))  where
-  bitSelect (Simple v) = selectWords 0 (monoList v)
+  bitSelect (Simple v) = selectWords 0 (toList v)
   {-# INLINABLE bitSelect #-}
 
 instance BitSelect (Simple (DVS.Vector Word32))  where
-  bitSelect (Simple v) = selectWords 0 (monoList v)
+  bitSelect (Simple v) = selectWords 0 (toList v)
   {-# INLINABLE bitSelect #-}
 
 instance BitSelect (Simple (DVS.Vector Word64))  where
-  bitSelect (Simple v) = selectWords 0 (monoList v)
+  bitSelect (Simple v) = selectWords 0 (toList v)
   {-# INLINABLE bitSelect #-}
 
 rankWords :: (P.Num a, PopCount a, BitRank a, BitLength a) => [a] -> Position -> Count
