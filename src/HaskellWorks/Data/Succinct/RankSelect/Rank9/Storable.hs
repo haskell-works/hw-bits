@@ -81,8 +81,6 @@ module HaskellWorks.Data.Succinct.RankSelect.Rank9.Storable (
     , index
 
     -- * Queries
-    , Position(..)
-    , Count(..)
     , SuccinctStorableBitVector(..)
     , rank
     , select
@@ -101,6 +99,7 @@ import Control.Monad (guard, replicateM)
 import Data.Bits (Bits, (.|.), (.&.), xor, complement)
 import Data.List (sort)
 import Data.Word (Word16, Word64)
+import HaskellWorks.Data.Succinct.RankSelect.Rank9.Positioning
 import Prelude hiding ((>>))  -- Use `(>>)` for right bit shift in this module
 import Test.QuickCheck (Arbitrary(..), choose)
 
@@ -246,34 +245,6 @@ x `leu16` y
         )
     .&. h16
 {-# INLINE leu16 #-}
-
--- | A 0-indexed bit position
-newtype Position = Position { getPosition :: Int } deriving (Eq, Num, Ord)
-{-@
-data Position = Position { getPosition :: { v : Int | 0 <= v } }
-@-}
-
-instance Show Position where
-    show (Position n) = show n
-
--- I assume that `QuickCheck` implemented this correctly :)
-{-@
-assume arbitraryNonNegative :: QuickCheck.Gen { v : Int | 0 <= v }
-@-}
-arbitraryNonNegative :: QuickCheck.Gen Int
-arbitraryNonNegative = fmap QuickCheck.getNonNegative arbitrary
-
-instance Arbitrary Position where
-    arbitrary = fmap Position arbitraryNonNegative
-
--- | A count of bits
-newtype Count = Count { getCount :: Word64 } deriving (Eq, Num, Ord)
-
-instance Show Count where
-    show (Count w64) = show w64
-
-instance Arbitrary Count where
-    arbitrary = fmap Count arbitrary
 
 -- `Word64`s always map onto a non-negative integer, but we have to inform
 -- Liquid Haskell of that fact

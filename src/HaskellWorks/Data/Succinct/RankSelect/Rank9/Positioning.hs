@@ -1,8 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module HaskellWorks.Data.Succinct.Positioning where
+module HaskellWorks.Data.Succinct.RankSelect.Rank9.Positioning where
 
-import Data.Int
 import Data.Word
 import Test.QuickCheck as QuickCheck
 
@@ -15,13 +14,13 @@ instance Show Count where
 instance Arbitrary Count where
     arbitrary = fmap Count arbitrary
 
-newtype Position = Position { getPosition :: Int64 }
+newtype Position = Position { getPosition :: Int }
   deriving (Eq, Num, Ord, Enum, Real, Integral)
 
 instance Show Position where
     show (Position n) = show n
 
-arbitraryNonNegative :: QuickCheck.Gen Int64
+arbitraryNonNegative :: QuickCheck.Gen Int
 arbitraryNonNegative = fmap QuickCheck.getNonNegative arbitrary
 
 instance Arbitrary Position where
