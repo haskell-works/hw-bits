@@ -10,6 +10,7 @@ import Data.Word
 class MonoList v where
   type Elem v
   monoList :: v -> [Elem v]
+  fromList :: [Elem v] -> v
 
 class MonoList v => Indexable v where
   (!!!) :: v -> Int -> Elem v
@@ -17,41 +18,49 @@ class MonoList v => Indexable v where
 instance MonoList (DV.Vector Word8) where
   type Elem (DV.Vector Word8) = Word8
   monoList = DV.toList
+  fromList = DV.fromList
   {-# INLINABLE monoList #-}
 
 instance MonoList (DV.Vector Word16) where
   type Elem (DV.Vector Word16) = Word16
   monoList = DV.toList
+  fromList = DV.fromList
   {-# INLINABLE monoList #-}
 
 instance MonoList (DV.Vector Word32) where
   type Elem (DV.Vector Word32) = Word32
   monoList = DV.toList
+  fromList = DV.fromList
   {-# INLINABLE monoList #-}
 
 instance MonoList (DV.Vector Word64) where
   type Elem (DV.Vector Word64) = Word64
   monoList = DV.toList
+  fromList = DV.fromList
   {-# INLINABLE monoList #-}
 
 instance MonoList (DVS.Vector Word8) where
   type Elem (DVS.Vector Word8) = Word8
   monoList = DVS.toList
+  fromList = DVS.fromList
   {-# INLINABLE monoList #-}
 
 instance MonoList (DVS.Vector Word16) where
   type Elem (DVS.Vector Word16) = Word16
   monoList = DVS.toList
+  fromList = DVS.fromList
   {-# INLINABLE monoList #-}
 
 instance MonoList (DVS.Vector Word32) where
   type Elem (DVS.Vector Word32) = Word32
   monoList = DVS.toList
+  fromList = DVS.fromList
   {-# INLINABLE monoList #-}
 
 instance MonoList (DVS.Vector Word64) where
   type Elem (DVS.Vector Word64) = Word64
   monoList = DVS.toList
+  fromList = DVS.fromList
   {-# INLINABLE monoList #-}
 
 instance Indexable (DV.Vector Word8) where
