@@ -42,6 +42,8 @@ library
                       , attoparsec                      >= 0.10
                       , bytestring
                       , conduit                         >= 1.1  && < 1.3
+                      , deepseq                         <  1.5
+                      , QuickCheck
                       , resourcet                       >= 1.1
                       , safe
                       , text
