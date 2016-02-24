@@ -1,6 +1,11 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module HaskellWorks.Data.Succinct.Positioning where
+module HaskellWorks.Data.Succinct.Positioning
+  ( Count(..)
+  , Position(..)
+  , toCount
+  , toPosition
+  ) where
 
 import Data.Int
 import Data.Word
@@ -26,3 +31,9 @@ arbitraryNonNegative = fmap QuickCheck.getNonNegative arbitrary
 
 instance Arbitrary Position where
     arbitrary = fmap Position arbitraryNonNegative
+
+toPosition :: Count -> Position
+toPosition (Count n) = Position (fromIntegral n)
+
+toCount :: Position -> Count
+toCount (Position n) = Count (fromIntegral n)
