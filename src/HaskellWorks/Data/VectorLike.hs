@@ -1,12 +1,18 @@
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module HaskellWorks.Data.VectorLike where
+module HaskellWorks.Data.VectorLike
+  ( VectorLike(..)
+  , elemBitLength
+  , elemEndPosition
+  ) where
 
-import qualified Data.Vector as DV
-import qualified Data.Vector.Storable as DVS
-import Foreign.Storable
-import Data.Word
+import qualified Data.Vector                            as DV
+import qualified Data.Vector.Storable                   as DVS
+import           Data.Word
+import           Foreign.Storable
+import           HaskellWorks.Data.Succinct.BitWise
+import           HaskellWorks.Data.Succinct.Positioning
 
 class VectorLike v e where
   toList :: v e -> [e]
@@ -33,6 +39,12 @@ class StorableVectorLike v e where
   sMap :: (Storable a, Storable b) => (a -> b) -> v a -> v b
   sUnfoldr :: (Storable a) => (b -> Maybe (a, b)) -> b -> v a
   sUnfoldrN :: (Storable a) => Int -> (b -> Maybe (a, b)) -> b -> v a
+
+elemBitLength :: (VectorLike v e, BitLength e) => v e -> Count
+elemBitLength v = bitLength (v !!! 0)
+
+elemEndPosition :: (VectorLike v e, BitLength e) => v e -> Position
+elemEndPosition v = endPosition (v !!! 0)
 
 instance VectorLike DV.Vector Word8 where
   toList = DV.toList
