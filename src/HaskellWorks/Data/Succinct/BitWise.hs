@@ -14,12 +14,17 @@ module HaskellWorks.Data.Succinct.BitWise
     , PopCount(..)
     , Shift(..)
     , TestBit(..)
+    , elemBitLength
+    , elemEndPosition
     ) where
 
-import qualified Data.Bits                              as B
+import qualified Data.Bits                     as B
 import           Data.Int
+import           Data.Vector                   as DV
+import           Data.Vector.Storable          as DVS
 import           Data.Word
 import           HaskellWorks.Data.Positioning
+import           HaskellWorks.Data.VectorLike
 
 -- We pervasively use precedence to avoid excessive parentheses, and we use
 -- the same precedence conventions of the C programming language: arithmetic
@@ -54,6 +59,15 @@ class PopCount a where
   popCount :: a -> Count
 
 --------------------------------------------------------------------------------
+-- Functions
+
+elemBitLength :: (VectorLike v e, BitLength e) => v e -> Count
+elemBitLength v = bitLength (v !!! 0)
+
+elemEndPosition :: (VectorLike v e, BitLength e) => v e -> Position
+elemEndPosition v = endPosition (v !!! 0)
+
+--------------------------------------------------------------------------------
 -- Instances
 
 instance BitLength Word8 where
@@ -86,6 +100,38 @@ instance TestBit Word32 where
 
 instance TestBit Word64 where
   (.?.) w n = B.testBit w (fromIntegral (getPosition n))
+  {-# INLINABLE (.?.) #-}
+
+instance TestBit (DV.Vector Word8) where
+  (.?.) v n = (v !!! n) .?. (n `mod` elemEndPosition v)
+  {-# INLINABLE (.?.) #-}
+
+instance TestBit (DV.Vector Word16) where
+  (.?.) v n = (v !!! n) .?. (n `mod` elemEndPosition v)
+  {-# INLINABLE (.?.) #-}
+
+instance TestBit (DV.Vector Word32) where
+  (.?.) v n = (v !!! n) .?. (n `mod` elemEndPosition v)
+  {-# INLINABLE (.?.) #-}
+
+instance TestBit (DV.Vector Word64) where
+  (.?.) v n = (v !!! n) .?. (n `mod` elemEndPosition v)
+  {-# INLINABLE (.?.) #-}
+
+instance TestBit (DVS.Vector Word8) where
+  (.?.) v n = (v !!! n) .?. (n `mod` elemEndPosition v)
+  {-# INLINABLE (.?.) #-}
+
+instance TestBit (DVS.Vector Word16) where
+  (.?.) v n = (v !!! n) .?. (n `mod` elemEndPosition v)
+  {-# INLINABLE (.?.) #-}
+
+instance TestBit (DVS.Vector Word32) where
+  (.?.) v n = (v !!! n) .?. (n `mod` elemEndPosition v)
+  {-# INLINABLE (.?.) #-}
+
+instance TestBit (DVS.Vector Word64) where
+  (.?.) v n = (v !!! n) .?. (n `mod` elemEndPosition v)
   {-# INLINABLE (.?.) #-}
 
 instance PopCount Word8 where
