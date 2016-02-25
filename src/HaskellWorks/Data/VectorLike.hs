@@ -9,11 +9,12 @@ import qualified Data.Vector                            as DV
 import qualified Data.Vector.Storable                   as DVS
 import           Data.Word
 import           Foreign.Storable
+import           HaskellWorks.Data.Positioning
 
 class VectorLike v e where
   toList :: v e -> [e]
   fromList :: [e] -> v e
-  (!!!) :: v e -> Int -> e
+  (!!!) :: v e -> Position -> e
   concat :: [v e] -> v e
   empty :: v e
   filter :: (e -> Bool) -> v e -> v e
@@ -21,8 +22,8 @@ class VectorLike v e where
   length :: v e -> Int
   snoc :: v e -> e -> v e
   sum :: v e -> e
-  unsafeIndex :: v e -> Int -> e
-  unsafeSlice :: Int -> Int -> v e -> v e
+  unsafeIndex :: v e -> Position -> e
+  unsafeSlice :: Position -> Position -> v e -> v e
 
 class BoxedVectorLike v e where
   bImap :: (Int -> a -> b) -> v a -> v b
@@ -43,7 +44,7 @@ instance VectorLike DV.Vector Word8 where
   fromList = DV.fromList
   {-# INLINABLE fromList #-}
 
-  (!!!) v i = v DV.! i
+  (!!!) v (Position i) = v DV.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
   concat = DV.concat
@@ -67,10 +68,10 @@ instance VectorLike DV.Vector Word8 where
   sum = DV.sum
   {-# INLINABLE sum #-}
 
-  unsafeIndex = DV.unsafeIndex
+  unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
-  unsafeSlice = DV.unsafeSlice
+  unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
 instance BoxedVectorLike DV.Vector Word8 where
@@ -93,7 +94,7 @@ instance VectorLike DV.Vector Word16 where
   fromList = DV.fromList
   {-# INLINABLE fromList #-}
 
-  (!!!) v i = v DV.! i
+  (!!!) v (Position i) = v DV.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
   concat = DV.concat
@@ -117,10 +118,10 @@ instance VectorLike DV.Vector Word16 where
   sum = DV.sum
   {-# INLINABLE sum #-}
 
-  unsafeIndex = DV.unsafeIndex
+  unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
-  unsafeSlice = DV.unsafeSlice
+  unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
 instance BoxedVectorLike DV.Vector Word16 where
@@ -143,7 +144,7 @@ instance VectorLike DV.Vector Word32 where
   fromList = DV.fromList
   {-# INLINABLE fromList #-}
 
-  (!!!) v i = v DV.! i
+  (!!!) v (Position i) = v DV.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
   concat = DV.concat
@@ -167,10 +168,10 @@ instance VectorLike DV.Vector Word32 where
   sum = DV.sum
   {-# INLINABLE sum #-}
 
-  unsafeIndex = DV.unsafeIndex
+  unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
-  unsafeSlice = DV.unsafeSlice
+  unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
 instance BoxedVectorLike DV.Vector Word32 where
@@ -193,7 +194,7 @@ instance VectorLike DV.Vector Word64 where
   fromList = DV.fromList
   {-# INLINABLE fromList #-}
 
-  (!!!) v i = v DV.! i
+  (!!!) v (Position i) = v DV.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
   concat = DV.concat
@@ -217,10 +218,10 @@ instance VectorLike DV.Vector Word64 where
   sum = DV.sum
   {-# INLINABLE sum #-}
 
-  unsafeIndex = DV.unsafeIndex
+  unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
-  unsafeSlice = DV.unsafeSlice
+  unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
 instance BoxedVectorLike DV.Vector Word64 where
@@ -243,7 +244,7 @@ instance VectorLike DVS.Vector Word8 where
   fromList = DVS.fromList
   {-# INLINABLE fromList #-}
 
-  (!!!) v i = v DVS.! i
+  (!!!) v (Position i) = v DVS.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
   concat = DVS.concat
@@ -267,10 +268,10 @@ instance VectorLike DVS.Vector Word8 where
   sum = DVS.sum
   {-# INLINABLE sum #-}
 
-  unsafeIndex = DVS.unsafeIndex
+  unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
-  unsafeSlice = DVS.unsafeSlice
+  unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
 instance StorableVectorLike DVS.Vector Word8 where
@@ -293,7 +294,7 @@ instance VectorLike DVS.Vector Word16 where
   fromList = DVS.fromList
   {-# INLINABLE fromList #-}
 
-  (!!!) v i = v DVS.! i
+  (!!!) v (Position i) = v DVS.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
   concat = DVS.concat
@@ -317,10 +318,10 @@ instance VectorLike DVS.Vector Word16 where
   sum = DVS.sum
   {-# INLINABLE sum #-}
 
-  unsafeIndex = DVS.unsafeIndex
+  unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
-  unsafeSlice = DVS.unsafeSlice
+  unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
 instance StorableVectorLike DVS.Vector Word16 where
@@ -343,7 +344,7 @@ instance VectorLike DVS.Vector Word32 where
   fromList = DVS.fromList
   {-# INLINABLE fromList #-}
 
-  (!!!) v i = v DVS.! i
+  (!!!) v (Position i) = v DVS.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
   concat = DVS.concat
@@ -367,10 +368,10 @@ instance VectorLike DVS.Vector Word32 where
   sum = DVS.sum
   {-# INLINABLE sum #-}
 
-  unsafeIndex = DVS.unsafeIndex
+  unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
-  unsafeSlice = DVS.unsafeSlice
+  unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
 instance StorableVectorLike DVS.Vector Word32 where
@@ -393,7 +394,7 @@ instance VectorLike DVS.Vector Word64 where
   fromList = DVS.fromList
   {-# INLINABLE fromList #-}
 
-  (!!!) v i = v DVS.! i
+  (!!!) v (Position i) = v DVS.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
   concat = DVS.concat
@@ -417,10 +418,10 @@ instance VectorLike DVS.Vector Word64 where
   sum = DVS.sum
   {-# INLINABLE sum #-}
 
-  unsafeIndex = DVS.unsafeIndex
+  unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
-  unsafeSlice = DVS.unsafeSlice
+  unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
 instance StorableVectorLike DVS.Vector Word64 where
