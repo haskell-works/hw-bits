@@ -1,6 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module HaskellWorks.Data.Succinct.Positioning
+module HaskellWorks.Data.Positioning
   ( Count(..)
   , Position(..)
   , toCount

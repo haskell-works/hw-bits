@@ -19,7 +19,7 @@ module HaskellWorks.Data.Succinct.BitWise
 import qualified Data.Bits                              as B
 import           Data.Int
 import           Data.Word
-import           HaskellWorks.Data.Succinct.Positioning
+import           HaskellWorks.Data.Positioning
 
 -- We pervasively use precedence to avoid excessive parentheses, and we use
 -- the same precedence conventions of the C programming language: arithmetic

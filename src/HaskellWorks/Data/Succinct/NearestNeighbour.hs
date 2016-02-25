@@ -3,7 +3,7 @@ module HaskellWorks.Data.Succinct.NearestNeighbour
   , bitSucc
   ) where
 
-import           HaskellWorks.Data.Succinct.Positioning
+import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect
 
 bitPred :: (BitRank v, BitSelect v) => v -> Position -> Position

@@ -10,5 +10,4 @@ module HaskellWorks.Data.Succinct
 import           HaskellWorks.Data.Succinct.BalancedParens   as X
 import           HaskellWorks.Data.Succinct.BitWise          as X
 import           HaskellWorks.Data.Succinct.NearestNeighbour as X
-import           HaskellWorks.Data.Succinct.Positioning      as X
 import           HaskellWorks.Data.Succinct.RankSelect       as X

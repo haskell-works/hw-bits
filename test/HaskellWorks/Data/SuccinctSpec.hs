@@ -6,6 +6,7 @@ module HaskellWorks.Data.SuccinctSpec (spec) where
 import qualified Data.Bits as B
 import           Data.Int
 import           Data.Word
+import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct
 import           Test.Hspec
 import           Test.QuickCheck

@@ -6,6 +6,7 @@ module HaskellWorks.Data.Succinct.SimpleSpec (spec) where
 import           Data.Int
 import           Data.Vector
 import           Data.Word
+import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct
 import           Test.Hspec
 import           Test.QuickCheck
