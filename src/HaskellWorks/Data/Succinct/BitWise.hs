@@ -54,6 +54,8 @@ class BitWise a where
   (.|.) :: a -> a -> a
   (.^.) :: a -> a -> a
   comp  :: a -> a
+  all0s :: a
+  all1s :: a
 
 class PopCount a where
   popCount :: a -> Count
@@ -179,6 +181,12 @@ instance BitWise Word8 where
   comp  = B.complement
   {-# INLINABLE comp #-}
 
+  all0s = 0
+  {-# INLINABLE all0s #-}
+
+  all1s = 0
+  {-# INLINABLE all1s #-}
+
 instance BitWise Word16 where
   (.&.) = (B..&.)
   {-# INLINABLE (.&.) #-}
@@ -191,6 +199,12 @@ instance BitWise Word16 where
 
   comp  = B.complement
   {-# INLINABLE comp #-}
+
+  all0s = 0
+  {-# INLINABLE all0s #-}
+
+  all1s = 0
+  {-# INLINABLE all1s #-}
 
 instance BitWise Word32 where
   (.&.) = (B..&.)
@@ -205,6 +219,12 @@ instance BitWise Word32 where
   comp  = B.complement
   {-# INLINABLE comp #-}
 
+  all0s = 0
+  {-# INLINABLE all0s #-}
+
+  all1s = 0
+  {-# INLINABLE all1s #-}
+
 instance BitWise Word64 where
   (.&.) = (B..&.)
   {-# INLINABLE (.&.) #-}
@@ -217,6 +237,12 @@ instance BitWise Word64 where
 
   comp  = B.complement
   {-# INLINABLE comp #-}
+
+  all0s = 0
+  {-# INLINABLE all0s #-}
+
+  all1s = 0
+  {-# INLINABLE all1s #-}
 
 instance Shift Word8  where
   (.<.) w n = B.shiftL w (fromIntegral n)
