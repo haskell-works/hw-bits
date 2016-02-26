@@ -24,7 +24,7 @@ import           Data.Vector                   as DV
 import           Data.Vector.Storable          as DVS
 import           Data.Word
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.VectorLike
+import           HaskellWorks.Data.VectorLike  as VL
 
 -- We pervasively use precedence to avoid excessive parentheses, and we use
 -- the same precedence conventions of the C programming language: arithmetic
@@ -86,6 +86,38 @@ instance BitLength Word32 where
 
 instance BitLength Word64 where
   bitLength _ = 64
+  {-# INLINABLE bitLength #-}
+
+instance BitLength (DV.Vector Word8) where
+  bitLength v = VL.length v * bitLength (v !!! 0)
+  {-# INLINABLE bitLength #-}
+
+instance BitLength (DV.Vector Word16) where
+  bitLength v = VL.length v * bitLength (v !!! 0)
+  {-# INLINABLE bitLength #-}
+
+instance BitLength (DV.Vector Word32) where
+  bitLength v = VL.length v * bitLength (v !!! 0)
+  {-# INLINABLE bitLength #-}
+
+instance BitLength (DV.Vector Word64) where
+  bitLength v = VL.length v * bitLength (v !!! 0)
+  {-# INLINABLE bitLength #-}
+
+instance BitLength (DVS.Vector Word8) where
+  bitLength v = VL.length v * bitLength (v !!! 0)
+  {-# INLINABLE bitLength #-}
+
+instance BitLength (DVS.Vector Word16) where
+  bitLength v = VL.length v * bitLength (v !!! 0)
+  {-# INLINABLE bitLength #-}
+
+instance BitLength (DVS.Vector Word32) where
+  bitLength v = VL.length v * bitLength (v !!! 0)
+  {-# INLINABLE bitLength #-}
+
+instance BitLength (DVS.Vector Word64) where
+  bitLength v = VL.length v * bitLength (v !!! 0)
   {-# INLINABLE bitLength #-}
 
 instance TestBit Word8 where
