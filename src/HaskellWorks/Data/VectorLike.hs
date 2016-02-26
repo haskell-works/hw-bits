@@ -19,7 +19,7 @@ class VectorLike v e where
   empty :: v e
   filter :: (e -> Bool) -> v e -> v e
   generate :: Int -> (Int -> e) -> v e
-  length :: v e -> Int
+  length :: v e -> Count
   snoc :: v e -> e -> v e
   sum :: v e -> e
   unsafeIndex :: v e -> Position -> e
@@ -59,7 +59,7 @@ instance VectorLike DV.Vector Word8 where
   generate = DV.generate
   {-# INLINABLE generate #-}
 
-  length = DV.length
+  length = Count . fromIntegral . DV.length
   {-# INLINABLE length #-}
 
   snoc = DV.snoc
@@ -109,7 +109,7 @@ instance VectorLike DV.Vector Word16 where
   generate = DV.generate
   {-# INLINABLE generate #-}
 
-  length = DV.length
+  length = Count . fromIntegral . DV.length
   {-# INLINABLE length #-}
 
   snoc = DV.snoc
@@ -159,7 +159,7 @@ instance VectorLike DV.Vector Word32 where
   generate = DV.generate
   {-# INLINABLE generate #-}
 
-  length = DV.length
+  length = Count . fromIntegral . DV.length
   {-# INLINABLE length #-}
 
   snoc = DV.snoc
@@ -209,7 +209,7 @@ instance VectorLike DV.Vector Word64 where
   generate = DV.generate
   {-# INLINABLE generate #-}
 
-  length = DV.length
+  length = Count . fromIntegral . DV.length
   {-# INLINABLE length #-}
 
   snoc = DV.snoc
@@ -259,7 +259,7 @@ instance VectorLike DVS.Vector Word8 where
   generate = DVS.generate
   {-# INLINABLE generate #-}
 
-  length = DVS.length
+  length = Count . fromIntegral . DVS.length
   {-# INLINABLE length #-}
 
   snoc = DVS.snoc
@@ -309,7 +309,7 @@ instance VectorLike DVS.Vector Word16 where
   generate = DVS.generate
   {-# INLINABLE generate #-}
 
-  length = DVS.length
+  length = Count . fromIntegral . DVS.length
   {-# INLINABLE length #-}
 
   snoc = DVS.snoc
@@ -359,7 +359,7 @@ instance VectorLike DVS.Vector Word32 where
   generate = DVS.generate
   {-# INLINABLE generate #-}
 
-  length = DVS.length
+  length = Count . fromIntegral . DVS.length
   {-# INLINABLE length #-}
 
   snoc = DVS.snoc
@@ -409,7 +409,7 @@ instance VectorLike DVS.Vector Word64 where
   generate = DVS.generate
   {-# INLINABLE generate #-}
 
-  length = DVS.length
+  length = Count . fromIntegral . DVS.length
   {-# INLINABLE length #-}
 
   snoc = DVS.snoc
