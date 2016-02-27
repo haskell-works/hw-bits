@@ -31,7 +31,10 @@ library
                       , HaskellWorks.Data.Succinct.BalancedParens
                       , HaskellWorks.Data.Succinct.BalancedParens.Internal
                       , HaskellWorks.Data.Succinct.BalancedParens.Simple
+                      , HaskellWorks.Data.Succinct.BitParse
+                      , HaskellWorks.Data.Succinct.BitString
                       , HaskellWorks.Data.Succinct.BitWise
+                      , HaskellWorks.Data.Succinct.BitWise.String
                       , HaskellWorks.Data.Succinct.NearestNeighbour
                       , HaskellWorks.Data.Succinct.RankSelect
                       , HaskellWorks.Data.Succinct.RankSelect.Internal
@@ -46,6 +49,7 @@ library
                       , bytestring
                       , conduit                         >= 1.1  && < 1.3
                       , deepseq                         <  1.5
+                      , parsec
                       , QuickCheck
                       , resourcet                       >= 1.1
                       , safe

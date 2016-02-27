@@ -19,7 +19,6 @@ module HaskellWorks.Data.Succinct.BitWise
     ) where
 
 import qualified Data.Bits                     as B
-import           Data.Int
 import           Data.Vector                   as DV
 import           Data.Vector.Storable          as DVS
 import           Data.Word
@@ -43,8 +42,8 @@ class BitLength v where
   endPosition = Position . fromIntegral . getCount . bitLength
 
 class Shift a where
-  (.<.) :: a -> Int64 -> a
-  (.>.) :: a -> Int64 -> a
+  (.<.) :: a -> Count -> a
+  (.>.) :: a -> Count -> a
 
 class TestBit a where
   (.?.) :: a -> Position -> Bool
