@@ -26,12 +26,14 @@ executable hw-succinct-example
 
 library
   hs-source-dirs:       src
-  exposed-modules:      HaskellWorks.Data.Positioning
+  exposed-modules:      HaskellWorks.Data.Bits
+                      , HaskellWorks.Data.Positioning
                       , HaskellWorks.Data.Succinct
                       , HaskellWorks.Data.Succinct.BalancedParens
                       , HaskellWorks.Data.Succinct.BalancedParens.Internal
                       , HaskellWorks.Data.Succinct.BalancedParens.Simple
                       , HaskellWorks.Data.Succinct.BitParse
+                      , HaskellWorks.Data.Succinct.BitPrint
                       , HaskellWorks.Data.Succinct.BitString
                       , HaskellWorks.Data.Succinct.BitWise
                       , HaskellWorks.Data.Succinct.BitWise.String
