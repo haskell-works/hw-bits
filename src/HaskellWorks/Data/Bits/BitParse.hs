@@ -6,13 +6,13 @@
 -- License: MIT
 --
 -- Succinct operations.
-module HaskellWorks.Data.Succinct.BitParse
+module HaskellWorks.Data.Bits.BitParse
   ( BitParse(..)
   ) where
 
 import qualified Data.Vector as DV
 import           Data.Word
-import           HaskellWorks.Data.Succinct.BitWise
+import           HaskellWorks.Data.Bits.BitWise
 import           Text.ParserCombinators.Parsec
 
 class BitParse a where

@@ -19,8 +19,8 @@ module HaskellWorks.Data.Succinct.RankSelect.Simple
 import qualified Data.Vector                                    as DV
 import qualified Data.Vector.Storable                           as DVS
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.BitWise
 import           HaskellWorks.Data.Succinct.RankSelect.Internal
 import           HaskellWorks.Data.VectorLike
 import qualified Prelude                                        as P

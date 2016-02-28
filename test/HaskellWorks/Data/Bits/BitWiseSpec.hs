@@ -1,13 +1,14 @@
 {-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}
 {-# LANGUAGE ScopedTypeVariables              #-}
 
-module HaskellWorks.Data.SuccinctSpec (spec) where
+module HaskellWorks.Data.Bits.BitWiseSpec (spec) where
 
 import qualified Data.Bits as B
 import           Data.Int
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct
+import           HaskellWorks.Data.Succinct.RankSelect
 import           Test.Hspec
 import           Test.QuickCheck
 

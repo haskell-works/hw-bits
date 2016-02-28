@@ -6,9 +6,9 @@ module HaskellWorks.Data.Succinct.BalancedParens.Simple
   , findClose
   ) where
 
+import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens.Internal
-import           HaskellWorks.Data.Succinct.BitWise
 import           Prelude                                            as P
 
 newtype SimpleBalancedParens a = SimpleBalancedParens a

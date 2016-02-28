@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances    #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module HaskellWorks.Data.Succinct.BitWise.String
+module HaskellWorks.Data.Bits.BitWise.String
   ( AsBits(..)
   , FromBits(..)
   , bitsToString

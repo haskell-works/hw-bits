@@ -1,10 +1,10 @@
-module HaskellWorks.Data.Succinct.BitString
+module HaskellWorks.Data.Bits.BitString
   ( fromBitString
   , toBitString
   ) where
 
-import           HaskellWorks.Data.Succinct.BitParse
-import           HaskellWorks.Data.Succinct.BitPrint
+import           HaskellWorks.Data.Bits.BitParse
+import           HaskellWorks.Data.Bits.BitPrint
 import           Text.ParserCombinators.Parsec
 
 fromBitString :: BitParse a => String -> Maybe a

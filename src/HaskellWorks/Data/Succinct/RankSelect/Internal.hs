@@ -13,8 +13,8 @@ module HaskellWorks.Data.Succinct.RankSelect.Internal
     ) where
 
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.BitWise
 
 class BeBitRank v where
   beBitRank :: v -> Position -> Count

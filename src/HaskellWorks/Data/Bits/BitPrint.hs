@@ -6,13 +6,13 @@
 -- License: MIT
 --
 -- Succinct operations.
-module HaskellWorks.Data.Succinct.BitPrint
+module HaskellWorks.Data.Bits.BitPrint
   ( BitPrint(..)
   ) where
 
 import Data.Word
-import HaskellWorks.Data.Bits
-import HaskellWorks.Data.Succinct.BitWise
+import HaskellWorks.Data.Bits.BitWise
+import HaskellWorks.Data.Word
 
 class BitPrint a where
   bitPrint :: a -> String -> String
