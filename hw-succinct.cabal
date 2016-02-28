@@ -66,7 +66,8 @@ test-suite hw-succinct-test
   type:                 exitcode-stdio-1.0
   hs-source-dirs:       test
   main-is:              Spec.hs
-  other-modules:        HaskellWorks.Data.Bits.BitWiseSpec
+  other-modules:        HaskellWorks.Data.Bits.BitStringSpec
+                      , HaskellWorks.Data.Bits.BitWiseSpec
                       , HaskellWorks.Data.Succinct.BalancedParensSpec
                       , HaskellWorks.Data.Succinct.RankSelect.Rank9Spec
                       , HaskellWorks.Data.Succinct.SimpleSpec
