@@ -57,6 +57,27 @@ jsonToken2Markers = do
       jsonToken2Markers
     Nothing -> return ()
 
+jsonToken2BalancedParens :: Monad m => Conduit (ParseDelta Offset, JsonToken) m Bool
+jsonToken2BalancedParens = do
+  mi <- await
+  case mi of
+    Just (ParseDelta (Offset _) _, token) -> do
+      case token of
+        JsonTokenBraceL     -> yield True
+        JsonTokenBraceR     -> yield False
+        JsonTokenBracketL   -> yield True
+        JsonTokenBracketR   -> yield False
+        JsonTokenComma      -> return ()
+        JsonTokenColon      -> return ()
+        JsonTokenWhitespace -> return ()
+        JsonTokenString _   -> yield True >> yield False
+        JsonTokenBoolean _  -> yield True >> yield False
+        JsonTokenNumber _   -> yield True >> yield False
+        JsonTokenNull       -> yield True >> yield False
+      jsonToken2BalancedParens
+    Nothing -> return ()
+
+
 moo :: Source IO (ParseDelta Offset, JsonToken)
 moo = CL.sourceList
   [ (ParseDelta (Offset 1) (Offset 2), JsonTokenBraceL)

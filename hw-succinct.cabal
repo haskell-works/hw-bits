@@ -48,6 +48,7 @@ library
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec
                       , HaskellWorks.Data.Json.Final.Tokenize
                       , HaskellWorks.Data.Json.Final.Tokenize.Internal
+                      , HaskellWorks.Data.Json.Succinct
                       , HaskellWorks.Data.Json.Token
                       , HaskellWorks.Data.Positioning
                       , HaskellWorks.Data.Succinct
@@ -91,6 +92,7 @@ test-suite hw-succinct-test
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumnSpec
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.OffsetSpec
                       , HaskellWorks.Data.Json.Final.TokenizeSpec
+                      , HaskellWorks.Data.Json.SuccinctSpec
                       , HaskellWorks.Data.Succinct.BalancedParensSpec
                       , HaskellWorks.Data.Succinct.RankSelect.Rank9Spec
                       , HaskellWorks.Data.Succinct.SimpleSpec
