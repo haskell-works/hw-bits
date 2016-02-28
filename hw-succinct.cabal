@@ -32,6 +32,10 @@ library
                       , HaskellWorks.Data.Bits.BitString
                       , HaskellWorks.Data.Bits.BitWise
                       , HaskellWorks.Data.Bits.BitWise.String
+                      , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Internal
+                      , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumn
+                      , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Offset
+                      , HaskellWorks.Data.Conduit.Tokenize.Attoparsec
                       , HaskellWorks.Data.Json.Token
                       , HaskellWorks.Data.Positioning
                       , HaskellWorks.Data.Succinct
@@ -69,6 +73,8 @@ test-suite hw-succinct-test
   main-is:              Spec.hs
   other-modules:        HaskellWorks.Data.Bits.BitStringSpec
                       , HaskellWorks.Data.Bits.BitWiseSpec
+                      , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumnSpec
+                      , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.OffsetSpec
                       , HaskellWorks.Data.Succinct.BalancedParensSpec
                       , HaskellWorks.Data.Succinct.RankSelect.Rank9Spec
                       , HaskellWorks.Data.Succinct.SimpleSpec
