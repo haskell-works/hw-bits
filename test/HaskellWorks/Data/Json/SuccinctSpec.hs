@@ -18,9 +18,11 @@ spec = describe "HaskellWorks.Data.Json.SuccinctSpec" $ do
       runListConduit [0, 9, 18, 27, 36] markerToByteString `shouldBe` ["\1", "\2", "\4", "\8", "\16"]
     it "Marker at [0, 9, 27, 36] gives \"\\255\"" $
       runListConduit [0, 9, 27, 36] markerToByteString `shouldBe` ["\1", "\2", "\0", "\8", "\16"]
+    it "Marker at [0, 36] gives \"\\255\"" $
+      runListConduit [0, 36] markerToByteString `shouldBe` ["\1", "\0", "\0", "\0", "\16"]
   describe "moo" $ do
     it "foo" $
       jsonToInterestBalancedParens ["{\"field\": 1}"] `shouldBe` [True, True, False, True, False, False]
     it "moo" $
       jsonToInterestBits ["{\"field\": 1}"] `shouldBe`
-        [True, True, False, False, False, False, False, False, True, False, True, True, False, False, False, False]
+        [True, True, False, False, False, False, False, False, False, False, True, False, False, False, False, False]

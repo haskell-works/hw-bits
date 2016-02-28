@@ -44,11 +44,11 @@ jsonToken2Markers = do
     Just (ParseDelta (Offset start) _, token) -> do
       case token of
         JsonTokenBraceL     -> yield $ fromIntegral start
-        JsonTokenBraceR     -> yield $ fromIntegral start
+        JsonTokenBraceR     -> return ()
         JsonTokenBracketL   -> yield $ fromIntegral start
-        JsonTokenBracketR   -> yield $ fromIntegral start
-        JsonTokenComma      -> yield $ fromIntegral start
-        JsonTokenColon      -> yield $ fromIntegral start
+        JsonTokenBracketR   -> return ()
+        JsonTokenComma      -> return ()
+        JsonTokenColon      -> return ()
         JsonTokenWhitespace -> return ()
         JsonTokenString _   -> yield $ fromIntegral start
         JsonTokenBoolean _  -> yield $ fromIntegral start

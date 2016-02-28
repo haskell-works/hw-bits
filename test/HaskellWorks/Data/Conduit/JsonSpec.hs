@@ -81,7 +81,7 @@ spec = describe "Data.Conduit.Succinct.JsonSpec" $ do
       (ParseDelta (Offset 0) (Offset 1), JsonTokenBraceL),
       (ParseDelta (Offset 1) (Offset 2), JsonTokenBraceL),
       (ParseDelta (Offset 2) (Offset 3), JsonTokenBraceR),
-      (ParseDelta (Offset 3) (Offset 4), JsonTokenBraceR)] `shouldBe` [0, 1, 2, 3]
+      (ParseDelta (Offset 3) (Offset 4), JsonTokenBraceR)] `shouldBe` [0, 1]
   describe "When converting Json to tokens to markers to bits" $ do
     it "Empty Json should produce no bits" $
       jsonToBits [""] `shouldBe` []
@@ -98,16 +98,16 @@ spec = describe "Data.Conduit.Succinct.JsonSpec" $ do
     it "left brace at beginning should produce one bit" $
       jsonToBits ["{ "] `shouldBe` stringToBits "10000000"
     it "right brace at beginning should produce one bit" $
-      jsonToBits ["} "] `shouldBe` stringToBits "10000000"
+      jsonToBits ["} "] `shouldBe` stringToBits ""
     it "left bracket at beginning should produce one bit" $
       jsonToBits ["[ "] `shouldBe` stringToBits "10000000"
     it "right bracket at beginning should produce one bit" $
-      jsonToBits ["] "] `shouldBe` stringToBits "10000000"
+      jsonToBits ["] "] `shouldBe` stringToBits ""
     it "right bracket at beginning should produce one bit" $
-      jsonToBits [": "] `shouldBe` stringToBits "10000000"
+      jsonToBits [": "] `shouldBe` stringToBits ""
     it "right bracket at beginning should produce one bit" $
-      jsonToBits [", "] `shouldBe` stringToBits "10000000"
+      jsonToBits [", "] `shouldBe` stringToBits ""
     it "Four consecutive braces should produce four bits" $
-      jsonToBits ["{{}}"] `shouldBe` stringToBits "11110000"
+      jsonToBits ["{{}}"] `shouldBe` stringToBits "11000000"
     it "Four spread out braces should produce four spread out bits" $
-      jsonToBits [" { { } } "] `shouldBe` stringToBits "01010101"
+      jsonToBits [" { { } } "] `shouldBe` stringToBits "01010000"
