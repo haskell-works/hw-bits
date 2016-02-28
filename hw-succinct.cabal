@@ -32,6 +32,7 @@ library
                       , HaskellWorks.Data.Bits.BitString
                       , HaskellWorks.Data.Bits.BitWise
                       , HaskellWorks.Data.Bits.BitWise.String
+                      , HaskellWorks.Data.Json.Token
                       , HaskellWorks.Data.Positioning
                       , HaskellWorks.Data.Succinct
                       , HaskellWorks.Data.Succinct.BalancedParens
