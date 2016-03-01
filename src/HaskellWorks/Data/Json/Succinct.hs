@@ -1,13 +1,6 @@
-module HaskellWorks.Data.Json.Succinct where
+module HaskellWorks.Data.Json.Succinct
+  ( module X
+  ) where
 
-import qualified Data.ByteString                as BS
-import           Data.Conduit
-import           HaskellWorks.Data.Conduit.Json
-
-jsonToInterestBits :: [BS.ByteString] -> [Bool]
-jsonToInterestBits json = runListConduit json $
-  textToJsonToken =$= jsonToken2Markers =$= markerToByteString =$= byteStringToBits
-
-jsonToInterestBalancedParens :: [BS.ByteString] -> [Bool]
-jsonToInterestBalancedParens json = runListConduit json $
-  textToJsonToken =$= jsonToken2BalancedParens
+import HaskellWorks.Data.Json.Succinct.Cursor     as X
+import HaskellWorks.Data.Json.Succinct.Transform  as X

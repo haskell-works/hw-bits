@@ -49,6 +49,8 @@ library
                       , HaskellWorks.Data.Json.Final.Tokenize
                       , HaskellWorks.Data.Json.Final.Tokenize.Internal
                       , HaskellWorks.Data.Json.Succinct
+                      , HaskellWorks.Data.Json.Succinct.Cursor
+                      , HaskellWorks.Data.Json.Succinct.Transform
                       , HaskellWorks.Data.Json.Token
                       , HaskellWorks.Data.Positioning
                       , HaskellWorks.Data.Succinct
