@@ -10,9 +10,10 @@ module HaskellWorks.Data.Positioning
 import Data.Int
 import Data.Word
 import Test.QuickCheck as QuickCheck
+import System.Random
 
 newtype Count = Count { getCount :: Word64 }
-  deriving (Eq, Num, Ord, Enum, Real, Integral)
+  deriving (Eq, Num, Ord, Enum, Integral, Real, Random)
 
 instance Show Count where
     show (Count w64) = show w64

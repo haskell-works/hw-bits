@@ -192,6 +192,11 @@ instance TestBit (DVS.Vector Word64) where
   (.?.) v n = (v !!! n) .?. (n `mod` elemBitEnd v)
   {-# INLINABLE (.?.) #-}
 
+instance PopCount1 Bool where
+  popCount1 True  = 1
+  popCount1 False = 0
+  {-# INLINABLE popCount1 #-}
+
 instance PopCount1 Word8 where
   popCount1 x0 = Count (fromIntegral x3)
     where
@@ -224,6 +229,11 @@ instance PopCount1 Word64 where
       x3 = (x2 + (x2 .>. 4)) .&. 0x0f0f0f0f0f0f0f0f
   {-# INLINABLE popCount1 #-}
 
+instance PopCount0 Bool where
+  popCount0 True  = 0
+  popCount0 False = 1
+  {-# INLINABLE popCount0 #-}
+
 instance PopCount0 Word8 where
   popCount0 x0 = bitLength x0 - popCount1 x0
   {-# INLINABLE popCount0 #-}
@@ -240,6 +250,10 @@ instance PopCount0 Word64 where
   popCount0 x0 = bitLength x0 - popCount1 x0
   {-# INLINABLE popCount0 #-}
 
+instance PopCount1 [Bool] where
+  popCount1 = P.sum . fmap popCount1
+  {-# INLINABLE popCount1 #-}
+
 instance PopCount1 [Word8] where
   popCount1 = P.sum . fmap popCount1
   {-# INLINABLE popCount1 #-}
@@ -255,6 +269,10 @@ instance PopCount1 [Word32] where
 instance PopCount1 [Word64] where
   popCount1 = P.sum . fmap popCount1
   {-# INLINABLE popCount1 #-}
+
+instance PopCount0 [Bool] where
+  popCount0 = P.sum . fmap popCount0
+  {-# INLINABLE popCount0 #-}
 
 instance PopCount0 [Word8] where
   popCount0 = P.sum . fmap popCount0
