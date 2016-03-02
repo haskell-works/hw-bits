@@ -21,11 +21,12 @@ module HaskellWorks.Data.Bits.BitWise
     ) where
 
 import qualified Data.Bits                     as B
-import           Data.Vector                   as DV
-import           Data.Vector.Storable          as DVS
+import qualified Data.Vector                   as DV
+import qualified Data.Vector.Storable          as DVS
 import           Data.Word
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.VectorLike  as VL
+import           Prelude                       as P
 
 -- We pervasively use precedence to avoid excessive parentheses, and we use
 -- the same precedence conventions of the C programming language: arithmetic
@@ -93,6 +94,22 @@ instance BitLength Word32 where
 
 instance BitLength Word64 where
   bitLength _ = 64
+  {-# INLINABLE bitLength #-}
+
+instance BitLength [Word8] where
+  bitLength v = fromIntegral (P.length v) * bitLength (head v)
+  {-# INLINABLE bitLength #-}
+
+instance BitLength [Word16] where
+  bitLength v = fromIntegral (P.length v) * bitLength (head v)
+  {-# INLINABLE bitLength #-}
+
+instance BitLength [Word32] where
+  bitLength v = fromIntegral (P.length v) * bitLength (head v)
+  {-# INLINABLE bitLength #-}
+
+instance BitLength [Word64] where
+  bitLength v = fromIntegral (P.length v) * bitLength (head v)
   {-# INLINABLE bitLength #-}
 
 instance BitLength (DV.Vector Word8) where
