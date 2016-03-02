@@ -240,6 +240,38 @@ instance PopCount0 Word64 where
   popCount0 x0 = bitLength x0 - popCount1 x0
   {-# INLINABLE popCount0 #-}
 
+instance PopCount1 [Word8] where
+  popCount1 = P.sum . fmap popCount1
+  {-# INLINABLE popCount1 #-}
+
+instance PopCount1 [Word16] where
+  popCount1 = P.sum . fmap popCount1
+  {-# INLINABLE popCount1 #-}
+
+instance PopCount1 [Word32] where
+  popCount1 = P.sum . fmap popCount1
+  {-# INLINABLE popCount1 #-}
+
+instance PopCount1 [Word64] where
+  popCount1 = P.sum . fmap popCount1
+  {-# INLINABLE popCount1 #-}
+
+instance PopCount0 [Word8] where
+  popCount0 = P.sum . fmap popCount0
+  {-# INLINABLE popCount0 #-}
+
+instance PopCount0 [Word16] where
+  popCount0 = P.sum . fmap popCount0
+  {-# INLINABLE popCount0 #-}
+
+instance PopCount0 [Word32] where
+  popCount0 = P.sum . fmap popCount0
+  {-# INLINABLE popCount0 #-}
+
+instance PopCount0 [Word64] where
+  popCount0 = P.sum . fmap popCount0
+  {-# INLINABLE popCount0 #-}
+
 instance BitWise Word8 where
   (.&.) = (B..&.)
   {-# INLINABLE (.&.) #-}
