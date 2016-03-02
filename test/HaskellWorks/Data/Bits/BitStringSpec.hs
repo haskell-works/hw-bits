@@ -19,7 +19,10 @@ import           Test.QuickCheck
 spec :: Spec
 spec = describe "HaskellWorks.Data.BitStringSpec" $ do
   it "fromBitString \"10000000 101\" :: Maybe [Word8]" $
-    let w = fromBitString "10000000 101" :: Maybe [Word8] in
+    let w = fromBitString "10000000 101" :: Maybe [Bool] in
+    w `shouldBe` Just [True, False, False, False, False, False, False, False, True, False, True]
+  it "fromBitString \"10000000 101\" :: Maybe [Word8]"$
+     let w = fromBitString "10000000 101" :: Maybe [Word8] in
     w `shouldBe` Just [1, 5]
   it "fromBitString \"11100100 10101111 1\" :: Maybe [Word8]" $
     let ws = fromBitString "11100100 10101111 1" :: Maybe [Word8] in
