@@ -10,18 +10,41 @@ import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens
 import           HaskellWorks.Data.Succinct.RankSelect
 
-data JsonCursor v = JsonCursor
-  { position       :: Position
-  , balancedParens :: SimpleBalancedParens v
-  , interests      :: Simple v
+data JsonCursor t v = JsonCursor
+  { cursorText      :: t
+  , interests       :: Simple v
+  , balancedParens  :: SimpleBalancedParens v
+  , position        :: Position
   }
+  deriving (Eq, Show)
 
-instance IsString (JsonCursor [Bool]) where
-  fromString :: String -> JsonCursor [Bool]
+instance IsString (JsonCursor String [Bool]) where
+  fromString :: String -> JsonCursor String [Bool]
   fromString s = JsonCursor
-    { position        = select True interests' 1
+    { cursorText      = s
+    , position        = select True interests' 1
     , balancedParens  = SimpleBalancedParens (jsonToInterestBalancedParens [bs])
     , interests       = Simple interests'
     }
     where bs          = BS.pack s :: BS.ByteString
           interests'  = jsonToInterestBits [bs]
+
+data JsonCursorType
+  = JsonCursorArray
+  | JsonCursorBool
+  | JsonCursorNull
+  | JsonCursorNumber
+  | JsonCursorObject
+  | JsonCursorString
+  deriving (Eq, Show)
+
+jsonCursorType :: JsonCursor String [Bool] -> JsonCursorType
+jsonCursorType k = case c of
+  '[' -> JsonCursorArray
+  't' -> JsonCursorBool
+  'f' -> JsonCursorBool
+  'n' -> JsonCursorNull
+  '{' -> JsonCursorObject
+  '"' -> JsonCursorString
+  _   -> error "Invalid JsonCursor position"
+  where c = cursorText k !! fromIntegral (position k - 1)

@@ -12,7 +12,7 @@ import           HaskellWorks.Data.Succinct.BalancedParens.Internal
 import           Prelude                                            as P
 
 newtype SimpleBalancedParens a = SimpleBalancedParens a
-  deriving (BitLength, Show, TestBit)
+  deriving (BitLength, Eq, Show, TestBit)
 
 closeAt :: TestBit a => a -> Position -> Bool
 closeAt v p = v .?. p

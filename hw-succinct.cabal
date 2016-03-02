@@ -94,6 +94,7 @@ test-suite hw-succinct-test
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumnSpec
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.OffsetSpec
                       , HaskellWorks.Data.Json.Final.TokenizeSpec
+                      , HaskellWorks.Data.Json.Succinct.CursorSpec
                       , HaskellWorks.Data.Json.SuccinctSpec
                       , HaskellWorks.Data.Succinct.BalancedParensSpec
                       , HaskellWorks.Data.Succinct.RankSelect.InternalSpec
