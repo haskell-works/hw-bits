@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
 module HaskellWorks.Data.Succinct.RankSelect.Internal
@@ -34,11 +35,11 @@ class LeBitRank v where
 class LeBitSelect v where
   leBitSelect :: v -> Count -> Position
 
-class Rank v a where
-  rank :: Eq a => a -> v -> Position -> Count
+class Eq a => Rank v a where
+  rank :: a -> v -> Position -> Count
 
-class Select v where
-  select :: Eq a => a -> v -> Count -> Position
+class Eq a => Select v a where
+  select :: a -> v -> Count -> Position
 
 instance LeBitRank Word8 where
   leBitRank v s0 =
