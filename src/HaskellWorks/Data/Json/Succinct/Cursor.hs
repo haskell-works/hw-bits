@@ -11,10 +11,10 @@ import           HaskellWorks.Data.Succinct.BalancedParens
 import           HaskellWorks.Data.Succinct.RankSelect
 
 data JsonCursor t v = JsonCursor
-  { cursorText      :: t
-  , interests       :: Simple v
-  , balancedParens  :: SimpleBalancedParens v
-  , position        :: Position
+  { cursorText     :: t
+  , interests      :: Simple v
+  , balancedParens :: SimpleBalancedParens v
+  , position       :: Position
   }
   deriving (Eq, Show)
 
@@ -43,6 +43,18 @@ jsonCursorType k = case c of
   '[' -> JsonCursorArray
   't' -> JsonCursorBool
   'f' -> JsonCursorBool
+  '0' -> JsonCursorNumber
+  '1' -> JsonCursorNumber
+  '2' -> JsonCursorNumber
+  '3' -> JsonCursorNumber
+  '4' -> JsonCursorNumber
+  '5' -> JsonCursorNumber
+  '6' -> JsonCursorNumber
+  '7' -> JsonCursorNumber
+  '8' -> JsonCursorNumber
+  '9' -> JsonCursorNumber
+  '+' -> JsonCursorNumber
+  '-' -> JsonCursorNumber
   'n' -> JsonCursorNull
   '{' -> JsonCursorObject
   '"' -> JsonCursorString
