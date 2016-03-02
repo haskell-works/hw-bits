@@ -304,3 +304,17 @@ instance BitSelect Word32 where
 instance BitSelect Word64 where
   bitSelect = leBitSelect
   {-# INLINABLE bitSelect #-}
+
+instance Rank [Bool] Bool where
+  rank a = go 0
+    where go r _ 0 = r
+          go r (b:bs) p = go (if b == a then r + 1 else r) bs (p - 1)
+          go _ [] _         = error "Out of range"
+  {-# INLINABLE rank #-}
+
+instance Select [Bool] Bool where
+  select a = go 0
+    where go r _ 0 = r
+          go r (b:bs)  c = go (r + 1) bs (if a == b then c - 1 else c)
+          go _ []         _ = error "Out of range"
+  {-# INLINABLE select #-}

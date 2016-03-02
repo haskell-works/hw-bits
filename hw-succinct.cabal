@@ -96,6 +96,7 @@ test-suite hw-succinct-test
                       , HaskellWorks.Data.Json.Final.TokenizeSpec
                       , HaskellWorks.Data.Json.SuccinctSpec
                       , HaskellWorks.Data.Succinct.BalancedParensSpec
+                      , HaskellWorks.Data.Succinct.RankSelect.InternalSpec
                       , HaskellWorks.Data.Succinct.RankSelect.Rank9Spec
                       , HaskellWorks.Data.Succinct.SimpleSpec
   build-depends:        base
