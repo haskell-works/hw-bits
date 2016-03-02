@@ -132,7 +132,7 @@ instance BitSelect (Simple (DVS.Vector Word64))  where
   bitSelect (Simple v) = selectWords 0 (toList v)
   {-# INLINABLE bitSelect #-}
 
-rankWords :: (P.Num a, PopCount a, BitRank a, BitLength a) => [a] -> Position -> Count
+rankWords :: (P.Num a, PopCount1 a, BitRank a, BitLength a) => [a] -> Position -> Count
 rankWords ws n = if remainder P.== 0
     then predRank
     else predRank P.+ partRank
@@ -140,16 +140,16 @@ rankWords ws n = if remainder P.== 0
     partRank = bitRank r remainder
     remainder = n `P.mod` endPos
     (ls, rs) = P.splitAt (P.fromIntegral P.$ n `P.quot` endPos) ws
-    predRank = P.sum (P.map (P.fromIntegral P.. popCount) ls)
+    predRank = P.sum (P.map (P.fromIntegral P.. popCount1) ls)
     r = headDef 0 rs
     endPos = endPosition (P.head ws)
 {-# INLINABLE rankWords #-}
 
-selectWords :: (PopCount v, BitSelect v, BitLength v) => Count -> [v] -> Count -> Position
+selectWords :: (PopCount1 v, BitSelect v, BitLength v) => Count -> [v] -> Count -> Position
 selectWords _ [] (Count r) = Position (P.fromIntegral r) P.+ 1
 selectWords n (w:ws) r = if pc P.< n
     then selectWords (n P.- pc) ws (r P.+ bitLength w)
     else bitSelect w n P.+ Position (P.fromIntegral r)
   where
-    pc = popCount w
+    pc = popCount1 w
 {-# INLINABLE selectWords #-}

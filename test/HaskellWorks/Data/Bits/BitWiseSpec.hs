@@ -66,14 +66,14 @@ instance Arbitrary Count_0_64 where
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
-  it "popCount for Word8 matches Data.Bits implementation" $ property $
-    \(w :: Word8 ) -> popCount w == fromIntegral (B.popCount w)
-  it "popCount for Word16 matches Data.Bits implementation" $ property $
-    \(w :: Word16) -> popCount w == fromIntegral (B.popCount w)
-  it "popCount for Word32 matches Data.Bits implementation" $ property $
-    \(w :: Word32) -> popCount w == fromIntegral (B.popCount w)
-  it "popCount for Word64 matches Data.Bits implementation" $ property $
-    \(w :: Word64) -> popCount w == fromIntegral (B.popCount w)
+  it "popCount1 for Word8 matches Data.Bits implementation" $ property $
+    \(w :: Word8 ) -> popCount1 w == fromIntegral (B.popCount w)
+  it "popCount1 for Word16 matches Data.Bits implementation" $ property $
+    \(w :: Word16) -> popCount1 w == fromIntegral (B.popCount w)
+  it "popCount1 for Word32 matches Data.Bits implementation" $ property $
+    \(w :: Word32) -> popCount1 w == fromIntegral (B.popCount w)
+  it "popCount1 for Word64 matches Data.Bits implementation" $ property $
+    \(w :: Word64) -> popCount1 w == fromIntegral (B.popCount w)
   it "bitRank for Word16 and Word64 should give same answer for bits 0-7" $ property $
     \(Position_0_8  i) (w :: Word8 ) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
   it "bitRank for Word16 and Word64 should give same answer for bits 0-15" $ property $
@@ -84,7 +84,7 @@ spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
     \(Position_0_32 i) (v :: Word32) (w :: Word32) ->
       let v64 = fromIntegral v :: Word64 in
       let w64 = fromIntegral w :: Word64 in
-      bitRank v i + popCount w == bitRank ((v64 .<. 32) .|. w64) (i + 32)
+      bitRank v i + popCount1 w == bitRank ((v64 .<. 32) .|. w64) (i + 32)
   it "bitRank and bitSelect for Word64 form a galois connection" $ property $
-    \(Count_0_32 i) (w :: Word32) -> 1 <= i && i <= popCount w ==>
+    \(Count_0_32 i) (w :: Word32) -> 1 <= i && i <= popCount1 w ==>
       bitRank w (bitSelect w i) == i && bitSelect w (bitRank w (fromIntegral i)) <= (fromIntegral i)

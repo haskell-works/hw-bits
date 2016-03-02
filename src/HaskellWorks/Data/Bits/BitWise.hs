@@ -12,6 +12,8 @@ module HaskellWorks.Data.Bits.BitWise
       BitLength(..)
     , BitWise(..)
     , PopCount(..)
+    , PopCount0(..)
+    , PopCount1(..)
     , Shift(..)
     , TestBit(..)
     , elemBitLength
@@ -56,8 +58,14 @@ class BitWise a where
   all0s :: a
   all1s :: a
 
-class PopCount a where
-  popCount :: a -> Count
+class PopCount v e where
+  popCount :: e -> v -> Count
+
+class PopCount0 v where
+  popCount0 :: v -> Count
+
+class PopCount1 v where
+  popCount1 :: v -> Count
 
 --------------------------------------------------------------------------------
 -- Functions
@@ -167,37 +175,53 @@ instance TestBit (DVS.Vector Word64) where
   (.?.) v n = (v !!! n) .?. (n `mod` elemBitEnd v)
   {-# INLINABLE (.?.) #-}
 
-instance PopCount Word8 where
-  popCount x0 = Count (fromIntegral x3)
+instance PopCount1 Word8 where
+  popCount1 x0 = Count (fromIntegral x3)
     where
       x1 = x0 - ((x0 .&. 0xaa) .>. 1)
       x2 = (x1 .&. 0x33) + ((x1 .>. 2) .&. 0x33)
       x3 = (x2 + (x2 .>. 4)) .&. 0x0f
-  {-# INLINABLE popCount #-}
+  {-# INLINABLE popCount1 #-}
 
-instance PopCount Word16 where
-  popCount x0 = Count (fromIntegral ((x3 * 0x0101) .>. 8))
+instance PopCount1 Word16 where
+  popCount1 x0 = Count (fromIntegral ((x3 * 0x0101) .>. 8))
     where
       x1 = x0 - ((x0 .&. 0xaaaa) .>. 1)
       x2 = (x1 .&. 0x3333) + ((x1 .>. 2) .&. 0x3333)
       x3 = (x2 + (x2 .>. 4)) .&. 0x0f0f
-  {-# INLINABLE popCount #-}
+  {-# INLINABLE popCount1 #-}
 
-instance PopCount Word32 where
-  popCount x0 = Count (fromIntegral ((x3 * 0x01010101) .>. 24))
+instance PopCount1 Word32 where
+  popCount1 x0 = Count (fromIntegral ((x3 * 0x01010101) .>. 24))
     where
       x1 = x0 - ((x0 .&. 0xaaaaaaaa) .>. 1)
       x2 = (x1 .&. 0x33333333) + ((x1 .>. 2) .&. 0x33333333)
       x3 = (x2 + (x2 .>. 4)) .&. 0x0f0f0f0f
-  {-# INLINABLE popCount #-}
+  {-# INLINABLE popCount1 #-}
 
-instance PopCount Word64 where
-  popCount x0 = Count ((x3 * 0x0101010101010101) .>. 56)
+instance PopCount1 Word64 where
+  popCount1 x0 = Count ((x3 * 0x0101010101010101) .>. 56)
     where
       x1 = x0 - ((x0 .&. 0xaaaaaaaaaaaaaaaa) .>. 1)
       x2 = (x1 .&. 0x3333333333333333) + ((x1 .>. 2) .&. 0x3333333333333333)
       x3 = (x2 + (x2 .>. 4)) .&. 0x0f0f0f0f0f0f0f0f
-  {-# INLINABLE popCount #-}
+  {-# INLINABLE popCount1 #-}
+
+instance PopCount0 Word8 where
+  popCount0 x0 = bitLength x0 - popCount1 x0
+  {-# INLINABLE popCount0 #-}
+
+instance PopCount0 Word16 where
+  popCount0 x0 = bitLength x0 - popCount1 x0
+  {-# INLINABLE popCount0 #-}
+
+instance PopCount0 Word32 where
+  popCount0 x0 = bitLength x0 - popCount1 x0
+  {-# INLINABLE popCount0 #-}
+
+instance PopCount0 Word64 where
+  popCount0 x0 = bitLength x0 - popCount1 x0
+  {-# INLINABLE popCount0 #-}
 
 instance BitWise Word8 where
   (.&.) = (B..&.)
