@@ -3,13 +3,12 @@
 
 module HaskellWorks.Data.Json.Succinct.Cursor where
 
-import qualified Data.ByteString.Lazy.Char8                   as BS
+import qualified Data.ByteString.Char8                     as BS
 import           Data.String
-import qualified Data.Vector                                  as DV
-import           Data.Word
+import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens
-import           HaskellWorks.Data.Succinct.RankSelect.Simple
+import           HaskellWorks.Data.Succinct.RankSelect
 
 data JsonCursor v = JsonCursor
   { position       :: Position
@@ -17,11 +16,12 @@ data JsonCursor v = JsonCursor
   , interests      :: Simple v
   }
 
-instance IsString (JsonCursor (DV.Vector Word64)) where
-  fromString :: String -> JsonCursor (DV.Vector Word64)
+instance IsString (JsonCursor [Bool]) where
+  fromString :: String -> JsonCursor [Bool]
   fromString s = JsonCursor
-    { position        = 0
-    , balancedParens  = undefined
-    , interests       = undefined
+    { position        = select True interests' 1
+    , balancedParens  = SimpleBalancedParens (jsonToInterestBalancedParens [bs])
+    , interests       = Simple interests'
     }
-    where bs = BS.pack s :: BS.ByteString
+    where bs          = BS.pack s :: BS.ByteString
+          interests'  = jsonToInterestBits [bs]

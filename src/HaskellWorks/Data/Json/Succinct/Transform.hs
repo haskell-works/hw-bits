@@ -1,4 +1,7 @@
-module HaskellWorks.Data.Json.Succinct.Transform where
+module HaskellWorks.Data.Json.Succinct.Transform
+  ( jsonToInterestBits
+  , jsonToInterestBalancedParens
+  ) where
 
 import qualified Data.ByteString                as BS
 import           Data.Conduit
