@@ -3,7 +3,9 @@
 
 module HaskellWorks.Data.Succinct.RankSelect.Internal
     ( -- * Rank & Select
-      Rank1(..)
+      Rank0(..)
+    , Select0(..)
+    , Rank1(..)
     , Select1(..)
     , Rank(..)
     , Select(..)
@@ -12,6 +14,12 @@ module HaskellWorks.Data.Succinct.RankSelect.Internal
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
+
+class Rank0 v where
+  rank0 :: v -> Position -> Count
+
+class Select0 v where
+  select0 :: v -> Count -> Position
 
 class Rank1 v where
   rank1 :: v -> Position -> Count
@@ -175,16 +183,79 @@ instance Select1 Word64 where
     fromIntegral s7
   {-# INLINABLE select1 #-}
 
-instance Rank [Bool] Bool where
-  rank a = go 0
+-----------------------------------------------------------------------------------
+
+instance Rank0 Word8 where
+  rank0 v s0 = toCount s0 - rank1 v s0
+  {-# INLINABLE rank0 #-}
+
+instance Rank0 Word16 where
+  rank0 v s0 = toCount s0 - rank1 v s0
+  {-# INLINABLE rank0 #-}
+
+instance Rank0 Word32 where
+  rank0 v s0 = toCount s0 - rank1 v s0
+  {-# INLINABLE rank0 #-}
+
+instance Rank0 Word64 where
+  rank0 v s0 = toCount s0 - rank1 v s0
+  {-# INLINABLE rank0 #-}
+
+-- TODO: Implement NOT interms of select for word-16
+instance Select0 Word8 where
+  select0 v = select1 (comp v)
+  {-# INLINABLE select0 #-}
+
+instance Select0 Word16 where
+  select0 v = select1 (comp v)
+  {-# INLINABLE select0 #-}
+
+instance Select0 Word32 where
+  select0 v = select1 (comp v)
+  {-# INLINABLE select0 #-}
+
+instance Select0 Word64 where
+  select0 v = select1 (comp v)
+  {-# INLINABLE select0 #-}
+
+-----------------------------------------------------------------------------------
+
+instance Rank0 [Bool] where
+  rank0 = go 0
     where go r _ 0 = r
-          go r (b:bs) p = go (if b == a then r + 1 else r) bs (p - 1)
+          go r (False:bs) p = go (r + 1) bs (p - 1)
+          go r (True:bs) p  = go  r      bs (p - 1)
           go _ [] _         = error "Out of range"
+  {-# INLINABLE rank0 #-}
+
+instance Select0 [Bool] where
+  select0 = go 0
+    where go r _ 0 = r
+          go r (False:bs) c = go (r + 1) bs (c - 1)
+          go r (True:bs)  c = go (r + 1) bs  c
+          go _ []         _ = error "Out of range"
+  {-# INLINABLE select0 #-}
+
+instance Rank1 [Bool] where
+  rank1 = go 0
+    where go r _ 0 = r
+          go r (True :bs) p = go (r + 1) bs (p - 1)
+          go r (False:bs) p = go  r      bs (p - 1)
+          go _ [] _         = error "Out of range"
+  {-# INLINABLE rank1 #-}
+
+instance Select1 [Bool] where
+  select1 = go 0
+    where go r _ 0 = r
+          go r (True :bs) c = go (r + 1) bs (c - 1)
+          go r (False:bs) c = go (r + 1) bs  c
+          go _ []         _ = error "Out of range"
+  {-# INLINABLE select1 #-}
+
+instance Rank [Bool] Bool where
+  rank a = if a then rank1 else rank0
   {-# INLINABLE rank #-}
 
 instance Select [Bool] Bool where
-  select a = go 0
-    where go r _ 0 = r
-          go r (b:bs)  c = go (r + 1) bs (if a == b then c - 1 else c)
-          go _ []         _ = error "Out of range"
+  select a = if a then select1 else select0
   {-# INLINABLE select #-}
