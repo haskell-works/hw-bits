@@ -10,6 +10,7 @@ import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens as BP
 import           HaskellWorks.Data.Succinct.RankSelect
+import Debug.Trace
 
 class TreeCursor k where
   firstChild :: k -> k
@@ -22,7 +23,7 @@ data JsonCursor t v = JsonCursor
   { cursorText     :: t
   , interests      :: Simple v
   , balancedParens :: SimpleBalancedParens v
-  , position       :: Position
+  , focus          :: Position
   }
   deriving (Eq, Show)
 
@@ -30,7 +31,7 @@ instance IsString (JsonCursor String [Bool]) where
   fromString :: String -> JsonCursor String [Bool]
   fromString s = JsonCursor
     { cursorText      = s
-    , position        = select True interests' 1
+    , focus           = 1
     , balancedParens  = SimpleBalancedParens (jsonToInterestBalancedParens [bs])
     , interests       = Simple interests'
     }
@@ -38,11 +39,11 @@ instance IsString (JsonCursor String [Bool]) where
           interests'  = jsonToInterestBits [bs]
 
 instance TreeCursor (JsonCursor String [Bool]) where
-  firstChild  k = k { position = select1 (interests k) (toCount (BP.firstChild  (balancedParens k) (position k))) }
-  nextSibling k = k { position = select1 (interests k) (toCount (BP.nextSibling (balancedParens k) (position k))) }
-  parent      k = k { position = select1 (interests k) (toCount (BP.parent      (balancedParens k) (position k))) }
-  depth       k = BP.depth (balancedParens k) (position k)
-  subtreeSize k = BP.subtreeSize (balancedParens k) (position k)
+  firstChild  k = k { focus = BP.firstChild   (balancedParens k) (focus k) }
+  nextSibling k = k { focus = BP.nextSibling  (balancedParens k) (focus k) }
+  parent      k = k { focus = BP.parent       (balancedParens k) (focus k) }
+  depth       k = BP.depth (balancedParens k) (focus k)
+  subtreeSize k = BP.subtreeSize (balancedParens k) (focus k)
 
 data JsonCursorType
   = JsonCursorArray
@@ -73,5 +74,5 @@ jsonCursorType k = case c of
   'n' -> JsonCursorNull
   '{' -> JsonCursorObject
   '"' -> JsonCursorString
-  _   -> error "Invalid JsonCursor position"
-  where c = cursorText k !! fromIntegral (position k - 1)
+  _   -> error "Invalid JsonCursor focus"
+  where c = cursorText k !! fromIntegral (select1 (interests k) (toCount (focus k)) - 1)

@@ -43,8 +43,8 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
       jsonCursorType (C.firstChild cursor) `shouldBe` JsonCursorNull
     it "cursor can navigate to second child of array" $ do
       let cursor = "[null, {\"field\": 1}]" :: JsonCursor String [Bool]
-      putStrLn $ show (C.nextSibling (C.firstChild cursor))
       jsonCursorType (C.nextSibling (C.firstChild cursor)) `shouldBe` JsonCursorObject
-    -- it "cursor can navigate to first child of object at second child of array" $ do
-    --   let cursor = "[null, {\"field\", 1}]" :: JsonCursor String [Bool]
-    --   jsonCursorType (C.firstChild (C.nextSibling (C.firstChild cursor))) `shouldBe` JsonCursorString
+    it "cursor can navigate to first child of object at second child of array" $ do
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String [Bool]
+      putStrLn $ show (C.firstChild (C.nextSibling (C.firstChild cursor)))
+      jsonCursorType (C.firstChild (C.nextSibling (C.firstChild cursor))) `shouldBe` JsonCursorString
