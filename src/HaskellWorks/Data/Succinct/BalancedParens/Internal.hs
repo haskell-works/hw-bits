@@ -27,5 +27,5 @@ parent = enclose
 depth :: (BalancedParens v, Rank1 v) => v -> Position -> Count
 depth = rank1
 
-subtreeSize :: (BalancedParens v) => v -> Position -> Position
-subtreeSize v p = (findClose v p - p + 1) `quot` 2
+subtreeSize :: (BalancedParens v) => v -> Position -> Count
+subtreeSize v p = toCount ((findClose v p - p + 1) `quot` 2)
