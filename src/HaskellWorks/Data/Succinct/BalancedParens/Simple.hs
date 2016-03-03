@@ -8,11 +8,12 @@ module HaskellWorks.Data.Succinct.BalancedParens.Simple
 
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
+import           HaskellWorks.Data.Succinct.RankSelect.Internal
 import           HaskellWorks.Data.Succinct.BalancedParens.Internal
 import           Prelude                                            as P
 
 newtype SimpleBalancedParens a = SimpleBalancedParens a
-  deriving (BitLength, Eq, Show, TestBit)
+  deriving (BitLength, Eq, Show, TestBit, Rank0, Rank1, Select0, Select1)
 
 closeAt :: TestBit a => a -> Position -> Bool
 closeAt v p = v .?. p
