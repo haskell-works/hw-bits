@@ -48,6 +48,22 @@ instance TestBit (Simple (DV.Vector Word64)) where
     (q, r) -> (v !!! P.fromIntegral q) .?. P.fromIntegral r
   {-# INLINABLE (.?.) #-}
 
+instance Rank0 (Simple [P.Bool]) where
+  rank0 (Simple v) = rank0 v
+  {-# INLINABLE rank0 #-}
+
+instance Select0 (Simple [P.Bool]) where
+  select0 (Simple v) = select0 v
+  {-# INLINABLE select0 #-}
+
+instance Rank1 (Simple [P.Bool]) where
+  rank1 (Simple v) = rank1 v
+  {-# INLINABLE rank1 #-}
+
+instance Select1 (Simple [P.Bool]) where
+  select1 (Simple v) = select1 v
+  {-# INLINABLE select1 #-}
+
 instance Rank1 (Simple (DV.Vector Word8)) where
   rank1 (Simple v) = rankWords (toList v)
   {-# INLINABLE rank1 #-}
