@@ -80,6 +80,14 @@ elemBitEnd v = endPosition (v !!! 0)
 --------------------------------------------------------------------------------
 -- Instances
 
+instance BitLength Bool where
+  bitLength _ = 1
+  {-# INLINABLE bitLength #-}
+
+instance BitLength [Bool] where
+  bitLength = fromIntegral . P.length
+  {-# INLINABLE bitLength #-}
+
 instance BitLength Word8 where
   bitLength _ = 8
   {-# INLINABLE bitLength #-}
@@ -143,6 +151,15 @@ instance BitLength (DVS.Vector Word32) where
 instance BitLength (DVS.Vector Word64) where
   bitLength v = VL.length v * bitLength (v !!! 0)
   {-# INLINABLE bitLength #-}
+
+instance TestBit Bool where
+  (.?.) w 0 = w
+  (.?.) _ _ = error "Invalid bit index"
+  {-# INLINABLE (.?.) #-}
+
+instance TestBit [Bool] where
+  (.?.) v p = v !! fromIntegral p
+  {-# INLINABLE (.?.) #-}
 
 instance TestBit Word8 where
   (.?.) w n = B.testBit w (fromIntegral (getPosition n))
