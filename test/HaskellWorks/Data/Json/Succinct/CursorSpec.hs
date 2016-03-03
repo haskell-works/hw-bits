@@ -7,7 +7,8 @@ import           Control.Monad
 import           Control.Monad.IO.Class
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct
-import           HaskellWorks.Data.Json.Succinct.Cursor
+import           HaskellWorks.Data.Json.Succinct.Cursor    as C
+import           HaskellWorks.Data.Succinct.BalancedParens
 import           Test.Hspec
 
 spec :: Spec
@@ -18,9 +19,6 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
       jsonCursorType cursor `shouldBe` JsonCursorObject
     it "initialises to beginning of empty object preceded by spaces" $ do
       let cursor = " {}" :: JsonCursor String [Bool]
-      liftIO $ putStrLn $ show $ cursorText cursor !! fromIntegral (position cursor - 1)
-      liftIO $ putStrLn $ show $ fromIntegral (position cursor - 1)
-      liftIO $ putStrLn (show cursor)
       jsonCursorType cursor `shouldBe` JsonCursorObject
     it "initialises to beginning of number" $ do
       let cursor = "1234" :: JsonCursor String [Bool]
@@ -40,3 +38,13 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
     it "initialises to beginning of null" $ do
       let cursor = "null" :: JsonCursor String [Bool]
       jsonCursorType cursor `shouldBe` JsonCursorNull
+    it "cursor can navigate to first child of array" $ do
+      let cursor = "[null]" :: JsonCursor String [Bool]
+      jsonCursorType (C.firstChild cursor) `shouldBe` JsonCursorNull
+    it "cursor can navigate to second child of array" $ do
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String [Bool]
+      putStrLn $ show (C.nextSibling (C.firstChild cursor))
+      jsonCursorType (C.nextSibling (C.firstChild cursor)) `shouldBe` JsonCursorObject
+    -- it "cursor can navigate to first child of object at second child of array" $ do
+    --   let cursor = "[null, {\"field\", 1}]" :: JsonCursor String [Bool]
+    --   jsonCursorType (C.firstChild (C.nextSibling (C.firstChild cursor))) `shouldBe` JsonCursorString

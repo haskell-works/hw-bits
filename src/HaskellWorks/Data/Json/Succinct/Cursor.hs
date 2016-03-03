@@ -5,10 +5,18 @@ module HaskellWorks.Data.Json.Succinct.Cursor where
 
 import qualified Data.ByteString.Char8                     as BS
 import           Data.String
+import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.BalancedParens
+import           HaskellWorks.Data.Succinct.BalancedParens as BP
 import           HaskellWorks.Data.Succinct.RankSelect
+
+class TreeCursor k where
+  firstChild :: k -> k
+  nextSibling :: k -> k
+  parent :: k -> k
+  depth :: k -> Count
+  subtreeSize :: k -> Count
 
 data JsonCursor t v = JsonCursor
   { cursorText     :: t
@@ -28,6 +36,13 @@ instance IsString (JsonCursor String [Bool]) where
     }
     where bs          = BS.pack s :: BS.ByteString
           interests'  = jsonToInterestBits [bs]
+
+instance TreeCursor (JsonCursor String [Bool]) where
+  firstChild  k = k { position = select1 (interests k) (toCount (BP.firstChild  (balancedParens k) (position k))) }
+  nextSibling k = k { position = select1 (interests k) (toCount (BP.nextSibling (balancedParens k) (position k))) }
+  parent      k = k { position = select1 (interests k) (toCount (BP.parent      (balancedParens k) (position k))) }
+  depth       k = BP.depth (balancedParens k) (position k)
+  subtreeSize k = BP.subtreeSize (balancedParens k) (position k)
 
 data JsonCursorType
   = JsonCursorArray

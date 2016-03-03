@@ -16,10 +16,10 @@ newtype SimpleBalancedParens a = SimpleBalancedParens a
   deriving (BitLength, Eq, Show, TestBit, Rank0, Rank1, Select0, Select1)
 
 closeAt :: TestBit a => a -> Position -> Bool
-closeAt v p = v .?. p
+closeAt v p = not (v .?. p)
 
 openAt :: TestBit a => a -> Position -> Bool
-openAt v p = not (v .?. p)
+openAt v p = v .?. p
 
 require :: Bool -> String -> a -> a
 require p msg v = if p then v else error msg
