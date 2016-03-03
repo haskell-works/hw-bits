@@ -41,7 +41,7 @@ instance Arbitrary Position_0_64 where
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
-  it "bitRank for Simple (Vector Word8) and Simple (Vector Word64) should give same answer" $ property $
+  it "rank1 for Simple (Vector Word8) and Simple (Vector Word64) should give same answer" $ property $
     \(Position_0_64 i) (a :: Word8) (b :: Word8) (c :: Word8) (d :: Word8)
                   (e :: Word8) (f :: Word8) (g :: Word8) (h :: Word8) ->
       let a64 = fromIntegral a :: Word64 in
@@ -56,8 +56,8 @@ spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
                        (d64 .<. 24) .|. (c64 .<. 16) .|. (b64 .<. 8 ) .|.  a64              in
       let vec16 = Simple (fromList [a, b, c, d, e, f, g, h] :: Vector Word8 )               in
       let vec64 = Simple (fromList [abcdefgh64]             :: Vector Word64)               in
-      bitRank vec16 i == bitRank vec64 i
-  it "bitRank for Simple (Vector Word16) and Simple (Vector Word64) should give same answer" $ property $
+      rank1 vec16 i == rank1 vec64 i
+  it "rank1 for Simple (Vector Word16) and Simple (Vector Word64) should give same answer" $ property $
     \(Position_0_64 i) (a :: Word16) (b :: Word16) (c :: Word16) (d :: Word16) ->
       let a64 = fromIntegral a :: Word64 in
       let b64 = fromIntegral b :: Word64 in
@@ -66,12 +66,12 @@ spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
       let abcd64 = (d64 .<. 48) .|. (c64 .<. 32) .|. (b64 .<. 16) .|. a64 in
       let vec16 = Simple (fromList [a, b, c, d] :: Vector Word16) in
       let vec64 = Simple (fromList [abcd64]     :: Vector Word64) in
-      bitRank vec16 i == bitRank vec64 i
-  it "bitRank for Simple (Vector Word32) and Simple (Vector Word64) should give same answer" $ property $
+      rank1 vec16 i == rank1 vec64 i
+  it "rank1 for Simple (Vector Word32) and Simple (Vector Word64) should give same answer" $ property $
     \(Position_0_64 i) (a :: Word32) (b :: Word32) ->
       let a64 = fromIntegral a :: Word64 in
       let b64 = fromIntegral b :: Word64 in
       let ab64 = (b64 .<. 32) .|. a64 in
       let vec32 = Simple (fromList [a, b] :: Vector Word32) in
       let vec64 = Simple (fromList [ab64] :: Vector Word64) in
-      bitRank vec32 i == bitRank vec64 i
+      rank1 vec32 i == rank1 vec64 i

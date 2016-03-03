@@ -24,8 +24,8 @@ nextSibling v p = findClose v p + 1
 parent :: (BalancedParens v) => v -> Position -> Position
 parent = enclose
 
-depth :: (BalancedParens v, BitRank v) => v -> Position -> Count
-depth = bitRank
+depth :: (BalancedParens v, Rank1 v) => v -> Position -> Count
+depth = rank1
 
 subtreeSize :: (BalancedParens v) => v -> Position -> Position
 subtreeSize v p = (findClose v p - p + 1) `quot` 2

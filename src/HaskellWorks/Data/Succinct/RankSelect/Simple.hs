@@ -48,37 +48,37 @@ instance TestBit (Simple (DV.Vector Word64)) where
     (q, r) -> (v !!! P.fromIntegral q) .?. P.fromIntegral r
   {-# INLINABLE (.?.) #-}
 
-instance BitRank (Simple (DV.Vector Word8)) where
-  bitRank (Simple v) = rankWords (toList v)
-  {-# INLINABLE bitRank #-}
+instance Rank1 (Simple (DV.Vector Word8)) where
+  rank1 (Simple v) = rankWords (toList v)
+  {-# INLINABLE rank1 #-}
 
-instance BitRank (Simple (DV.Vector Word16)) where
-  bitRank (Simple v) = rankWords (toList v)
-  {-# INLINABLE bitRank #-}
+instance Rank1 (Simple (DV.Vector Word16)) where
+  rank1 (Simple v) = rankWords (toList v)
+  {-# INLINABLE rank1 #-}
 
-instance BitRank (Simple (DV.Vector Word32)) where
-  bitRank (Simple v) = rankWords (toList v)
-  {-# INLINABLE bitRank #-}
+instance Rank1 (Simple (DV.Vector Word32)) where
+  rank1 (Simple v) = rankWords (toList v)
+  {-# INLINABLE rank1 #-}
 
-instance BitRank (Simple (DV.Vector Word64)) where
-  bitRank (Simple v) = rankWords (toList v)
-  {-# INLINABLE bitRank #-}
+instance Rank1 (Simple (DV.Vector Word64)) where
+  rank1 (Simple v) = rankWords (toList v)
+  {-# INLINABLE rank1 #-}
 
-instance BitSelect (Simple (DV.Vector Word8)) where
-  bitSelect (Simple v) = selectWords 0 (toList v)
-  {-# INLINABLE bitSelect #-}
+instance Select1 (Simple (DV.Vector Word8)) where
+  select1 (Simple v) = selectWords 0 (toList v)
+  {-# INLINABLE select1 #-}
 
-instance BitSelect (Simple (DV.Vector Word16))  where
-  bitSelect (Simple v) = selectWords 0 (toList v)
-  {-# INLINABLE bitSelect #-}
+instance Select1 (Simple (DV.Vector Word16))  where
+  select1 (Simple v) = selectWords 0 (toList v)
+  {-# INLINABLE select1 #-}
 
-instance BitSelect (Simple (DV.Vector Word32))  where
-  bitSelect (Simple v) = selectWords 0 (toList v)
-  {-# INLINABLE bitSelect #-}
+instance Select1 (Simple (DV.Vector Word32))  where
+  select1 (Simple v) = selectWords 0 (toList v)
+  {-# INLINABLE select1 #-}
 
-instance BitSelect (Simple (DV.Vector Word64))  where
-  bitSelect (Simple v) = selectWords 0 (toList v)
-  {-# INLINABLE bitSelect #-}
+instance Select1 (Simple (DV.Vector Word64))  where
+  select1 (Simple v) = selectWords 0 (toList v)
+  {-# INLINABLE select1 #-}
 
 instance TestBit (Simple (DVS.Vector Word8)) where
   Simple v .?. n = case n `P.quotRem` endPosition (v !!! 0) of
@@ -100,44 +100,44 @@ instance TestBit (Simple (DVS.Vector Word64)) where
     (q, r) -> (v !!! P.fromIntegral q) .?. P.fromIntegral r
   {-# INLINABLE (.?.) #-}
 
-instance BitRank (Simple (DVS.Vector Word8)) where
-  bitRank (Simple v) = rankWords (toList v)
-  {-# INLINABLE bitRank #-}
+instance Rank1 (Simple (DVS.Vector Word8)) where
+  rank1 (Simple v) = rankWords (toList v)
+  {-# INLINABLE rank1 #-}
 
-instance BitRank (Simple (DVS.Vector Word16)) where
-  bitRank (Simple v) = rankWords (toList v)
-  {-# INLINABLE bitRank #-}
+instance Rank1 (Simple (DVS.Vector Word16)) where
+  rank1 (Simple v) = rankWords (toList v)
+  {-# INLINABLE rank1 #-}
 
-instance BitRank (Simple (DVS.Vector Word32)) where
-  bitRank (Simple v) = rankWords (toList v)
-  {-# INLINABLE bitRank #-}
+instance Rank1 (Simple (DVS.Vector Word32)) where
+  rank1 (Simple v) = rankWords (toList v)
+  {-# INLINABLE rank1 #-}
 
-instance BitRank (Simple (DVS.Vector Word64)) where
-  bitRank (Simple v) = rankWords (toList v)
-  {-# INLINABLE bitRank #-}
+instance Rank1 (Simple (DVS.Vector Word64)) where
+  rank1 (Simple v) = rankWords (toList v)
+  {-# INLINABLE rank1 #-}
 
-instance BitSelect (Simple (DVS.Vector Word8)) where
-  bitSelect (Simple v) = selectWords 0 (toList v)
-  {-# INLINABLE bitSelect #-}
+instance Select1 (Simple (DVS.Vector Word8)) where
+  select1 (Simple v) = selectWords 0 (toList v)
+  {-# INLINABLE select1 #-}
 
-instance BitSelect (Simple (DVS.Vector Word16))  where
-  bitSelect (Simple v) = selectWords 0 (toList v)
-  {-# INLINABLE bitSelect #-}
+instance Select1 (Simple (DVS.Vector Word16))  where
+  select1 (Simple v) = selectWords 0 (toList v)
+  {-# INLINABLE select1 #-}
 
-instance BitSelect (Simple (DVS.Vector Word32))  where
-  bitSelect (Simple v) = selectWords 0 (toList v)
-  {-# INLINABLE bitSelect #-}
+instance Select1 (Simple (DVS.Vector Word32))  where
+  select1 (Simple v) = selectWords 0 (toList v)
+  {-# INLINABLE select1 #-}
 
-instance BitSelect (Simple (DVS.Vector Word64))  where
-  bitSelect (Simple v) = selectWords 0 (toList v)
-  {-# INLINABLE bitSelect #-}
+instance Select1 (Simple (DVS.Vector Word64))  where
+  select1 (Simple v) = selectWords 0 (toList v)
+  {-# INLINABLE select1 #-}
 
-rankWords :: (P.Num a, PopCount1 a, BitRank a, BitLength a) => [a] -> Position -> Count
+rankWords :: (P.Num a, PopCount1 a, Rank1 a, BitLength a) => [a] -> Position -> Count
 rankWords ws n = if remainder P.== 0
     then predRank
     else predRank P.+ partRank
   where
-    partRank = bitRank r remainder
+    partRank = rank1 r remainder
     remainder = n `P.mod` endPos
     (ls, rs) = P.splitAt (P.fromIntegral P.$ n `P.quot` endPos) ws
     predRank = P.sum (P.map (P.fromIntegral P.. popCount1) ls)
@@ -145,11 +145,11 @@ rankWords ws n = if remainder P.== 0
     endPos = endPosition (P.head ws)
 {-# INLINABLE rankWords #-}
 
-selectWords :: (PopCount1 v, BitSelect v, BitLength v) => Count -> [v] -> Count -> Position
+selectWords :: (PopCount1 v, Select1 v, BitLength v) => Count -> [v] -> Count -> Position
 selectWords _ [] (Count r) = Position (P.fromIntegral r) P.+ 1
 selectWords n (w:ws) r = if pc P.< n
     then selectWords (n P.- pc) ws (r P.+ bitLength w)
-    else bitSelect w n P.+ Position (P.fromIntegral r)
+    else select1 w n P.+ Position (P.fromIntegral r)
   where
     pc = popCount1 w
 {-# INLINABLE selectWords #-}

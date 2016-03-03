@@ -74,17 +74,17 @@ spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
     \(w :: Word32) -> popCount1 w == fromIntegral (B.popCount w)
   it "popCount1 for Word64 matches Data.Bits implementation" $ property $
     \(w :: Word64) -> popCount1 w == fromIntegral (B.popCount w)
-  it "bitRank for Word16 and Word64 should give same answer for bits 0-7" $ property $
-    \(Position_0_8  i) (w :: Word8 ) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
-  it "bitRank for Word16 and Word64 should give same answer for bits 0-15" $ property $
-    \(Position_0_16 i) (w :: Word16) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
-  it "bitRank for Word32 and Word64 should give same answer for bits 0-31" $ property $
-    \(Position_0_32 i) (w :: Word32) -> bitRank w i == bitRank (fromIntegral w :: Word64) i
-  it "bitRank for Word32 and Word64 should give same answer for bits 32-64" $ property $
+  it "rank1 for Word16 and Word64 should give same answer for bits 0-7" $ property $
+    \(Position_0_8  i) (w :: Word8 ) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
+  it "rank1 for Word16 and Word64 should give same answer for bits 0-15" $ property $
+    \(Position_0_16 i) (w :: Word16) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
+  it "rank1 for Word32 and Word64 should give same answer for bits 0-31" $ property $
+    \(Position_0_32 i) (w :: Word32) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
+  it "rank1 for Word32 and Word64 should give same answer for bits 32-64" $ property $
     \(Position_0_32 i) (v :: Word32) (w :: Word32) ->
       let v64 = fromIntegral v :: Word64 in
       let w64 = fromIntegral w :: Word64 in
-      bitRank v i + popCount1 w == bitRank ((v64 .<. 32) .|. w64) (i + 32)
-  it "bitRank and bitSelect for Word64 form a galois connection" $ property $
+      rank1 v i + popCount1 w == rank1 ((v64 .<. 32) .|. w64) (i + 32)
+  it "rank1 and select1 for Word64 form a galois connection" $ property $
     \(Count_0_32 i) (w :: Word32) -> 1 <= i && i <= popCount1 w ==>
-      bitRank w (bitSelect w i) == i && bitSelect w (bitRank w (fromIntegral i)) <= (fromIntegral i)
+      rank1 w (select1 w i) == i && select1 w (rank1 w (fromIntegral i)) <= (fromIntegral i)

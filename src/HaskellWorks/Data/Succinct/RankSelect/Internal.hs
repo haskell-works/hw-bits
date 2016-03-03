@@ -3,8 +3,8 @@
 
 module HaskellWorks.Data.Succinct.RankSelect.Internal
     ( -- * Rank & Select
-      BitRank(..)
-    , BitSelect(..)
+      Rank1(..)
+    , Select1(..)
     , Rank(..)
     , Select(..)
     ) where
@@ -13,11 +13,11 @@ import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
 
-class BitRank v where
-  bitRank :: v -> Position -> Count
+class Rank1 v where
+  rank1 :: v -> Position -> Count
 
-class BitSelect v where
-  bitSelect :: v -> Count -> Position
+class Select1 v where
+  select1 :: v -> Count -> Position
 
 class Eq a => Rank v a where
   rank :: a -> v -> Position -> Count
@@ -25,8 +25,8 @@ class Eq a => Rank v a where
 class Eq a => Select v a where
   select :: a -> v -> Count -> Position
 
-instance BitRank Word8 where
-  bitRank v s0 =
+instance Rank1 Word8 where
+  rank1 v s0 =
     -- Shift out bits after given position.
     let r0 = v .<. (8 - toCount s0) in
     -- Count set bits in parallel.
@@ -35,10 +35,10 @@ instance BitRank Word8 where
     let r3 = (r2 .&. 0x0f) + ((r2 .>. 4) .&. 0x0f)  in
     let r4 = r3 `mod` 255                           in
     Count $ fromIntegral r4
-  {-# INLINABLE bitRank #-}
+  {-# INLINABLE rank1 #-}
 
-instance BitRank Word16 where
-  bitRank v s0 =
+instance Rank1 Word16 where
+  rank1 v s0 =
     -- Shift out bits after given position.
     let r0 = v .<. (16 - toCount s0) in
     -- Count set bits in parallel.
@@ -47,10 +47,10 @@ instance BitRank Word16 where
     let r3 = (r2 .&. 0x0f0f) + ((r2 .>. 4) .&. 0x0f0f)  in
     let r4 = r3 `mod` 255                               in
     Count $ fromIntegral r4
-  {-# INLINABLE bitRank #-}
+  {-# INLINABLE rank1 #-}
 
-instance BitRank Word32 where
-  bitRank v s0 =
+instance Rank1 Word32 where
+  rank1 v s0 =
     -- Shift out bits after given position.
     let r0 = v .<. (32 - toCount s0) in
     -- Count set bits in parallel.
@@ -59,10 +59,10 @@ instance BitRank Word32 where
     let r3 = (r2 .&. 0x0f0f0f0f) + ((r2 .>. 4) .&. 0x0f0f0f0f)  in
     let r4 = r3 `mod` 255                                       in
     Count $ fromIntegral r4
-  {-# INLINABLE bitRank #-}
+  {-# INLINABLE rank1 #-}
 
-instance BitRank Word64 where
-  bitRank v s0 =
+instance Rank1 Word64 where
+  rank1 v s0 =
     -- Shift out bits after given position.
     let r0 = v .<. (64 - toCount s0) in
     -- Count set bits in parallel.
@@ -71,16 +71,16 @@ instance BitRank Word64 where
     let r3 = (r2 .&. 0x0f0f0f0f0f0f0f0f) + ((r2 .>. 4) .&. 0x0f0f0f0f0f0f0f0f)  in
     let r4 = r3 `mod` 255                                                       in
     Count $ fromIntegral r4
-  {-# INLINABLE bitRank #-}
+  {-# INLINABLE rank1 #-}
 
 -- TODO: Implement NOT interms of select for word-16
-instance BitSelect Word8 where
-  bitSelect v = bitSelect (fromIntegral v :: Word16)
-  {-# INLINABLE bitSelect #-}
+instance Select1 Word8 where
+  select1 v = select1 (fromIntegral v :: Word16)
+  {-# INLINABLE select1 #-}
 
 -- TODO: Remove redundant code to optimise
-instance BitSelect Word16 where
-  bitSelect v rn =
+instance Select1 Word16 where
+  select1 v rn =
     -- Do a normal parallel bit count for a 64-bit integer,
     -- but store all intermediate steps.
     let a = (v .&. 0x5555) + ((v .>.  1) .&. 0x5555)    in
@@ -108,11 +108,11 @@ instance BitSelect Word16 where
     let t5 =      (v .>. fromIntegral (s5 - 1))  .&. 0x1                        in
     let s6 = s5 - ((t5 - r5) .&. 256) .>. 8                                     in
     fromIntegral s6
-  {-# INLINABLE bitSelect #-}
+  {-# INLINABLE select1 #-}
 
 -- TODO: Remove redundant code to optimise
-instance BitSelect Word32 where
-  bitSelect v rn =
+instance Select1 Word32 where
+  select1 v rn =
     -- Do a normal parallel bit count for a 64-bit integer,
     -- but store all intermediate steps.
     let a = (v .&. 0x55555555) + ((v .>.  1) .&. 0x55555555)    in
@@ -141,10 +141,10 @@ instance BitSelect Word32 where
     let t5 =      (v .>. fromIntegral (s5 - 1))  .&. 0x1                        in
     let s6 = s5 - ((t5 - r5) .&. 256) .>. 8                                     in
     fromIntegral s6
-  {-# INLINABLE bitSelect #-}
+  {-# INLINABLE select1 #-}
 
-instance BitSelect Word64 where
-  bitSelect v rn =
+instance Select1 Word64 where
+  select1 v rn =
     -- Do a normal parallel bit count for a 64-bit integer,
     -- but store all intermediate steps.
     let a = (v .&. 0x5555555555555555) + ((v .>.  1) .&. 0x5555555555555555)    in
@@ -173,7 +173,7 @@ instance BitSelect Word64 where
     let s6 = s5 - ((t5 - r5) .&. 256) .>. 8                                     in
     let s7 =      65 - s6                                                       in
     fromIntegral s7
-  {-# INLINABLE bitSelect #-}
+  {-# INLINABLE select1 #-}
 
 instance Rank [Bool] Bool where
   rank a = go 0
