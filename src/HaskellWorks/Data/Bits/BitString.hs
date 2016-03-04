@@ -63,6 +63,18 @@ instance FromBitString (DV.Vector Word32) where
 instance FromBitString (DV.Vector Word64) where
   fromBitString = fromBitString'
 
+instance FromBitString (DVS.Vector Word8) where
+  fromBitString = fromBitString'
+
+instance FromBitString (DVS.Vector Word16) where
+  fromBitString = fromBitString'
+
+instance FromBitString (DVS.Vector Word32) where
+  fromBitString = fromBitString'
+
+instance FromBitString (DVS.Vector Word64) where
+  fromBitString = fromBitString'
+
 instance BitPrint a => ToBitString a where
   toBitString a = bitPrint a ""
 

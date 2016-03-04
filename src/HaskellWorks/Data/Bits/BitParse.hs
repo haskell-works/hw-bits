@@ -10,7 +10,8 @@ module HaskellWorks.Data.Bits.BitParse
   ( BitParse(..)
   ) where
 
-import qualified Data.Vector as DV
+import qualified Data.Vector                    as DV
+import qualified Data.Vector.Storable           as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           Text.ParserCombinators.Parsec
@@ -102,3 +103,19 @@ instance BitParse (DV.Vector Word32) where
 instance BitParse (DV.Vector Word64) where
   bitParse0 = option DV.empty bitParse1
   bitParse1 = DV.fromList `fmap` bitParse0
+
+instance BitParse (DVS.Vector Word8) where
+  bitParse0 = option DVS.empty bitParse1
+  bitParse1 = DVS.fromList `fmap` bitParse0
+
+instance BitParse (DVS.Vector Word16) where
+  bitParse0 = option DVS.empty bitParse1
+  bitParse1 = DVS.fromList `fmap` bitParse0
+
+instance BitParse (DVS.Vector Word32) where
+  bitParse0 = option DVS.empty bitParse1
+  bitParse1 = DVS.fromList `fmap` bitParse0
+
+instance BitParse (DVS.Vector Word64) where
+  bitParse0 = option DVS.empty bitParse1
+  bitParse1 = DVS.fromList `fmap` bitParse0
