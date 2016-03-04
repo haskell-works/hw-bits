@@ -6,14 +6,19 @@ module HaskellWorks.Data.Succinct.BalancedParens.Simple
   , findClose
   ) where
 
+import           HaskellWorks.Data.Bits.BitPrint
+import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.RankSelect.Internal
 import           HaskellWorks.Data.Succinct.BalancedParens.Internal
+import           HaskellWorks.Data.Succinct.RankSelect.Internal
 import           Prelude                                            as P
 
 newtype SimpleBalancedParens a = SimpleBalancedParens a
-  deriving (BitLength, Eq, Show, TestBit, Rank0, Rank1, Select0, Select1)
+  deriving (BitLength, Eq, BitPrint, TestBit, Rank0, Rank1, Select0, Select1)
+
+instance (BitPrint a, ToBitString a) => Show (SimpleBalancedParens a) where
+  show = toBitString
 
 closeAt :: TestBit a => a -> Position -> Bool
 closeAt v p = not (v .?. p)
