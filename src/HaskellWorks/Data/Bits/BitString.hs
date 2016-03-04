@@ -17,7 +17,7 @@ class FromBitString a where
   fromBitString :: String -> Maybe a
 
 class ToBitString a where
-  toBitString :: BitPrint a => a -> String
+  toBitString :: a -> String
 
 fromBitString' :: BitParse a => String -> Maybe a
 fromBitString' = either (const Nothing) Just . parse bitParse0 "" . filter (/= ' ')
