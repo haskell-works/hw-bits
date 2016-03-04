@@ -1,11 +1,11 @@
 {-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}
-{-# LANGUAGE ScopedTypeVariables              #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module HaskellWorks.Data.Bits.BitStringSpec (spec) where
 
-import qualified Data.Bits as B
+import qualified Data.Bits                             as B
 import           Data.Int
-import qualified Data.Vector as DV
+import qualified Data.Vector                           as DV
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
@@ -14,7 +14,7 @@ import           HaskellWorks.Data.Succinct.RankSelect
 import           Test.Hspec
 import           Test.QuickCheck
 
-{-# ANN module "HLint: ignore Redundant do" #-}
+{-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.BitStringSpec" $ do

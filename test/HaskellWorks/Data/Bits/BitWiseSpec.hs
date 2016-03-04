@@ -1,9 +1,9 @@
 {-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}
-{-# LANGUAGE ScopedTypeVariables              #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module HaskellWorks.Data.Bits.BitWiseSpec (spec) where
 
-import qualified Data.Bits as B
+import qualified Data.Bits                             as B
 import           Data.Int
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
@@ -12,7 +12,7 @@ import           HaskellWorks.Data.Succinct.RankSelect
 import           Test.Hspec
 import           Test.QuickCheck
 
-{-# ANN module "HLint: ignore Redundant do" #-}
+{-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 
 newtype Position_0_8  = Position_0_8  Position deriving (Eq, Show)
 newtype Position_0_16 = Position_0_16 Position deriving (Eq, Show)

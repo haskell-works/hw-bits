@@ -5,7 +5,7 @@ module HaskellWorks.Data.Succinct.RankSelect.InternalSpec (spec) where
 
 import           Control.Monad.IO.Class
 import           Data.Word
-import Debug.Trace
+import           Debug.Trace
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
@@ -13,7 +13,7 @@ import           HaskellWorks.Data.Succinct.RankSelect
 import           Test.Hspec
 import           Test.QuickCheck
 
-{-# ANN module "HLint: ignore Redundant do" #-}
+{-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do

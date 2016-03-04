@@ -14,7 +14,7 @@ import qualified HaskellWorks.Data.Succinct.RankSelect.Rank9.Storable    as S
 import           Test.Hspec
 import           Test.QuickCheck
 
-{-# ANN module "HLint: ignore Redundant do" #-}
+{-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 
 data VectorRank = VectorRank [Word64] P.Position deriving (Eq, Show)
 

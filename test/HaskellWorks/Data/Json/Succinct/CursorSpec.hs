@@ -1,4 +1,3 @@
-{-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module HaskellWorks.Data.Json.Succinct.CursorSpec(spec) where
@@ -10,6 +9,8 @@ import           HaskellWorks.Data.Json.Succinct
 import           HaskellWorks.Data.Json.Succinct.Cursor    as C
 import           HaskellWorks.Data.Succinct.BalancedParens
 import           Test.Hspec
+
+{-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
@@ -46,5 +47,4 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
       jsonCursorType (C.nextSibling (C.firstChild cursor)) `shouldBe` JsonCursorObject
     it "cursor can navigate to first child of object at second child of array" $ do
       let cursor = "[null, {\"field\": 1}]" :: JsonCursor String [Bool]
-      putStrLn $ show (C.firstChild (C.nextSibling (C.firstChild cursor)))
       jsonCursorType (C.firstChild (C.nextSibling (C.firstChild cursor))) `shouldBe` JsonCursorString
