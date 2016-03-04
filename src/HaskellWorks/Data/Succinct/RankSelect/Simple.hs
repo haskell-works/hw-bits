@@ -3,8 +3,10 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses      #-}
 {-# LANGUAGE NoImplicitPrelude          #-}
+{-# LANGUAGE OverlappingInstances       #-}
 {-# LANGUAGE RankNTypes                 #-}
 {-# LANGUAGE ScopedTypeVariables        #-}
+{-# LANGUAGE TypeSynonymInstances       #-}
 
 -- |
 -- Copyright: 2016 John Ky
@@ -19,6 +21,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Simple
 import qualified Data.Vector                                    as DV
 import qualified Data.Vector.Storable                           as DVS
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Internal
@@ -26,7 +29,10 @@ import           HaskellWorks.Data.VectorLike
 import qualified Prelude                                        as P
 import           Safe
 
-newtype Simple a = Simple a deriving (P.Eq, P.Show)
+newtype Simple a = Simple a deriving (P.Eq)
+
+instance forall a. ToBitString a => P.Show (Simple a) where
+  show (Simple bs) = toBitString bs
 
 instance TestBit (Simple (DV.Vector Word8)) where
   Simple v .?. n = case n `P.quotRem` endPosition (v !!! 0) of

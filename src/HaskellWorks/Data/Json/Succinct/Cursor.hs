@@ -5,12 +5,12 @@ module HaskellWorks.Data.Json.Succinct.Cursor where
 
 import qualified Data.ByteString.Char8                     as BS
 import           Data.String
+import           Debug.Trace
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens as BP
 import           HaskellWorks.Data.Succinct.RankSelect
-import Debug.Trace
 
 class TreeCursor k where
   firstChild :: k -> k

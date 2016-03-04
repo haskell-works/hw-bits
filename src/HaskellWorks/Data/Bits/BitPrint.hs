@@ -19,6 +19,9 @@ import           HaskellWorks.Data.Word
 class BitPrint a where
   bitPrint :: a -> String -> String
 
+instance BitPrint Bool where
+  bitPrint a = ((if a then '1' else '0'):)
+
 instance BitPrint Word8 where
   bitPrint w =
       (if w .?. 0 then ('1':) else ('0':))
@@ -38,6 +41,13 @@ instance BitPrint Word32 where
 
 instance BitPrint Word64 where
   bitPrint w = case leSplit w of (a, b) -> bitPrint a . (' ':) . bitPrint b
+
+instance BitPrint [Bool] where
+  bitPrint ws = ('\"':) . go 0 ws . ('\"':)
+    where go n []     = id
+          go n [w]    = bitPrint w
+          go n (w:ws) = bitPrint w . maybePrependSeperatorat n . go (n + 1) ws
+          maybePrependSeperatorat n = if n `mod` 8 == 7 then (' ':) else id
 
 instance BitPrint [Word8] where
   bitPrint []     = id
