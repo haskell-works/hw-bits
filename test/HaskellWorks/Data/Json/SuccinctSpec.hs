@@ -3,9 +3,14 @@
 
 module HaskellWorks.Data.Json.SuccinctSpec where
 
+import           Data.Maybe
+import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct
 import           Test.Hspec
+
+{-# ANN module ("HLint: ignore Redundant do"        :: String) #-}
+{-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Json.SuccinctSpec" $ do
@@ -20,9 +25,9 @@ spec = describe "HaskellWorks.Data.Json.SuccinctSpec" $ do
       runListConduit [0, 9, 27, 36] markerToByteString `shouldBe` ["\1", "\2", "\0", "\8", "\16"]
     it "Marker at [0, 36] gives \"\\255\"" $
       runListConduit [0, 36] markerToByteString `shouldBe` ["\1", "\0", "\0", "\0", "\16"]
-  describe "moo" $ do
-    it "foo" $
-      jsonToInterestBalancedParens ["{\"field\": 1}"] `shouldBe` [True, True, False, True, False, False]
-    it "moo" $
-      jsonToInterestBits ["{\"field\": 1}"] `shouldBe`
-        [True, True, False, False, False, False, False, False, False, False, True, False, False, False, False, False]
+  describe "jsonToInterestBalancedParens" $ do
+    it "produces the correct interest bits for {\"field\": 1}" $
+      jsonToInterestBalancedParens ["{\"field\": 1}"] `shouldBe` fromJust (fromBitString "110100")
+  describe "jsonToInterestBits" $ do
+    it "produces the correct interest bits for {\"field\": 1}" $
+      jsonToInterestBits ["{\"field\": 1}"] `shouldBe` fromJust (fromBitString "1100000000100000")

@@ -1,23 +1,23 @@
-{-# LANGUAGE RankNTypes    #-}
+{-# LANGUAGE RankNTypes #-}
 
 module HaskellWorks.Data.Conduit.Json where
 
 import           Control.Monad
-import           Control.Monad.Trans.Resource             (MonadThrow)
+import           Control.Monad.Trans.Resource                         (MonadThrow)
 import           Data.Bits
-import           Data.ByteString                          as BS
-import           Data.ByteString.Internal                 as BS
+import           Data.ByteString                                      as BS
+import           Data.ByteString.Internal                             as BS
 import           Data.Conduit
-import           Data.Conduit.List                        as CL
+import           Data.Conduit.List                                    as CL
 import           Data.Int
 import           Data.Word
+import           Foreign.Ptr                                          (plusPtr)
+import           Foreign.Storable                                     (Storable (..))
 import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec
 import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Offset
 import           HaskellWorks.Data.Json.Final.Tokenize
 import           HaskellWorks.Data.Json.Token
-import           Prelude as P
-import Foreign.Ptr              (plusPtr)
-import Foreign.Storable         (Storable(..))
+import           Prelude                                              as P
 
 markerToByteString' :: Monad m => Int64 -> Word8 -> Conduit Int64 m BS.ByteString
 markerToByteString' a v = do
@@ -76,12 +76,6 @@ jsonToken2BalancedParens = do
         JsonTokenNull       -> yield True >> yield False
       jsonToken2BalancedParens
     Nothing -> return ()
-
-
-moo :: Source IO (ParseDelta Offset, JsonToken)
-moo = CL.sourceList
-  [ (ParseDelta (Offset 1) (Offset 2), JsonTokenBraceL)
-  ]
 
 ------------------------
 
