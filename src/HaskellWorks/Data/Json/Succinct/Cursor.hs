@@ -5,7 +5,6 @@ module HaskellWorks.Data.Json.Succinct.Cursor where
 
 import qualified Data.ByteString.Char8                     as BS
 import           Data.String
-import           Debug.Trace
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning

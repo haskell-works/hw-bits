@@ -5,7 +5,6 @@ module HaskellWorks.Data.Succinct.RankSelect.InternalSpec (spec) where
 
 import           Control.Monad.IO.Class
 import           Data.Word
-import           Debug.Trace
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning

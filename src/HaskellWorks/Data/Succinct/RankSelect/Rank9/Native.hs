@@ -1,5 +1,5 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE CPP                        #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 #define LIQUID_HASKELL
 
@@ -94,23 +94,26 @@ module HaskellWorks.Data.Succinct.RankSelect.Rank9.Native (
 -- TODO: Compress original bit vector
 -- TODO: Carefully examine all `fromIntegral` uses
 
-import Control.DeepSeq (NFData(..))
-import Control.Monad (guard, replicateM)
-import Data.Bits (Bits, (.|.), (.&.), xor, complement)
-import Data.List (sort)
-import Data.Word (Word16, Word64)
-import HaskellWorks.Data.Succinct.RankSelect.Rank9.Positioning
-import Prelude hiding ((>>))  -- Use `(>>)` for right bit shift in this module
-import Test.QuickCheck (Arbitrary(..), choose)
-import Debug.Trace
+import           Control.DeepSeq                                         (NFData (..))
+import           Control.Monad                                           (guard, replicateM)
+import           Data.Bits                                               (Bits, complement,
+                                                                          xor,
+                                                                          (.&.),
+                                                                          (.|.))
+import           Data.List                                               (sort)
+import           Data.Word                                               (Word16, Word64)
+import           HaskellWorks.Data.Succinct.RankSelect.Rank9.Positioning
+import           Prelude                                                 hiding
+                                                                          ((>>))
+import           Test.QuickCheck                                         (Arbitrary (..), choose)
 
-import qualified Data.Bits           as Bits
+import qualified Data.Bits                                               as Bits
 #ifdef LIQUID_HASKELL
-import qualified Data.Vector         as Unboxed
+import qualified Data.Vector                                             as Unboxed
 #else
-import qualified Data.Vector.Unboxed as Unboxed
+import qualified Data.Vector.Unboxed                                     as Unboxed
 #endif
-import qualified Test.QuickCheck     as QuickCheck
+import qualified Test.QuickCheck                                         as QuickCheck
 
 safeIndexA v i = if i == Unboxed.length v then error "A" else (Unboxed.!) v i
 safeIndexB v i = if i == Unboxed.length v then error "B" else (Unboxed.!) v i
@@ -774,7 +777,7 @@ instance SuccinctNativeBitVector NativeBitVector where
         (c2, p2) = partialRank       basicBlock p1
         (c3, p3) = partialRank       w64        p2
         basicBlock = BasicBlock (safeIndexJ rank9_ (2 * (getPosition p0 `quot` 512) + 1))
-        w64        = trace ("iii" ++ show iii ++ show (Unboxed.length bits_)) $ safeIndexK bits_ iii
+        w64        = safeIndexK bits_ iii
         iii = getPosition p0 `quot` 64
 
     partialSelect (NativeBitVector rank9_ (Select9 primary_ secondary_) bits_) r =
