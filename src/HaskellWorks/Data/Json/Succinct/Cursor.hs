@@ -42,7 +42,7 @@ instance TreeCursor (JsonCursor String [Bool]) where
   firstChild  k = k { cursorRank = rank1 (balancedParens k) (BP.firstChild   (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
   nextSibling k = k { cursorRank = rank1 (balancedParens k) (BP.nextSibling  (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
   parent      k = k { cursorRank = undefined }-- BP.parent       (balancedParens k) (cursorRank k) }
-  depth       k = undefined -- BP.depth (balancedParens k) (cursorRank k)
+  depth       k = BP.depth (balancedParens k) (select1 (balancedParens k) (cursorRank k))
   subtreeSize k = undefined -- BP.subtreeSize (balancedParens k) (cursorRank k)
 
 data JsonCursorType
