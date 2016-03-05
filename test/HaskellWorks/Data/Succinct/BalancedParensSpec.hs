@@ -47,9 +47,13 @@ spec = describe "HaskellWorks.Data.Succinct.BalancedParensSpec" $ do
     it "depth  8" $ depth bs  8 `shouldBe` 3
     it "depth  9" $ depth bs  9 `shouldBe` 2
     it "depth 10" $ depth bs 10 `shouldBe` 1
-
--- depth :: (BalancedParens v, Rank1 v) => v -> Position -> Count
--- depth = rank1
-
--- subtreeSize :: (BalancedParens v) => v -> Position -> Count
--- subtreeSize v p = toCount ((findClose v p - p + 1) `quot` 2)
+    it "subtreeSize  1" $ subtreeSize bs  1 `shouldBe` 5
+    it "subtreeSize  2" $ subtreeSize bs  2 `shouldBe` 1
+    it "subtreeSize  3" $ subtreeSize bs  3 `shouldBe` 0
+    it "subtreeSize  4" $ subtreeSize bs  4 `shouldBe` 3
+    it "subtreeSize  5" $ subtreeSize bs  5 `shouldBe` 1
+    it "subtreeSize  6" $ subtreeSize bs  6 `shouldBe` 0
+    it "subtreeSize  7" $ subtreeSize bs  7 `shouldBe` 1
+    it "subtreeSize  8" $ subtreeSize bs  8 `shouldBe` 0
+    it "subtreeSize  9" $ subtreeSize bs  9 `shouldBe` 0
+    it "subtreeSize 10" $ subtreeSize bs 10 `shouldBe` 0
