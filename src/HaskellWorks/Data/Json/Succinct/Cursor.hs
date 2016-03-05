@@ -23,7 +23,7 @@ data JsonCursor t v = JsonCursor
   { cursorText     :: t
   , interests      :: Simple v
   , balancedParens :: SimpleBalancedParens v
-  , focus          :: Position
+  , cursorRank     :: Count
   }
   deriving (Eq, Show)
 
@@ -31,7 +31,7 @@ instance IsString (JsonCursor String [Bool]) where
   fromString :: String -> JsonCursor String [Bool]
   fromString s = JsonCursor
     { cursorText      = s
-    , focus           = 1
+    , cursorRank           = 1
     , balancedParens  = SimpleBalancedParens (jsonToInterestBalancedParens [bs])
     , interests       = Simple interests'
     }
@@ -39,11 +39,11 @@ instance IsString (JsonCursor String [Bool]) where
           interests'  = jsonToInterestBits [bs]
 
 instance TreeCursor (JsonCursor String [Bool]) where
-  firstChild  k = k { focus = BP.firstChild   (balancedParens k) (focus k) }
-  nextSibling k = k { focus = BP.nextSibling  (balancedParens k) (focus k) }
-  parent      k = k { focus = BP.parent       (balancedParens k) (focus k) }
-  depth       k = BP.depth (balancedParens k) (focus k)
-  subtreeSize k = BP.subtreeSize (balancedParens k) (focus k)
+  firstChild  k = k { cursorRank = rank1 (balancedParens k) (BP.firstChild   (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
+  nextSibling k = k { cursorRank = rank1 (balancedParens k) (BP.nextSibling  (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
+  parent      k = k { cursorRank = undefined }-- BP.parent       (balancedParens k) (cursorRank k) }
+  depth       k = undefined -- BP.depth (balancedParens k) (cursorRank k)
+  subtreeSize k = undefined -- BP.subtreeSize (balancedParens k) (cursorRank k)
 
 data JsonCursorType
   = JsonCursorArray
@@ -74,5 +74,5 @@ jsonCursorType k = case c of
   'n' -> JsonCursorNull
   '{' -> JsonCursorObject
   '"' -> JsonCursorString
-  _   -> error "Invalid JsonCursor focus"
-  where c = cursorText k !! fromIntegral (select1 (interests k) (toCount (focus k)) - 1)
+  _   -> error "Invalid JsonCursor cursorRank"
+  where c = cursorText k !! fromIntegral (select1 (interests k) (cursorRank k) - 1)

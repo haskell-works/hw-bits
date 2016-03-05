@@ -32,6 +32,9 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
   it "select False 110000011000000001000000 over [0..5] should be 023568" $
     let (Just bs) = fromBitString "110000011000000001000000" :: Maybe [Bool] in
     fmap (select1 bs) [0..5] `shouldBe` [0, 1, 2, 8, 9, 18]
+  it "select1 1101101000 over [0..5]" $
+    let (Just bs) = fromBitString "1101101000" :: Maybe [Bool] in
+    fmap (select1 bs) [0..5] `shouldBe` [0, 1, 2, 4, 5, 7]
   it "Rank and select form a galois connection" $
     property $ \(bs :: [Bool]) ->
     forAll (choose (0, popCount1 bs)) $ \(c :: Count) ->

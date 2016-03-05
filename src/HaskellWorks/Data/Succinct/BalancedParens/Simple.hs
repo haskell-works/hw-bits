@@ -2,8 +2,11 @@
 
 module HaskellWorks.Data.Succinct.BalancedParens.Simple
   ( SimpleBalancedParens(..)
+  , closeAt
   , findOpen
   , findClose
+  , findClose'
+  , openAt
   ) where
 
 import           HaskellWorks.Data.Bits.BitPrint
@@ -21,17 +24,17 @@ instance (BitPrint a, ToBitString a) => Show (SimpleBalancedParens a) where
   show = toBitString
 
 closeAt :: TestBit a => a -> Position -> Bool
-closeAt v p = not (v .?. p)
+closeAt v p = not (v .?. (p - 1))
 
 openAt :: TestBit a => a -> Position -> Bool
-openAt v p = v .?. p
+openAt v p = v .?. (p - 1)
 
 require :: Bool -> String -> a -> a
 require p msg v = if p then v else error msg
 
 findOpen' :: (BitLength a, TestBit a) => Count -> SimpleBalancedParens a -> Position -> Position
 findOpen' c v p =
-  require (0 <= p && p < endPosition v) "Out of bounds" $
+  require (0 < p && p <= endPosition v) "Out of bounds" $
   if v `openAt` p
     then if c == 0
       then p
@@ -40,7 +43,7 @@ findOpen' c v p =
 
 findClose' :: (BitLength a, TestBit a) => Count -> SimpleBalancedParens a -> Position -> Position
 findClose' c v p =
-  require (0 <= p && p < endPosition v) "Out of bounds" $
+  require (1 < p && p <= endPosition v) "Out of bounds" $
   if v `closeAt` p
     then if c == 0
       then p
