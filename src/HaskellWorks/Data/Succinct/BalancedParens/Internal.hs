@@ -7,8 +7,8 @@ module HaskellWorks.Data.Succinct.BalancedParens.Internal
   , subtreeSize
   ) where
 
-import HaskellWorks.Data.Positioning
-import HaskellWorks.Data.Succinct.RankSelect.Internal
+import           HaskellWorks.Data.Positioning
+import           HaskellWorks.Data.Succinct.RankSelect.Internal
 
 class BalancedParens v where
   findOpen :: v -> Position -> Position
@@ -24,8 +24,8 @@ nextSibling v p = findClose v p + 1
 parent :: (BalancedParens v) => v -> Position -> Position
 parent = enclose
 
-depth :: (BalancedParens v, Rank1 v) => v -> Position -> Count
-depth = rank1
+depth :: (BalancedParens v, Rank0 v, Rank1 v) => v -> Position -> Count
+depth v p = let q = findOpen v p in rank1 v q - rank0 v q
 
 subtreeSize :: (BalancedParens v) => v -> Position -> Count
 subtreeSize v p = toCount ((findClose v p - p + 1) `quot` 2)
