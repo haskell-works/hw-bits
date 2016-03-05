@@ -4,11 +4,14 @@ module HaskellWorks.Data.Json.Succinct.CursorSpec(spec) where
 
 import           Control.Monad
 import           Control.Monad.IO.Class
+import           Data.Vector.Storable
+import           Data.Word
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct
 import           HaskellWorks.Data.Json.Succinct.Cursor    as C
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens
+import           System.IO.MMap
 import           Test.Hspec
 
 {-# ANN module ("HLint: ignore Redundant do"        :: String) #-}
@@ -81,3 +84,9 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
     it "depth at first child of object at second child of array" $ do
       let cursor = "[null, {\"field\": 1}]" :: JsonCursor String [Bool]
       cd ((ns . fc . ns . fc) cursor)  `shouldBe` 3
+    it "can memory map a json file" $ do
+      (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
+      putStrLn "Hello world"
+      print (fptr, offset, size)
+      let v = unsafeFromForeignPtr fptr offset size :: Vector Word8
+      print v

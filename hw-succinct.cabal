@@ -105,8 +105,9 @@ test-suite hw-succinct-test
                       , attoparsec                      >= 0.10
                       , bytestring
                       , conduit                         >= 1.1  && < 1.3
-                      , hw-succinct
                       , hspec                           >= 1.3
+                      , hw-succinct
+                      , mmap
                       , QuickCheck
                       , resourcet                       >= 1.1
                       , transformers
