@@ -111,7 +111,7 @@ instance FromForeignRegion (JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)) wh
   fromForeignRegion (fptr, offset, size) = JsonCursor
     { cursorText     = DVS.unsafeFromForeignPtr (castForeignPtr fptr) offset size :: DVS.Vector Word8
     , interests      = Simple interestsV
-    , balancedParens = SimpleBalancedParens DVS.empty
+    , balancedParens = SimpleBalancedParens bpV
     , cursorRank     = 1
     }
     where textBS          = BSI.fromForeignPtr (castForeignPtr fptr) offset size :: ByteString
@@ -120,7 +120,26 @@ instance FromForeignRegion (JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)) wh
           genInterest bs  = if BS.null bs
             then Nothing
             else Just (BS.head bs, BS.tail bs)
+          bpV             = DVS.unfoldr fromBits (jsonToInterestBalancedParens [textBS])
 
+-- bitsToWord8 :: Bool -> Bool -> Bool -> Bool -> Bool -> Bool -> Bool -> Bool -> Word8
+-- bitsToWord8 a b c d e f g h =
+
+fromBits :: [Bool] -> Maybe (Word8, [Bool])
+fromBits [] = Nothing
+fromBits xs = case splitAt 8 xs of
+  (as, zs) -> case as ++ [False, False, False, False, False, False, False] of
+    (a:b:c:d:e:f:g:h:_) ->
+       Just (
+        (if a then 0x01 else 0) .|.
+        (if b then 0x02 else 0) .|.
+        (if c then 0x04 else 0) .|.
+        (if d then 0x08 else 0) .|.
+        (if e then 0x10 else 0) .|.
+        (if f then 0x20 else 0) .|.
+        (if g then 0x40 else 0) .|.
+        (if h then 0x80 else 0),
+        zs)
 
 instance (Monad m, DVS.Storable a) => Stream (DVS.Vector a) m a where
   uncons v | DVS.null v = return Nothing
