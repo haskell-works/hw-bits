@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE InstanceSigs          #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
 
@@ -9,12 +10,14 @@ import           Control.Monad.IO.Class
 import           Data.Char
 import qualified Data.Vector.Storable                      as DVS
 import           Data.Word
+import           Foreign.ForeignPtr
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct
 import           HaskellWorks.Data.Json.Succinct.Cursor    as C
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens
+import           HaskellWorks.Data.Succinct.RankSelect
 import           HaskellWorks.Data.VectorLike
 import           System.IO.MMap
 import           Test.Hspec
@@ -94,8 +97,20 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
       (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
       putStrLn "Hello world"
       print (fptr, offset, size)
-      let v = DVS.unsafeFromForeignPtr fptr offset size :: DVS.Vector Word8
-      print v
+      let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)
+      print cursor
+
+class FromForeignRegion a where
+  fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> a
+
+instance FromForeignRegion (JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)) where
+  fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)
+  fromForeignRegion (fptr, offset, size) = JsonCursor
+    { cursorText     = DVS.unsafeFromForeignPtr (castForeignPtr fptr) offset size :: DVS.Vector Word8
+    , interests      = Simple DVS.empty
+    , balancedParens = SimpleBalancedParens DVS.empty
+    , cursorRank     = 1
+    }
 
 instance (Monad m, DVS.Storable a) => Stream (DVS.Vector a) m a where
   uncons v | DVS.null v = return Nothing
