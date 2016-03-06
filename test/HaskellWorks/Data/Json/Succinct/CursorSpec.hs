@@ -19,7 +19,7 @@ import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct
 import           HaskellWorks.Data.Json.Succinct.Cursor    as C
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.BalancedParens
+import           HaskellWorks.Data.Succinct.BalancedParens as BP
 import           HaskellWorks.Data.Succinct.RankSelect
 import           HaskellWorks.Data.VectorLike
 import           System.IO.MMap
@@ -102,6 +102,10 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
       print (fptr, offset, size)
       let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)
       print cursor
+      let k = cursor in print $ fromIntegral (select1 (interests k) (cursorRank k) - 1)
+      let k = cursor in print $ select1 (interests k) (cursorRank k)
+      let k = cursor in print $ select1 (DVS.head (getSimple (interests k))) (cursorRank k)
+      print $ jsonCursorType2 cursor
 
 class FromForeignRegion a where
   fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> a
@@ -145,40 +149,32 @@ instance (Monad m, DVS.Storable a) => Stream (DVS.Vector a) m a where
   uncons v | DVS.null v = return Nothing
            | otherwise = return (Just (DVS.head v, DVS.tail v))
 
-isOpenBrace :: Word8 -> Bool
-isOpenBrace w = w == 123
+jsonCursorType2 :: JsonCursor (DVS.Vector Word8) (DVS.Vector Word8) -> JsonCursorType
+jsonCursorType2 k = case c of
+  91  {- [ -} -> JsonCursorArray
+  116 {- t -} -> JsonCursorBool
+  102 {- f -} -> JsonCursorBool
+  48  {- 0 -} -> JsonCursorNumber
+  49  {- 1 -} -> JsonCursorNumber
+  50  {- 2 -} -> JsonCursorNumber
+  51  {- 3 -} -> JsonCursorNumber
+  52  {- 4 -} -> JsonCursorNumber
+  53  {- 5 -} -> JsonCursorNumber
+  54  {- 6 -} -> JsonCursorNumber
+  55  {- 7 -} -> JsonCursorNumber
+  56  {- 8 -} -> JsonCursorNumber
+  57  {- 9 -} -> JsonCursorNumber
+  43  {- + -} -> JsonCursorNumber
+  45  {- - -} -> JsonCursorNumber
+  110 {- n -} -> JsonCursorNull
+  123 {- { -} -> JsonCursorObject
+  34  {- " -} -> JsonCursorString
+  _   -> error "Invalid JsonCursor cursorRank"
+  where c = cursorText k !!! fromIntegral (select1 (interests k) (cursorRank k) - 1)
 
-isOpenBracket :: Word8 -> Bool
-isOpenBracket w = w == 91
-
-isDoubleQuote :: Word8 -> Bool
-isDoubleQuote w = w == 34
-
-isSingleQuot :: Word8 -> Bool
-isSingleQuot w = w == 44
-
-isBackslash :: Word8 -> Bool
-isBackslash w = w == 92
-
-isDigit :: Word8 -> Bool
-isDigit w = 48 <= w && w <= 57
-
-isWhitespace :: Word8 -> Bool
-isWhitespace w = w == 10 || w == 13 || w == 32
-
-
-
--- isOpenBrace = fromIntegral (ord '{') :: Word8
-
--- makeInterests' :: DVS.Vector Word8 -> Position -> [Position] -> [Position]
--- makeInterests' _ 0 ps = ps
--- makeInterests' v q ps = case v !!! qm of
---   '{' -> makeInterests' v qm (qm:ps)
---   '[' -> makeInterests' v qm (qm:ps)
---   '{' -> makeInterests' v qm (qm:ps)
---   '{' -> makeInterests' v qm (qm:ps)
---   where qm = q - 1
-
-
--- makeInterests :: DVS.Vector Word8 -> [Position]
--- makeInterests v = makeInterests' v (bitLength v)
+instance TreeCursor (JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)) where
+  firstChild  k = k { cursorRank = rank1 (balancedParens k) (BP.firstChild   (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
+  nextSibling k = k { cursorRank = rank1 (balancedParens k) (BP.nextSibling  (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
+  parent      k = k { cursorRank = undefined }-- BP.parent       (balancedParens k) (cursorRank k) }
+  depth       k = BP.depth (balancedParens k) (select1 (balancedParens k) (cursorRank k))
+  subtreeSize k = undefined -- BP.subtreeSize (balancedParens k) (cursorRank k)

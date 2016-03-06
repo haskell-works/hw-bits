@@ -11,9 +11,13 @@ module HaskellWorks.Data.Succinct.RankSelect.Internal
     , Select(..)
     ) where
 
+import qualified Data.Vector.Storable           as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
+import           HaskellWorks.Data.VectorLike
+import           Prelude                        as P
+import           Safe
 
 class Rank0 v where
   rank0 :: v -> Position -> Count
@@ -182,6 +186,67 @@ instance Select1 Word64 where
     let s7 =      65 - s6                                                       in
     fromIntegral s7
   {-# INLINABLE select1 #-}
+
+rankWords1 :: (Num a, PopCount1 a, Rank1 a, BitLength a) => [a] -> Position -> Count
+rankWords1 ws n = if remainder == 0
+    then predRank
+    else predRank + partRank
+  where
+    partRank = rank1 r remainder
+    remainder = n `mod` endPos
+    (ls, rs) = splitAt (fromIntegral $ n `quot` endPos) ws
+    predRank = P.sum (map (fromIntegral . popCount1) ls)
+    r = headDef 0 rs
+    endPos = endPosition (head ws)
+{-# INLINABLE rankWords1 #-}
+
+selectWords1 :: (PopCount1 v, Select1 v, BitLength v) => Count -> [v] -> Count -> Position
+selectWords1 _ [] (Count r) = Position (fromIntegral r) + 1
+selectWords1 n (w:ws) r = if pc < n
+    then selectWords1 (n - pc) ws (r + bitLength w)
+    else select1 w n + Position (fromIntegral r)
+  where
+    pc = popCount1 w
+{-# INLINABLE selectWords1 #-}
+
+instance Rank1 (DVS.Vector Word8) where
+  rank1 v = rankWords1 (DVS.toList v)
+  {-# INLINABLE rank1 #-}
+
+instance Select1 (DVS.Vector Word8) where
+  select1 v = selectWords1 0 (toList v)
+  {-# INLINABLE select1 #-}
+
+rankWords0 :: (Num a, PopCount1 a, Rank0 a, BitLength a) => [a] -> Position -> Count
+rankWords0 ws n = if remainder == 0
+    then predRank
+    else predRank + partRank
+  where
+    partRank = rank0 r remainder
+    remainder = n `mod` endPos
+    (ls, rs) = splitAt (fromIntegral $ n `quot` endPos) ws
+    predRank = P.sum (map (fromIntegral . popCount1) ls)
+    r = headDef 0 rs
+    endPos = endPosition (head ws)
+{-# INLINABLE rankWords0 #-}
+
+selectWords0 :: (PopCount1 v, Select0 v, BitLength v) => Count -> [v] -> Count -> Position
+selectWords0 _ [] (Count r) = Position (fromIntegral r) + 1
+selectWords0 n (w:ws) r = if pc < n
+    then selectWords0 (n - pc) ws (r + bitLength w)
+    else select0 w n + Position (fromIntegral r)
+  where
+    pc = popCount1 w
+{-# INLINABLE selectWords0 #-}
+
+instance Rank0 (DVS.Vector Word8) where
+  rank0 v = rankWords0 (DVS.toList v)
+  {-# INLINABLE rank0 #-}
+
+instance Select0 (DVS.Vector Word8) where
+  select0 v = selectWords0 0 (toList v)
+  {-# INLINABLE select0 #-}
+
 
 -----------------------------------------------------------------------------------
 

@@ -16,6 +16,7 @@
 module HaskellWorks.Data.Succinct.RankSelect.Simple
     ( -- * Simple bit vector types
       Simple(..)
+    , getSimple
     ) where
 
 import qualified Data.Vector                                    as DV
@@ -30,6 +31,9 @@ import qualified Prelude                                        as P
 import           Safe
 
 newtype Simple a = Simple a deriving (P.Eq)
+
+getSimple :: Simple a -> a
+getSimple (Simple a) = a
 
 instance forall a. ToBitString a => P.Show (Simple a) where
   show (Simple bs) = toBitString bs
