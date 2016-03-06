@@ -7,7 +7,10 @@ module HaskellWorks.Data.Json.Succinct.CursorSpec(spec) where
 
 import           Control.Monad
 import           Control.Monad.IO.Class
+import qualified Data.ByteString                           as BS
+import           Data.ByteString.Internal                  as BSI
 import           Data.Char
+import           Data.Conduit
 import qualified Data.Vector.Storable                      as DVS
 import           Data.Word
 import           Foreign.ForeignPtr
@@ -107,10 +110,17 @@ instance FromForeignRegion (JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)) wh
   fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)
   fromForeignRegion (fptr, offset, size) = JsonCursor
     { cursorText     = DVS.unsafeFromForeignPtr (castForeignPtr fptr) offset size :: DVS.Vector Word8
-    , interests      = Simple DVS.empty
+    , interests      = Simple interestsV
     , balancedParens = SimpleBalancedParens DVS.empty
     , cursorRank     = 1
     }
+    where textBS          = BSI.fromForeignPtr (castForeignPtr fptr) offset size :: ByteString
+          interestBS      = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
+          interestsV      = DVS.unfoldr genInterest interestBS :: DVS.Vector Word8
+          genInterest bs  = if BS.null bs
+            then Nothing
+            else Just (BS.head bs, BS.tail bs)
+
 
 instance (Monad m, DVS.Storable a) => Stream (DVS.Vector a) m a where
   uncons v | DVS.null v = return Nothing

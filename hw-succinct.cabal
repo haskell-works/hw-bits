@@ -52,6 +52,7 @@ library
                       , HaskellWorks.Data.Json.Succinct.Cursor
                       , HaskellWorks.Data.Json.Succinct.Transform
                       , HaskellWorks.Data.Json.Token
+                      , HaskellWorks.Data.Json.Tokenize.Parsec
                       , HaskellWorks.Data.Positioning
                       , HaskellWorks.Data.Succinct
                       , HaskellWorks.Data.Succinct.BalancedParens
