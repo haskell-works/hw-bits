@@ -108,6 +108,7 @@ test-suite hw-succinct-test
                       , hspec                           >= 1.3
                       , hw-succinct
                       , mmap
+                      , parsec
                       , QuickCheck
                       , resourcet                       >= 1.1
                       , transformers

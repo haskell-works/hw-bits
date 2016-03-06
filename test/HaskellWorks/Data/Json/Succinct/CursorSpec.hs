@@ -1,18 +1,24 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings     #-}
 
 module HaskellWorks.Data.Json.Succinct.CursorSpec(spec) where
 
 import           Control.Monad
 import           Control.Monad.IO.Class
-import           Data.Vector.Storable
+import           Data.Char
+import qualified Data.Vector.Storable                      as DVS
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct
 import           HaskellWorks.Data.Json.Succinct.Cursor    as C
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens
+import           HaskellWorks.Data.VectorLike
 import           System.IO.MMap
 import           Test.Hspec
+import           Text.Parsec
 
 {-# ANN module ("HLint: ignore Redundant do"        :: String) #-}
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
@@ -88,5 +94,47 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
       (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
       putStrLn "Hello world"
       print (fptr, offset, size)
-      let v = unsafeFromForeignPtr fptr offset size :: Vector Word8
+      let v = DVS.unsafeFromForeignPtr fptr offset size :: DVS.Vector Word8
       print v
+
+instance (Monad m, DVS.Storable a) => Stream (DVS.Vector a) m a where
+  uncons v | DVS.null v = return Nothing
+           | otherwise = return (Just (DVS.head v, DVS.tail v))
+
+isOpenBrace :: Word8 -> Bool
+isOpenBrace w = w == 123
+
+isOpenBracket :: Word8 -> Bool
+isOpenBracket w = w == 91
+
+isDoubleQuote :: Word8 -> Bool
+isDoubleQuote w = w == 34
+
+isSingleQuot :: Word8 -> Bool
+isSingleQuot w = w == 44
+
+isBackslash :: Word8 -> Bool
+isBackslash w = w == 92
+
+isDigit :: Word8 -> Bool
+isDigit w = 48 <= w && w <= 57
+
+isWhitespace :: Word8 -> Bool
+isWhitespace w = w == 10 || w == 13 || w == 32
+
+
+
+-- isOpenBrace = fromIntegral (ord '{') :: Word8
+
+-- makeInterests' :: DVS.Vector Word8 -> Position -> [Position] -> [Position]
+-- makeInterests' _ 0 ps = ps
+-- makeInterests' v q ps = case v !!! qm of
+--   '{' -> makeInterests' v qm (qm:ps)
+--   '[' -> makeInterests' v qm (qm:ps)
+--   '{' -> makeInterests' v qm (qm:ps)
+--   '{' -> makeInterests' v qm (qm:ps)
+--   where qm = q - 1
+
+
+-- makeInterests :: DVS.Vector Word8 -> [Position]
+-- makeInterests v = makeInterests' v (bitLength v)
