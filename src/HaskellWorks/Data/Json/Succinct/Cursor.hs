@@ -4,20 +4,21 @@
 
 module HaskellWorks.Data.Json.Succinct.Cursor where
 
-import qualified Data.ByteString                           as BS
-import qualified Data.ByteString.Char8                     as BSC
-import           Data.ByteString.Internal                  as BSI
+import qualified Data.ByteString                              as BS
+import qualified Data.ByteString.Char8                        as BSC
+import           Data.ByteString.Internal                     as BSI
 import           Data.Conduit
 import           Data.String
-import qualified Data.Vector.Storable                      as DVS
+import qualified Data.Vector.Storable                         as DVS
 import           Data.Word
 import           Foreign.ForeignPtr
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.BalancedParens as BP
+import           HaskellWorks.Data.Succinct.BalancedParens    as BP
 import           HaskellWorks.Data.Succinct.RankSelect
+import           HaskellWorks.Data.Vector.Storable.ByteString
 import           HaskellWorks.Data.VectorLike
 import           Text.Parsec
 
@@ -43,7 +44,7 @@ instance IsString (JsonCursor String [Bool]) where
   fromString :: String -> JsonCursor String [Bool]
   fromString s = JsonCursor
     { cursorText      = s
-    , cursorRank           = 1
+    , cursorRank      = 1
     , balancedParens  = SimpleBalancedParens (jsonToInterestBalancedParens [bs])
     , interests       = Simple interests'
     }
@@ -93,7 +94,24 @@ instance (Monad m, DVS.Storable a) => Stream (DVS.Vector a) m a where
   uncons v | DVS.null v = return Nothing
            | otherwise = return (Just (DVS.head v, DVS.tail v))
 
-instance HasJsonCursorType (JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)) where
+instance IsString (JsonCursor BS.ByteString (DVS.Vector Word8)) where
+  fromString :: String -> JsonCursor BS.ByteString (DVS.Vector Word8)
+  fromString s = JsonCursor
+    { cursorText      = textBS
+    , cursorRank      = 1
+    , balancedParens  = SimpleBalancedParens bpV
+    , interests       = Simple interestsV
+    }
+    where textBS          = BSC.pack s :: BS.ByteString
+          interests'      = jsonToInterestBits [textBS]
+          interestBS      = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
+          interestsV      = DVS.unfoldr genInterest interestBS :: DVS.Vector Word8
+          genInterest bs  = if BS.null bs
+            then Nothing
+            else Just (BS.head bs, BS.tail bs)
+          bpV             = DVS.unfoldr fromBits (jsonToInterestBalancedParens [textBS])
+
+instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word8)) where
   jsonCursorType k = case c of
     91  {- [ -} -> JsonCursorArray
     116 {- t -} -> JsonCursorBool
@@ -114,9 +132,9 @@ instance HasJsonCursorType (JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)) wh
     123 {- { -} -> JsonCursorObject
     34  {- " -} -> JsonCursorString
     _   -> error "Invalid JsonCursor cursorRank"
-    where c = cursorText k !!! fromIntegral (select1 (interests k) (cursorRank k) - 1)
+    where c = cursorText k `BS.index` fromIntegral (select1 (interests k) (cursorRank k) - 1)
 
-instance TreeCursor (JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)) where
+instance TreeCursor (JsonCursor BS.ByteString (DVS.Vector Word8)) where
   firstChild  k = k { cursorRank = rank1 (balancedParens k) (BP.firstChild   (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
   nextSibling k = k { cursorRank = rank1 (balancedParens k) (BP.nextSibling  (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
   parent      k = k { cursorRank = undefined }-- BP.parent       (balancedParens k) (cursorRank k) }
@@ -126,10 +144,10 @@ instance TreeCursor (JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)) where
 class FromForeignRegion a where
   fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> a
 
-instance FromForeignRegion (JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)) where
-  fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)
+instance FromForeignRegion (JsonCursor BS.ByteString (DVS.Vector Word8)) where
+  fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> JsonCursor BS.ByteString (DVS.Vector Word8)
   fromForeignRegion (fptr, offset, size) = JsonCursor
-    { cursorText     = DVS.unsafeFromForeignPtr (castForeignPtr fptr) offset size :: DVS.Vector Word8
+    { cursorText     = textBS
     , interests      = Simple interestsV
     , balancedParens = SimpleBalancedParens bpV
     , cursorRank     = 1

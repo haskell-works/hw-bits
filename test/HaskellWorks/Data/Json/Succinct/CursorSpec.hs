@@ -42,7 +42,7 @@ ss = C.subtreeSize
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
-  describe "Cursor" $ do
+  describe "Cursor for [Bool]" $ do
     it "initialises to beginning of empty object" $ do
       let cursor = "{}" :: JsonCursor String [Bool]
       jsonCursorType cursor `shouldBe` JsonCursorObject
@@ -79,9 +79,9 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
     it "cursor can navigate to first child of object at second child of array" $ do
       let cursor = "[null, {\"field\": 1}]" :: JsonCursor String [Bool]
       jsonCursorType ((ns . fc . ns . fc) cursor)  `shouldBe` JsonCursorNumber
-
+  describe "Cursor for (DVS.Vector Word8)" $ do
     it "depth at top" $ do
-      let cursor = "[null]" :: JsonCursor String [Bool]
+      let cursor = "[null]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
       cd cursor `shouldBe` 1
     it "depth at first child of array" $ do
       let cursor = "[null]" :: JsonCursor String [Bool]
@@ -97,7 +97,7 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
       cd ((ns . fc . ns . fc) cursor)  `shouldBe` 3
     it "can memory map a json file" $ do
       (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
-      let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)
+      let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (DVS.Vector Word8)
       let k = cursor in print $ fromIntegral (select1 (interests k) (cursorRank k) - 1)
       let k = cursor in print $ select1 (interests k) (cursorRank k)
       let k = cursor in print $ select1 (DVS.head (getSimple (interests k))) (cursorRank k)

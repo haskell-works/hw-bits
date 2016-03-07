@@ -66,6 +66,7 @@ library
                       , HaskellWorks.Data.Succinct.RankSelect.Rank9.Positioning
                       , HaskellWorks.Data.Succinct.RankSelect.Rank9.Storable
                       , HaskellWorks.Data.Succinct.RankSelect.Simple
+                      , HaskellWorks.Data.Vector.Storable.ByteString
                       , HaskellWorks.Data.VectorLike
                       , HaskellWorks.Data.Word
   build-depends:        base                            >= 4.7  && < 5
