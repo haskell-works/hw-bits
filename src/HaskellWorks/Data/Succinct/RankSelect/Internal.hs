@@ -13,11 +13,14 @@ module HaskellWorks.Data.Succinct.RankSelect.Internal
 
 import qualified Data.Vector.Storable           as DVS
 import           Data.Word
+import           Debug.Trace
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.VectorLike
 import           Prelude                        as P
 import           Safe
+
+{-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
 
 class Rank0 v where
   rank0 :: v -> Position -> Count
@@ -38,6 +41,7 @@ class Eq a => Select v a where
   select :: a -> v -> Count -> Position
 
 instance Rank1 Word8 where
+  rank1 _ 0  = 0
   rank1 v s0 =
     -- Shift out bits after given position.
     let r0 = v .<. (8 - toCount s0) in
@@ -50,6 +54,7 @@ instance Rank1 Word8 where
   {-# INLINABLE rank1 #-}
 
 instance Rank1 Word16 where
+  rank1 _ 0  = 0
   rank1 v s0 =
     -- Shift out bits after given position.
     let r0 = v .<. (16 - toCount s0) in
@@ -62,6 +67,7 @@ instance Rank1 Word16 where
   {-# INLINABLE rank1 #-}
 
 instance Rank1 Word32 where
+  rank1 _ 0  = 0
   rank1 v s0 =
     -- Shift out bits after given position.
     let r0 = v .<. (32 - toCount s0) in
@@ -74,6 +80,7 @@ instance Rank1 Word32 where
   {-# INLINABLE rank1 #-}
 
 instance Rank1 Word64 where
+  rank1 _ 0  = 0
   rank1 v s0 =
     -- Shift out bits after given position.
     let r0 = v .<. (64 - toCount s0) in
@@ -87,11 +94,13 @@ instance Rank1 Word64 where
 
 -- TODO: Implement NOT interms of select for word-16
 instance Select1 Word8 where
-  select1 v = select1 (fromIntegral v :: Word16)
+  select1 _ 0 = 0
+  select1 v p = select1 (fromIntegral v :: Word16) p
   {-# INLINABLE select1 #-}
 
 -- TODO: Remove redundant code to optimise
 instance Select1 Word16 where
+  select1 _ 0 = 0
   select1 v rn =
     -- Do a normal parallel bit count for a 64-bit integer,
     -- but store all intermediate steps.
@@ -124,6 +133,7 @@ instance Select1 Word16 where
 
 -- TODO: Remove redundant code to optimise
 instance Select1 Word32 where
+  select1 _ 0 = 0
   select1 v rn =
     -- Do a normal parallel bit count for a 64-bit integer,
     -- but store all intermediate steps.
@@ -156,6 +166,7 @@ instance Select1 Word32 where
   {-# INLINABLE select1 #-}
 
 instance Select1 Word64 where
+  select1 _ 0 = 0
   select1 v rn =
     -- Do a normal parallel bit count for a 64-bit integer,
     -- but store all intermediate steps.
@@ -214,7 +225,11 @@ instance Rank1 (DVS.Vector Word8) where
   {-# INLINABLE rank1 #-}
 
 instance Select1 (DVS.Vector Word8) where
-  select1 v = selectWords1 0 (toList v)
+  select1 v c = go 0 c 0
+    where go n c' acc = let w = (v !!! n) in
+            case popCount1 w of
+              pc | c <= pc  -> select1 w c' + acc
+              pc            -> go (n + 1) (c' - pc) (acc + 8)
   {-# INLINABLE select1 #-}
 
 rankWords0 :: (Num a, PopCount1 a, Rank0 a, BitLength a) => [a] -> Position -> Count
@@ -240,11 +255,18 @@ selectWords0 n (w:ws) r = if pc < n
 {-# INLINABLE selectWords0 #-}
 
 instance Rank0 (DVS.Vector Word8) where
-  rank0 v = rankWords0 (DVS.toList v)
+  rank0 v p | p < 1     = 0
+            | p < 9     = rank0 (DVS.head v) ((p - 1 `rem` 8) + 1)
+            | otherwise = rank0 (DVS.head v) ((p - 1 `rem` 8) + 1) + rank0 (DVS.tail v) (p - 8)
   {-# INLINABLE rank0 #-}
 
 instance Select0 (DVS.Vector Word8) where
-  select0 v = selectWords0 0 (toList v)
+  select0 v c = go 0 c 0
+    where go _ 0  acc = acc
+          go n c' acc = let w = (v !!! n) in
+            case popCount0 w of
+              pc | c <= pc  -> select0 w c' + acc
+              pc            -> go (n + 1) (c' - pc) (acc + 8)
   {-# INLINABLE select0 #-}
 
 
