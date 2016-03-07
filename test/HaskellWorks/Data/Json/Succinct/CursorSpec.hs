@@ -24,7 +24,6 @@ import           HaskellWorks.Data.Succinct.RankSelect
 import           HaskellWorks.Data.VectorLike
 import           System.IO.MMap
 import           Test.Hspec
-import           Text.Parsec
 
 {-# ANN module ("HLint: ignore Redundant do"        :: String) #-}
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
@@ -102,76 +101,4 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
       let k = cursor in print $ fromIntegral (select1 (interests k) (cursorRank k) - 1)
       let k = cursor in print $ select1 (interests k) (cursorRank k)
       let k = cursor in print $ select1 (DVS.head (getSimple (interests k))) (cursorRank k)
-      print $ jsonCursorType2 cursor
-
-class FromForeignRegion a where
-  fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> a
-
-instance FromForeignRegion (JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)) where
-  fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)
-  fromForeignRegion (fptr, offset, size) = JsonCursor
-    { cursorText     = DVS.unsafeFromForeignPtr (castForeignPtr fptr) offset size :: DVS.Vector Word8
-    , interests      = Simple interestsV
-    , balancedParens = SimpleBalancedParens bpV
-    , cursorRank     = 1
-    }
-    where textBS          = BSI.fromForeignPtr (castForeignPtr fptr) offset size :: ByteString
-          interestBS      = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
-          interestsV      = DVS.unfoldr genInterest interestBS :: DVS.Vector Word8
-          genInterest bs  = if BS.null bs
-            then Nothing
-            else Just (BS.head bs, BS.tail bs)
-          bpV             = DVS.unfoldr fromBits (jsonToInterestBalancedParens [textBS])
-
--- bitsToWord8 :: Bool -> Bool -> Bool -> Bool -> Bool -> Bool -> Bool -> Bool -> Word8
--- bitsToWord8 a b c d e f g h =
-
-fromBits :: [Bool] -> Maybe (Word8, [Bool])
-fromBits [] = Nothing
-fromBits xs = case splitAt 8 xs of
-  (as, zs) -> case as ++ [False, False, False, False, False, False, False] of
-    (a:b:c:d:e:f:g:h:_) ->
-       Just (
-        (if a then 0x01 else 0) .|.
-        (if b then 0x02 else 0) .|.
-        (if c then 0x04 else 0) .|.
-        (if d then 0x08 else 0) .|.
-        (if e then 0x10 else 0) .|.
-        (if f then 0x20 else 0) .|.
-        (if g then 0x40 else 0) .|.
-        (if h then 0x80 else 0),
-        zs)
-
-instance (Monad m, DVS.Storable a) => Stream (DVS.Vector a) m a where
-  uncons v | DVS.null v = return Nothing
-           | otherwise = return (Just (DVS.head v, DVS.tail v))
-
-jsonCursorType2 :: JsonCursor (DVS.Vector Word8) (DVS.Vector Word8) -> JsonCursorType
-jsonCursorType2 k = case c of
-  91  {- [ -} -> JsonCursorArray
-  116 {- t -} -> JsonCursorBool
-  102 {- f -} -> JsonCursorBool
-  48  {- 0 -} -> JsonCursorNumber
-  49  {- 1 -} -> JsonCursorNumber
-  50  {- 2 -} -> JsonCursorNumber
-  51  {- 3 -} -> JsonCursorNumber
-  52  {- 4 -} -> JsonCursorNumber
-  53  {- 5 -} -> JsonCursorNumber
-  54  {- 6 -} -> JsonCursorNumber
-  55  {- 7 -} -> JsonCursorNumber
-  56  {- 8 -} -> JsonCursorNumber
-  57  {- 9 -} -> JsonCursorNumber
-  43  {- + -} -> JsonCursorNumber
-  45  {- - -} -> JsonCursorNumber
-  110 {- n -} -> JsonCursorNull
-  123 {- { -} -> JsonCursorObject
-  34  {- " -} -> JsonCursorString
-  _   -> error "Invalid JsonCursor cursorRank"
-  where c = cursorText k !!! fromIntegral (select1 (interests k) (cursorRank k) - 1)
-
-instance TreeCursor (JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)) where
-  firstChild  k = k { cursorRank = rank1 (balancedParens k) (BP.firstChild   (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
-  nextSibling k = k { cursorRank = rank1 (balancedParens k) (BP.nextSibling  (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
-  parent      k = k { cursorRank = undefined }-- BP.parent       (balancedParens k) (cursorRank k) }
-  depth       k = BP.depth (balancedParens k) (select1 (balancedParens k) (cursorRank k))
-  subtreeSize k = undefined -- BP.subtreeSize (balancedParens k) (cursorRank k)
+      print $ jsonCursorType cursor

@@ -4,7 +4,10 @@
 module HaskellWorks.Data.Json.SuccinctSpec where
 
 import           Data.Maybe
+import qualified Data.Vector.Storable             as DVS
+import           Data.Word
 import           HaskellWorks.Data.Bits.BitString
+import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct
 import           Test.Hspec
