@@ -98,10 +98,7 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
       cd ((ns . fc . ns . fc) cursor)  `shouldBe` 3
     it "can memory map a json file" $ do
       (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
-      putStrLn "Hello world"
-      print (fptr, offset, size)
       let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor (DVS.Vector Word8) (DVS.Vector Word8)
-      print cursor
       let k = cursor in print $ fromIntegral (select1 (interests k) (cursorRank k) - 1)
       let k = cursor in print $ select1 (interests k) (cursorRank k)
       let k = cursor in print $ select1 (DVS.head (getSimple (interests k))) (cursorRank k)

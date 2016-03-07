@@ -226,10 +226,11 @@ instance Rank1 (DVS.Vector Word8) where
 
 instance Select1 (DVS.Vector Word8) where
   select1 v c = go 0 c 0
-    where go n c' acc = let w = (v !!! n) in
+    where go _ 0  acc = acc
+          go n d acc = let w = (v !!! n) in
             case popCount1 w of
-              pc | c <= pc  -> select1 w c' + acc
-              pc            -> go (n + 1) (c' - pc) (acc + 8)
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (n + 1) (d - pc) (acc + 8)
   {-# INLINABLE select1 #-}
 
 rankWords0 :: (Num a, PopCount1 a, Rank0 a, BitLength a) => [a] -> Position -> Count
@@ -263,10 +264,10 @@ instance Rank0 (DVS.Vector Word8) where
 instance Select0 (DVS.Vector Word8) where
   select0 v c = go 0 c 0
     where go _ 0  acc = acc
-          go n c' acc = let w = (v !!! n) in
+          go n d acc = let w = (v !!! n) in
             case popCount0 w of
-              pc | c <= pc  -> select0 w c' + acc
-              pc            -> go (n + 1) (c' - pc) (acc + 8)
+              pc | d <= pc  -> select0 w d + acc
+              pc            -> go (n + 1) (d - pc) (acc + 8)
   {-# INLINABLE select0 #-}
 
 

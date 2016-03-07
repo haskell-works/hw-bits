@@ -60,8 +60,6 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
       fmap (rank1 bs) [0..8] `shouldBe` [0, 1, 1, 1, 2, 2, 2, 3, 3]
     it "rank True 10010010 over [0..8] should be 001223445" $ do
       let (Just bs) = fromBitString "10010010" :: Maybe (DVS.Vector Word8)
-      print "---------------"
-      print (Simple bs)
       fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
     it "select1 10010010 over [0..3] should be 0147" $ do
       let (Just bs) = fromBitString "10010010" :: Maybe (DVS.Vector Word8)
@@ -69,8 +67,8 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
     it "select0 10010010 over [0..5] should be 023568" $ do
       let (Just bs) = fromBitString "10010010" :: Maybe (DVS.Vector Word8)
       fmap (select0 bs) [0..5] `shouldBe` [0, 2, 3, 5, 6, 8]
-    it "select1 110000011000000001000000 over [0..5] should be 023568" $ do
-      let (Just bs) = fromBitString "110000011000000001000000" :: Maybe (DVS.Vector Word8)
+    it "select1 11000001 10000000 01000000 over [0..5] should be 023568" $ do
+      let (Just bs) = fromBitString "11000001 10000000 01000000" :: Maybe (DVS.Vector Word8)
       fmap (select1 bs) [0..5] `shouldBe` [0, 1, 2, 8, 9, 18]
     it "select1 1101101000 over [0..5]" $ do
       let (Just bs) = fromBitString "1101101000" :: Maybe (DVS.Vector Word8)
