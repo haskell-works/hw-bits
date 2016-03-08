@@ -14,31 +14,6 @@ import           Test.QuickCheck
 
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 
-newtype Position_0_8  = Position_0_8  Position deriving (Eq, Show)
-newtype Position_0_16 = Position_0_16 Position deriving (Eq, Show)
-newtype Position_0_32 = Position_0_32 Position deriving (Eq, Show)
-newtype Position_0_64 = Position_0_64 Position deriving (Eq, Show)
-
-instance Arbitrary Position_0_8 where
-  arbitrary = do
-     n <- choose (0, 8 :: Int64)
-     return (Position_0_8 (Position n))
-
-instance Arbitrary Position_0_16 where
- arbitrary = do
-    n <- choose (0, 16 :: Int64)
-    return (Position_0_16 (Position n))
-
-instance Arbitrary Position_0_32 where
- arbitrary = do
-    n <- choose (0, 32 :: Int64)
-    return (Position_0_32 (Position n))
-
-instance Arbitrary Position_0_64 where
- arbitrary = do
-    n <- choose (0, 64 :: Int64)
-    return (Position_0_64 (Position n))
-
 newtype Count_0_8  = Count_0_8  Count deriving (Eq, Show)
 newtype Count_0_16 = Count_0_16 Count deriving (Eq, Show)
 newtype Count_0_32 = Count_0_32 Count deriving (Eq, Show)
@@ -75,13 +50,13 @@ spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
   it "popCount1 for Word64 matches Data.Bits implementation" $ property $
     \(w :: Word64) -> popCount1 w == fromIntegral (B.popCount w)
   it "rank1 for Word16 and Word64 should give same answer for bits 0-7" $ property $
-    \(Position_0_8  i) (w :: Word8 ) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
+    \(Count_0_8  i) (w :: Word8 ) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
   it "rank1 for Word16 and Word64 should give same answer for bits 0-15" $ property $
-    \(Position_0_16 i) (w :: Word16) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
+    \(Count_0_16 i) (w :: Word16) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
   it "rank1 for Word32 and Word64 should give same answer for bits 0-31" $ property $
-    \(Position_0_32 i) (w :: Word32) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
+    \(Count_0_32 i) (w :: Word32) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
   it "rank1 for Word32 and Word64 should give same answer for bits 32-64" $ property $
-    \(Position_0_32 i) (v :: Word32) (w :: Word32) ->
+    \(Count_0_32 i) (v :: Word32) (w :: Word32) ->
       let v64 = fromIntegral v :: Word64 in
       let w64 = fromIntegral w :: Word64 in
       rank1 v i + popCount1 w == rank1 ((v64 .<. 32) .|. w64) (i + 32)

@@ -23,27 +23,27 @@ newtype SimpleBalancedParens a = SimpleBalancedParens a
 instance (BitPrint a, ToBitString a) => Show (SimpleBalancedParens a) where
   show = toBitString
 
-closeAt :: TestBit a => a -> Position -> Bool
-closeAt v p = not (v .?. (p - 1))
+closeAt :: TestBit a => a -> Count -> Bool
+closeAt v c = not (v .?. lastPositionOf c)
 
-openAt :: TestBit a => a -> Position -> Bool
-openAt v p = v .?. (p - 1)
+openAt :: TestBit a => a -> Count -> Bool
+openAt v c = v .?. lastPositionOf c
 
 require :: Bool -> String -> a -> a
 require p msg v = if p then v else error msg
 
-findOpen' :: (BitLength a, TestBit a) => Count -> SimpleBalancedParens a -> Position -> Position
+findOpen' :: (BitLength a, TestBit a) => Count -> SimpleBalancedParens a -> Count -> Count
 findOpen' c v p =
-  require (0 < p && p <= endPosition v) "Out of bounds" $
+  require (0 < p && p <= bitLength v) "Out of bounds" $
   if v `openAt` p
     then if c == 0
       then p
       else findOpen' (c - 1) v (p - 1)
     else findOpen' (c + 1) v (p - 1)
 
-findClose' :: (BitLength a, TestBit a) => Count -> SimpleBalancedParens a -> Position -> Position
+findClose' :: (BitLength a, TestBit a) => Count -> SimpleBalancedParens a -> Count -> Count
 findClose' c v p =
-  require (1 < p && p <= endPosition v) "Out of bounds" $
+  require (1 < p && p <= bitLength v) "Out of bounds" $
   if v `closeAt` p
     then if c == 0
       then p

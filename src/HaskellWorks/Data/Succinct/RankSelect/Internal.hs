@@ -23,28 +23,28 @@ import           Safe
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
 
 class Rank0 v where
-  rank0 :: v -> Position -> Count
+  rank0 :: v -> Count -> Count
 
 class Select0 v where
-  select0 :: v -> Count -> Position
+  select0 :: v -> Count -> Count
 
 class Rank1 v where
-  rank1 :: v -> Position -> Count
+  rank1 :: v -> Count -> Count
 
 class Select1 v where
-  select1 :: v -> Count -> Position
+  select1 :: v -> Count -> Count
 
 class Eq a => Rank v a where
-  rank :: a -> v -> Position -> Count
+  rank :: a -> v -> Count -> Count
 
 class Eq a => Select v a where
-  select :: a -> v -> Count -> Position
+  select :: a -> v -> Count -> Count
 
 instance Rank1 Word8 where
   rank1 _ 0  = 0
   rank1 v s0 =
     -- Shift out bits after given position.
-    let r0 = v .<. (8 - toCount s0) in
+    let r0 = v .<. (8 - s0) in
     -- Count set bits in parallel.
     let r1 = (r0 .&. 0x55) + ((r0 .>. 1) .&. 0x55)  in
     let r2 = (r1 .&. 0x33) + ((r1 .>. 2) .&. 0x33)  in
@@ -57,7 +57,7 @@ instance Rank1 Word16 where
   rank1 _ 0  = 0
   rank1 v s0 =
     -- Shift out bits after given position.
-    let r0 = v .<. (16 - toCount s0) in
+    let r0 = v .<. (16 - s0) in
     -- Count set bits in parallel.
     let r1 = (r0 .&. 0x5555) + ((r0 .>. 1) .&. 0x5555)  in
     let r2 = (r1 .&. 0x3333) + ((r1 .>. 2) .&. 0x3333)  in
@@ -70,7 +70,7 @@ instance Rank1 Word32 where
   rank1 _ 0  = 0
   rank1 v s0 =
     -- Shift out bits after given position.
-    let r0 = v .<. (32 - toCount s0) in
+    let r0 = v .<. (32 - s0) in
     -- Count set bits in parallel.
     let r1 = (r0 .&. 0x55555555) + ((r0 .>. 1) .&. 0x55555555)  in
     let r2 = (r1 .&. 0x33333333) + ((r1 .>. 2) .&. 0x33333333)  in
@@ -83,7 +83,7 @@ instance Rank1 Word64 where
   rank1 _ 0  = 0
   rank1 v s0 =
     -- Shift out bits after given position.
-    let r0 = v .<. (64 - toCount s0) in
+    let r0 = v .<. (64 - s0) in
     -- Count set bits in parallel.
     let r1 = (r0 .&. 0x5555555555555555) + ((r0 .>. 1) .&. 0x5555555555555555)  in
     let r2 = (r1 .&. 0x3333333333333333) + ((r1 .>. 2) .&. 0x3333333333333333)  in
@@ -198,7 +198,7 @@ instance Select1 Word64 where
     fromIntegral s7
   {-# INLINABLE select1 #-}
 
-rankWords1 :: (Num a, PopCount1 a, Rank1 a, BitLength a) => [a] -> Position -> Count
+rankWords1 :: (Num a, PopCount1 a, Rank1 a, BitLength a) => [a] -> Count -> Count
 rankWords1 ws n = if remainder == 0
     then predRank
     else predRank + partRank
@@ -208,14 +208,14 @@ rankWords1 ws n = if remainder == 0
     (ls, rs) = splitAt (fromIntegral $ n `quot` endPos) ws
     predRank = P.sum (map (fromIntegral . popCount1) ls)
     r = headDef 0 rs
-    endPos = endPosition (head ws)
+    endPos = bitLength (head ws)
 {-# INLINABLE rankWords1 #-}
 
-selectWords1 :: (PopCount1 v, Select1 v, BitLength v) => Count -> [v] -> Count -> Position
-selectWords1 _ [] (Count r) = Position (fromIntegral r) + 1
+selectWords1 :: (PopCount1 v, Select1 v, BitLength v) => Count -> [v] -> Count -> Count
+selectWords1 _ []     r = r + 1
 selectWords1 n (w:ws) r = if pc < n
     then selectWords1 (n - pc) ws (r + bitLength w)
-    else select1 w n + Position (fromIntegral r)
+    else select1 w n + r
   where
     pc = popCount1 w
 {-# INLINABLE selectWords1 #-}
@@ -233,24 +233,24 @@ instance Select1 (DVS.Vector Word8) where
               pc            -> go (n + 1) (d - pc) (acc + 8)
   {-# INLINABLE select1 #-}
 
-rankWords0 :: (Num a, PopCount1 a, Rank0 a, BitLength a) => [a] -> Position -> Count
+rankWords0 :: (Num a, PopCount1 a, Rank0 a, BitLength a) => [a] -> Count -> Count
 rankWords0 ws n = if remainder == 0
     then predRank
     else predRank + partRank
   where
     partRank = rank0 r remainder
-    remainder = n `mod` endPos
-    (ls, rs) = splitAt (fromIntegral $ n `quot` endPos) ws
+    remainder = n `mod` bitLen
+    (ls, rs) = splitAt (fromIntegral $ n `quot` bitLen) ws
     predRank = P.sum (map (fromIntegral . popCount1) ls)
     r = headDef 0 rs
-    endPos = endPosition (head ws)
+    bitLen = bitLength (head ws)
 {-# INLINABLE rankWords0 #-}
 
-selectWords0 :: (PopCount1 v, Select0 v, BitLength v) => Count -> [v] -> Count -> Position
-selectWords0 _ [] (Count r) = Position (fromIntegral r) + 1
+selectWords0 :: (PopCount1 v, Select0 v, BitLength v) => Count -> [v] -> Count -> Count
+selectWords0 _ []     r = r + 1
 selectWords0 n (w:ws) r = if pc < n
     then selectWords0 (n - pc) ws (r + bitLength w)
-    else select0 w n + Position (fromIntegral r)
+    else select0 w n + r
   where
     pc = popCount1 w
 {-# INLINABLE selectWords0 #-}
@@ -274,19 +274,19 @@ instance Select0 (DVS.Vector Word8) where
 -----------------------------------------------------------------------------------
 
 instance Rank0 Word8 where
-  rank0 v s0 = toCount s0 - rank1 v s0
+  rank0 v s0 = s0 - rank1 v s0
   {-# INLINABLE rank0 #-}
 
 instance Rank0 Word16 where
-  rank0 v s0 = toCount s0 - rank1 v s0
+  rank0 v s0 = s0 - rank1 v s0
   {-# INLINABLE rank0 #-}
 
 instance Rank0 Word32 where
-  rank0 v s0 = toCount s0 - rank1 v s0
+  rank0 v s0 = s0 - rank1 v s0
   {-# INLINABLE rank0 #-}
 
 instance Rank0 Word64 where
-  rank0 v s0 = toCount s0 - rank1 v s0
+  rank0 v s0 = s0 - rank1 v s0
   {-# INLINABLE rank0 #-}
 
 -- TODO: Implement NOT interms of select for word-16

@@ -6,8 +6,8 @@ module HaskellWorks.Data.Succinct.NearestNeighbour
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect
 
-bitPred :: (Rank1 v, Select1 v) => v -> Position -> Position
+bitPred :: (Rank1 v, Select1 v) => v -> Count -> Count
 bitPred v p = select1 v (rank1 v p - 1)
 
-bitSucc :: (Rank1 v, Select1 v) => v -> Position -> Position
+bitSucc :: (Rank1 v, Select1 v) => v -> Count -> Count
 bitSucc v p = select1 v (rank1 v p + 1)

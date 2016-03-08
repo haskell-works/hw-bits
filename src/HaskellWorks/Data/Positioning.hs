@@ -3,14 +3,15 @@
 module HaskellWorks.Data.Positioning
   ( Count(..)
   , Position(..)
+  , lastPositionOf
   , toCount
   , toPosition
   ) where
 
-import Data.Int
-import Data.Word
-import Test.QuickCheck as QuickCheck
-import System.Random
+import           Data.Int
+import           Data.Word
+import           System.Random
+import           Test.QuickCheck as QuickCheck
 
 newtype Count = Count { getCount :: Word64 }
   deriving (Eq, Num, Ord, Enum, Integral, Real, Random)
@@ -38,3 +39,6 @@ toPosition (Count n) = Position (fromIntegral n)
 
 toCount :: Position -> Count
 toCount (Position n) = Count (fromIntegral n)
+
+lastPositionOf :: Count -> Position
+lastPositionOf (Count c)  = Position (fromIntegral c - 1)

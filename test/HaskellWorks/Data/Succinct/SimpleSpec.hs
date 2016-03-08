@@ -14,35 +14,35 @@ import           Test.QuickCheck
 
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 
-newtype Position_0_8  = Position_0_8  Position deriving (Eq,Show)
-newtype Position_0_16 = Position_0_16 Position deriving (Eq,Show)
-newtype Position_0_32 = Position_0_32 Position deriving (Eq,Show)
-newtype Position_0_64 = Position_0_64 Position deriving (Eq,Show)
+newtype Count_0_8  = Count_0_8  Count deriving (Eq,Show)
+newtype Count_0_16 = Count_0_16 Count deriving (Eq,Show)
+newtype Count_0_32 = Count_0_32 Count deriving (Eq,Show)
+newtype Count_0_64 = Count_0_64 Count deriving (Eq,Show)
 
-instance Arbitrary Position_0_8 where
+instance Arbitrary Count_0_8 where
   arbitrary = do
-     n <- choose (0, 8 :: Int64)
-     return (Position_0_8 (Position n))
+     n <- choose (0, 8 :: Word64)
+     return (Count_0_8 (Count n))
 
-instance Arbitrary Position_0_16 where
+instance Arbitrary Count_0_16 where
  arbitrary = do
-    n <- choose (0, 16 :: Int64)
-    return (Position_0_16 (Position n))
+    n <- choose (0, 16 :: Word64)
+    return (Count_0_16 (Count n))
 
-instance Arbitrary Position_0_32 where
+instance Arbitrary Count_0_32 where
  arbitrary = do
-    n <- choose (0, 32 :: Int64)
-    return (Position_0_32 (Position n))
+    n <- choose (0, 32 :: Word64)
+    return (Count_0_32 (Count n))
 
-instance Arbitrary Position_0_64 where
+instance Arbitrary Count_0_64 where
  arbitrary = do
-    n <- choose (0, 64 :: Int64)
-    return (Position_0_64 (Position n))
+    n <- choose (0, 64 :: Word64)
+    return (Count_0_64 (Count n))
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
   it "rank1 for Simple (Vector Word8) and Simple (Vector Word64) should give same answer" $ property $
-    \(Position_0_64 i) (a :: Word8) (b :: Word8) (c :: Word8) (d :: Word8)
+    \(Count_0_64 i) (a :: Word8) (b :: Word8) (c :: Word8) (d :: Word8)
                   (e :: Word8) (f :: Word8) (g :: Word8) (h :: Word8) ->
       let a64 = fromIntegral a :: Word64 in
       let b64 = fromIntegral b :: Word64 in
@@ -58,7 +58,7 @@ spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
       let vec64 = Simple (fromList [abcdefgh64]             :: Vector Word64)               in
       rank1 vec16 i == rank1 vec64 i
   it "rank1 for Simple (Vector Word16) and Simple (Vector Word64) should give same answer" $ property $
-    \(Position_0_64 i) (a :: Word16) (b :: Word16) (c :: Word16) (d :: Word16) ->
+    \(Count_0_64 i) (a :: Word16) (b :: Word16) (c :: Word16) (d :: Word16) ->
       let a64 = fromIntegral a :: Word64 in
       let b64 = fromIntegral b :: Word64 in
       let c64 = fromIntegral c :: Word64 in
@@ -68,7 +68,7 @@ spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
       let vec64 = Simple (fromList [abcd64]     :: Vector Word64) in
       rank1 vec16 i == rank1 vec64 i
   it "rank1 for Simple (Vector Word32) and Simple (Vector Word64) should give same answer" $ property $
-    \(Position_0_64 i) (a :: Word32) (b :: Word32) ->
+    \(Count_0_64 i) (a :: Word32) (b :: Word32) ->
       let a64 = fromIntegral a :: Word64 in
       let b64 = fromIntegral b :: Word64 in
       let ab64 = (b64 .<. 32) .|. a64 in

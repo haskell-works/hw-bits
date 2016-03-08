@@ -11,21 +11,21 @@ import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Internal
 
 class BalancedParens v where
-  findOpen :: v -> Position -> Position
-  findClose :: v -> Position -> Position
-  enclose :: v -> Position -> Position
+  findOpen :: v -> Count -> Count
+  findClose :: v -> Count -> Count
+  enclose :: v -> Count -> Count
 
-firstChild :: v -> Position -> Position
+firstChild :: v -> Count -> Count
 firstChild _ = (+ 1)
 
-nextSibling :: (BalancedParens v) => v -> Position -> Position
+nextSibling :: (BalancedParens v) => v -> Count -> Count
 nextSibling v p = findClose v p + 1
 
-parent :: (BalancedParens v) => v -> Position -> Position
+parent :: (BalancedParens v) => v -> Count -> Count
 parent = enclose
 
-depth :: (BalancedParens v, Rank0 v, Rank1 v) => v -> Position -> Count
+depth :: (BalancedParens v, Rank0 v, Rank1 v) => v -> Count -> Count
 depth v p = let q = findOpen v p in rank1 v q - rank0 v q
 
-subtreeSize :: (BalancedParens v) => v -> Position -> Count
-subtreeSize v p = toCount ((findClose v p - p + 1) `quot` 2)
+subtreeSize :: (BalancedParens v) => v -> Count -> Count
+subtreeSize v p = (findClose v p - p + 1) `quot` 2
