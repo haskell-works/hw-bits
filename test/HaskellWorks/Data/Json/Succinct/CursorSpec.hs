@@ -150,3 +150,15 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
       (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
       let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (DVS.Vector Word8)
       jsonCursorType cursor `shouldBe` JsonCursorObject
+      jsonCursorType (fc cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((ns . fc) cursor) `shouldBe` JsonCursorObject
+      jsonCursorType ((fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorObject
+      jsonCursorType ((fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((ns . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorNumber
