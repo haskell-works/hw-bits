@@ -127,7 +127,7 @@ instance TestBit (Simple (DVS.Vector Word64)) where
   {-# INLINABLE (.?.) #-}
 
 instance Rank1 (Simple (DVS.Vector Word8)) where
-  rank1 (Simple v) = rankWords (toList v)
+  rank1 (Simple v) = rank1 v
   {-# INLINABLE rank1 #-}
 
 instance Rank1 (Simple (DVS.Vector Word16)) where
@@ -143,7 +143,7 @@ instance Rank1 (Simple (DVS.Vector Word64)) where
   {-# INLINABLE rank1 #-}
 
 instance Select1 (Simple (DVS.Vector Word8)) where
-  select1 (Simple v) = selectWords 0 (toList v)
+  select1 (Simple v) = select1 v
   {-# INLINABLE select1 #-}
 
 instance Select1 (Simple (DVS.Vector Word16))  where

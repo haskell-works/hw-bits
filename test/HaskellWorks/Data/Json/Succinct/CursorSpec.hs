@@ -79,9 +79,8 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
     it "cursor can navigate to first child of object at second child of array" $ do
       let cursor = "[null, {\"field\": 1}]" :: JsonCursor String [Bool]
       jsonCursorType ((ns . fc . ns . fc) cursor)  `shouldBe` JsonCursorNumber
-  describe "Cursor for (DVS.Vector Word8)" $ do
     it "depth at top" $ do
-      let cursor = "[null]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      let cursor = "[null]" :: JsonCursor String [Bool]
       cd cursor `shouldBe` 1
     it "depth at first child of array" $ do
       let cursor = "[null]" :: JsonCursor String [Bool]
@@ -95,10 +94,59 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
     it "depth at first child of object at second child of array" $ do
       let cursor = "[null, {\"field\": 1}]" :: JsonCursor String [Bool]
       cd ((ns . fc . ns . fc) cursor)  `shouldBe` 3
+  describe "Cursor for (DVS.Vector Word8)" $ do
+    it "initialises to beginning of empty object" $ do
+      let cursor = "{}" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      jsonCursorType cursor `shouldBe` JsonCursorObject
+    it "initialises to beginning of empty object preceded by spaces" $ do
+      let cursor = " {}" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      jsonCursorType cursor `shouldBe` JsonCursorObject
+    it "initialises to beginning of number" $ do
+      let cursor = "1234" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      jsonCursorType cursor `shouldBe` JsonCursorNumber
+    it "initialises to beginning of string" $ do
+      let cursor = "\"Hello\"" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      jsonCursorType cursor `shouldBe` JsonCursorString
+    it "initialises to beginning of array" $ do
+      let cursor = "[]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      jsonCursorType cursor `shouldBe` JsonCursorArray
+    it "initialises to beginning of boolean true" $ do
+      let cursor = "true" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      jsonCursorType cursor `shouldBe` JsonCursorBool
+    it "initialises to beginning of boolean false" $ do
+      let cursor = "false" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      jsonCursorType cursor `shouldBe` JsonCursorBool
+    it "initialises to beginning of null" $ do
+      let cursor = "null" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      jsonCursorType cursor `shouldBe` JsonCursorNull
+    it "cursor can navigate to first child of array" $ do
+      let cursor = "[null]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      jsonCursorType (fc cursor) `shouldBe` JsonCursorNull
+    it "cursor can navigate to second child of array" $ do
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      jsonCursorType ((ns . fc) cursor) `shouldBe` JsonCursorObject
+    it "cursor can navigate to first child of object at second child of array" $ do
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      jsonCursorType ((fc . ns . fc) cursor) `shouldBe` JsonCursorString
+    it "cursor can navigate to first child of object at second child of array" $ do
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      jsonCursorType ((ns . fc . ns . fc) cursor)  `shouldBe` JsonCursorNumber
+    it "depth at top" $ do
+      let cursor = "[null]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      cd cursor `shouldBe` 1
+    it "depth at first child of array" $ do
+      let cursor = "[null]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      cd (fc cursor) `shouldBe` 2
+    it "depth at second child of array" $ do
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      cd ((ns . fc) cursor) `shouldBe` 2
+    it "depth at first child of object at second child of array" $ do
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      cd ((fc . ns . fc) cursor) `shouldBe` 3
+    it "depth at first child of object at second child of array" $ do
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      cd ((ns . fc . ns . fc) cursor)  `shouldBe` 3
     it "can memory map a json file" $ do
       (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
       let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (DVS.Vector Word8)
-      let k = cursor in print $ fromIntegral (select1 (interests k) (cursorRank k) - 1)
-      let k = cursor in print $ select1 (interests k) (cursorRank k)
-      let k = cursor in print $ select1 (DVS.head (getSimple (interests k))) (cursorRank k)
-      print $ jsonCursorType cursor
+      jsonCursorType cursor `shouldBe` JsonCursorObject

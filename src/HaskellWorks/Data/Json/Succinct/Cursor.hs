@@ -11,6 +11,7 @@ import           Data.Conduit
 import           Data.String
 import qualified Data.Vector.Storable                         as DVS
 import           Data.Word
+import           Debug.Trace
 import           Foreign.ForeignPtr
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Conduit.Json
@@ -132,14 +133,14 @@ instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word8)) where
     123 {- { -} -> JsonCursorObject
     34  {- " -} -> JsonCursorString
     _   -> error "Invalid JsonCursor cursorRank"
-    where c = cursorText k `BS.index` fromIntegral (select1 (interests k) (cursorRank k) - 1)
+    where c = cursorText k `BS.index` fromIntegral (select1 (interests k) (rank1 (balancedParens k) (cursorRank k)) - 1)
 
 instance TreeCursor (JsonCursor BS.ByteString (DVS.Vector Word8)) where
-  firstChild  k = k { cursorRank = rank1 (balancedParens k) (BP.firstChild   (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
-  nextSibling k = k { cursorRank = rank1 (balancedParens k) (BP.nextSibling  (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
-  parent      k = k { cursorRank = undefined }-- BP.parent       (balancedParens k) (cursorRank k) }
-  depth       k = BP.depth (balancedParens k) (select1 (balancedParens k) (cursorRank k))
-  subtreeSize k = undefined -- BP.subtreeSize (balancedParens k) (cursorRank k)
+  firstChild  k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
+  nextSibling k = k { cursorRank = BP.nextSibling  (balancedParens k) (cursorRank k) }
+  parent      k = k { cursorRank = BP.parent       (balancedParens k) (cursorRank k) }
+  depth       k = BP.depth (balancedParens k) (cursorRank k)
+  subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
 
 class FromForeignRegion a where
   fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> a
