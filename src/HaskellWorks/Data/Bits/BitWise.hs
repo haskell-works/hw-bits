@@ -178,35 +178,35 @@ instance TestBit Word64 where
   {-# INLINABLE (.?.) #-}
 
 instance TestBit (DV.Vector Word8) where
-  (.?.) v n = (v !!! n) .?. (n `mod` elemBitEnd v)
+  (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
   {-# INLINABLE (.?.) #-}
 
 instance TestBit (DV.Vector Word16) where
-  (.?.) v n = (v !!! n) .?. (n `mod` elemBitEnd v)
+  (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
   {-# INLINABLE (.?.) #-}
 
 instance TestBit (DV.Vector Word32) where
-  (.?.) v n = (v !!! n) .?. (n `mod` elemBitEnd v)
+  (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
   {-# INLINABLE (.?.) #-}
 
 instance TestBit (DV.Vector Word64) where
-  (.?.) v n = (v !!! n) .?. (n `mod` elemBitEnd v)
+  (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
   {-# INLINABLE (.?.) #-}
 
 instance TestBit (DVS.Vector Word8) where
-  (.?.) v n = (v !!! n) .?. (n `mod` elemBitEnd v)
+  (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
   {-# INLINABLE (.?.) #-}
 
 instance TestBit (DVS.Vector Word16) where
-  (.?.) v n = (v !!! n) .?. (n `mod` elemBitEnd v)
+  (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
   {-# INLINABLE (.?.) #-}
 
 instance TestBit (DVS.Vector Word32) where
-  (.?.) v n = (v !!! n) .?. (n `mod` elemBitEnd v)
+  (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
   {-# INLINABLE (.?.) #-}
 
 instance TestBit (DVS.Vector Word64) where
-  (.?.) v n = (v !!! n) .?. (n `mod` elemBitEnd v)
+  (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
   {-# INLINABLE (.?.) #-}
 
 instance PopCount1 Bool where
