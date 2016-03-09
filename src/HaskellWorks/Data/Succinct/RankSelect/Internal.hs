@@ -16,6 +16,7 @@ import           Data.Word
 import           Debug.Trace
 import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitWise
+import           HaskellWorks.Data.Bits.PopCount
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.VectorLike
 import           Prelude                          as P

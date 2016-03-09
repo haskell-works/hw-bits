@@ -7,7 +7,7 @@ import qualified Data.Bits                        as B
 import qualified Data.Vector.Storable             as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength
-import           HaskellWorks.Data.Bits.BitWise
+import           HaskellWorks.Data.Bits.PopCount
 import           Test.Hspec
 import           Test.QuickCheck
 

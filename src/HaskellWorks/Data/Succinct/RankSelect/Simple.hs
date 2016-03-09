@@ -25,6 +25,7 @@ import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
+import           HaskellWorks.Data.Bits.PopCount
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Internal
 import           HaskellWorks.Data.VectorLike

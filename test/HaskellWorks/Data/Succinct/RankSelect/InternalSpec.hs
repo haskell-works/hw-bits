@@ -8,6 +8,7 @@ import qualified Data.Vector.Storable                  as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
+import           HaskellWorks.Data.Bits.PopCount
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect
 import           Test.Hspec

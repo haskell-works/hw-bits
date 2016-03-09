@@ -42,6 +42,7 @@ library
                       , HaskellWorks.Data.Bits.BitWise
                       , HaskellWorks.Data.Bits.BitWise.String
                       , HaskellWorks.Data.Bits.Conversion
+                      , HaskellWorks.Data.Bits.PopCount
                       , HaskellWorks.Data.Conduit.Json
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Internal
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumn

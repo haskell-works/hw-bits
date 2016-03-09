@@ -12,3 +12,4 @@ import           HaskellWorks.Data.Bits.BitParse  as X
 import           HaskellWorks.Data.Bits.BitPrint  as X
 import           HaskellWorks.Data.Bits.BitString as X
 import           HaskellWorks.Data.Bits.BitWise   as X
+import           HaskellWorks.Data.Bits.PopCount  as X
