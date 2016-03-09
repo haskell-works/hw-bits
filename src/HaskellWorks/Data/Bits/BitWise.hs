@@ -198,6 +198,22 @@ instance PopCount1 [Word64] where
   popCount1 = P.sum . fmap popCount1
   {-# INLINABLE popCount1 #-}
 
+instance PopCount1 (DVS.Vector Word8) where
+  popCount1 = DVS.foldl (\c -> (c +) . popCount1) 0
+  {-# INLINABLE popCount1 #-}
+
+instance PopCount1 (DVS.Vector Word16) where
+  popCount1 = DVS.foldl (\c -> (c +) . popCount1) 0
+  {-# INLINABLE popCount1 #-}
+
+instance PopCount1 (DVS.Vector Word32) where
+  popCount1 = DVS.foldl (\c -> (c +) . popCount1) 0
+  {-# INLINABLE popCount1 #-}
+
+instance PopCount1 (DVS.Vector Word64) where
+  popCount1 = DVS.foldl (\c -> (c +) . popCount1) 0
+  {-# INLINABLE popCount1 #-}
+
 instance PopCount0 [Bool] where
   popCount0 = P.sum . fmap popCount0
   {-# INLINABLE popCount0 #-}
@@ -216,6 +232,22 @@ instance PopCount0 [Word32] where
 
 instance PopCount0 [Word64] where
   popCount0 = P.sum . fmap popCount0
+  {-# INLINABLE popCount0 #-}
+
+instance PopCount0 (DVS.Vector Word8) where
+  popCount0 = DVS.foldl (\c -> (c +) . popCount0) 0
+  {-# INLINABLE popCount0 #-}
+
+instance PopCount0 (DVS.Vector Word16) where
+  popCount0 = DVS.foldl (\c -> (c +) . popCount0) 0
+  {-# INLINABLE popCount0 #-}
+
+instance PopCount0 (DVS.Vector Word32) where
+  popCount0 = DVS.foldl (\c -> (c +) . popCount0) 0
+  {-# INLINABLE popCount0 #-}
+
+instance PopCount0 (DVS.Vector Word64) where
+  popCount0 = DVS.foldl (\c -> (c +) . popCount0) 0
   {-# INLINABLE popCount0 #-}
 
 instance BitWise Word8 where
