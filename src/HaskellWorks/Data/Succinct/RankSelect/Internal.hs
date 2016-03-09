@@ -11,13 +11,14 @@ module HaskellWorks.Data.Succinct.RankSelect.Internal
     , Select(..)
     ) where
 
-import qualified Data.Vector.Storable            as DVS
+import qualified Data.Vector.Storable                      as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.Bits.PopCount
+import           HaskellWorks.Data.Bits.PopCount.PopCount0
+import           HaskellWorks.Data.Bits.PopCount.PopCount1
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.VectorLike
-import           Prelude                         as P
+import           Prelude                                   as P
 
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
 
