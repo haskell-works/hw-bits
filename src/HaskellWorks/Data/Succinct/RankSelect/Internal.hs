@@ -13,6 +13,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Internal
 
 import qualified Data.Vector.Storable             as DVS
 import           Data.Word
+import           Debug.Trace
 import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
@@ -198,21 +199,11 @@ instance Select1 Word64 where
     fromIntegral s7
   {-# INLINABLE select1 #-}
 
-rankWords1 :: (Num a, PopCount1 a, Rank1 a, BitLength a) => [a] -> Count -> Count
-rankWords1 ws n = if remainder == 0
-    then predRank
-    else predRank + partRank
-  where
-    partRank = rank1 r remainder
-    remainder = n `mod` endPos
-    (ls, rs) = splitAt (fromIntegral $ n `quot` endPos) ws
-    predRank = P.sum (map (fromIntegral . popCount1) ls)
-    r = headDef 0 rs
-    endPos = bitLength (head ws)
-{-# INLINABLE rankWords1 #-}
-
 instance Rank1 (DVS.Vector Word8) where
-  rank1 v = rankWords1 (DVS.toList v)
+  rank1 v p = popCount1 prefix + if r == 0 then 0 else (`rank1` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` 8, ((p - 1) `rem` 8) + 1)
+          prefix    = DVS.take (fromIntegral q) v
+          maybeElem = v !!! fromIntegral q
   {-# INLINABLE rank1 #-}
 
 instance Select1 (DVS.Vector Word8) where
@@ -225,9 +216,10 @@ instance Select1 (DVS.Vector Word8) where
   {-# INLINABLE select1 #-}
 
 instance Rank0 (DVS.Vector Word8) where
-  rank0 v p | p < 1     = 0
-            | p < 9     = rank0 (DVS.head v) ((p - 1 `rem` 8) + 1)
-            | otherwise = rank0 (DVS.head v) ((p - 1 `rem` 8) + 1) + rank0 (DVS.tail v) (p - 8)
+  rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` 8, ((p - 1) `rem` 8) + 1)
+          prefix    = DVS.take (fromIntegral q) v
+          maybeElem = v !!! fromIntegral q
   {-# INLINABLE rank0 #-}
 
 instance Select0 (DVS.Vector Word8) where

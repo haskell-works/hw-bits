@@ -116,6 +116,9 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
     it "rank1 11011010 00000000 over [0..9]" $ do
       let (Just bs) = fromBitString "11011010 00000000" :: Maybe (DVS.Vector Word8)
       fmap (rank1 bs) [0..9] `shouldBe` [0, 1, 2, 2, 3, 4, 4, 5, 5, 5]
+    it "rank1 11011010 10000000 over [0..9]" $ do
+      let (Just bs) = fromBitString "11011010 10000000" :: Maybe (DVS.Vector Word8)
+      fmap (rank1 bs) [0..9] `shouldBe` [0, 1, 2, 2, 3, 4, 4, 5, 5, 6]
     it "select1 11011010 00000000 over [0..5]" $ do
       let (Just bs) = fromBitString "11011010 00000000" :: Maybe (DVS.Vector Word8)
       fmap (select1 bs) [0..5] `shouldBe` [0, 1, 2, 4, 5, 7]
