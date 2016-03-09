@@ -13,7 +13,6 @@ module HaskellWorks.Data.Succinct.RankSelect.Internal
 
 import qualified Data.Vector.Storable             as DVS
 import           Data.Word
-import           Debug.Trace
 import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
@@ -212,15 +211,6 @@ rankWords1 ws n = if remainder == 0
     endPos = bitLength (head ws)
 {-# INLINABLE rankWords1 #-}
 
-selectWords1 :: (PopCount1 v, Select1 v, BitLength v) => Count -> [v] -> Count -> Count
-selectWords1 _ []     r = r + 1
-selectWords1 n (w:ws) r = if pc < n
-    then selectWords1 (n - pc) ws (r + bitLength w)
-    else select1 w n + r
-  where
-    pc = popCount1 w
-{-# INLINABLE selectWords1 #-}
-
 instance Rank1 (DVS.Vector Word8) where
   rank1 v = rankWords1 (DVS.toList v)
   {-# INLINABLE rank1 #-}
@@ -233,28 +223,6 @@ instance Select1 (DVS.Vector Word8) where
               pc | d <= pc  -> select1 w d + acc
               pc            -> go (n + 1) (d - pc) (acc + 8)
   {-# INLINABLE select1 #-}
-
-rankWords0 :: (Num a, PopCount1 a, Rank0 a, BitLength a) => [a] -> Count -> Count
-rankWords0 ws n = if remainder == 0
-    then predRank
-    else predRank + partRank
-  where
-    partRank = rank0 r remainder
-    remainder = n `mod` bitLen
-    (ls, rs) = splitAt (fromIntegral $ n `quot` bitLen) ws
-    predRank = P.sum (map (fromIntegral . popCount1) ls)
-    r = headDef 0 rs
-    bitLen = bitLength (head ws)
-{-# INLINABLE rankWords0 #-}
-
-selectWords0 :: (PopCount1 v, Select0 v, BitLength v) => Count -> [v] -> Count -> Count
-selectWords0 _ []     r = r + 1
-selectWords0 n (w:ws) r = if pc < n
-    then selectWords0 (n - pc) ws (r + bitLength w)
-    else select0 w n + r
-  where
-    pc = popCount1 w
-{-# INLINABLE selectWords0 #-}
 
 instance Rank0 (DVS.Vector Word8) where
   rank0 v p | p < 1     = 0
