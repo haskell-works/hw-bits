@@ -11,6 +11,7 @@ module HaskellWorks.Data.Succinct.BalancedParens.Simple
 
 import           Data.Typeable
 import           Debug.Trace
+import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitPrint
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise

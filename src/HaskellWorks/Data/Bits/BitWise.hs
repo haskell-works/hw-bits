@@ -9,24 +9,22 @@
 -- Succinct operations.
 module HaskellWorks.Data.Bits.BitWise
     ( -- * Bit map
-      BitLength(..)
-    , BitWise(..)
+      BitWise(..)
     , PopCount(..)
     , PopCount0(..)
     , PopCount1(..)
     , Shift(..)
     , TestBit(..)
-    , elemBitLength
-    , elemBitEnd
     ) where
 
-import qualified Data.Bits                     as B
-import qualified Data.Vector                   as DV
-import qualified Data.Vector.Storable          as DVS
+import qualified Data.Bits                        as B
+import qualified Data.Vector                      as DV
+import qualified Data.Vector.Storable             as DVS
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.VectorLike  as VL
-import           Prelude                       as P
+import           HaskellWorks.Data.VectorLike     as VL
+import           Prelude                          as P
 
 -- We pervasively use precedence to avoid excessive parentheses, and we use
 -- the same precedence conventions of the C programming language: arithmetic
@@ -37,12 +35,6 @@ infixl 8 .<., .>.
 infixl 7 .&.        -- Bitwise AND.  eg. ∧
 infixl 6 .^.        -- Bitwise XOR.  eg. ⊕
 infixl 5 .|.        -- Bitwise OR.   eg. ∨
-
-class BitLength v where
-  bitLength :: v -> Count
-
-  endPosition :: v -> Position
-  endPosition = Position . fromIntegral . getCount . bitLength
 
 class Shift a where
   (.<.) :: a -> Count -> a
@@ -69,88 +61,7 @@ class PopCount1 v where
   popCount1 :: v -> Count
 
 --------------------------------------------------------------------------------
--- Functions
-
-elemBitLength :: (VectorLike v e, BitLength e) => v e -> Count
-elemBitLength v = bitLength (v !!! 0)
-
-elemBitEnd :: (VectorLike v e, BitLength e) => v e -> Position
-elemBitEnd v = endPosition (v !!! 0)
-
---------------------------------------------------------------------------------
 -- Instances
-
-instance BitLength Bool where
-  bitLength _ = 1
-  {-# INLINABLE bitLength #-}
-
-instance BitLength [Bool] where
-  bitLength = fromIntegral . P.length
-  {-# INLINABLE bitLength #-}
-
-instance BitLength Word8 where
-  bitLength _ = 8
-  {-# INLINABLE bitLength #-}
-
-instance BitLength Word16 where
-  bitLength _ = 16
-  {-# INLINABLE bitLength #-}
-
-instance BitLength Word32 where
-  bitLength _ = 32
-  {-# INLINABLE bitLength #-}
-
-instance BitLength Word64 where
-  bitLength _ = 64
-  {-# INLINABLE bitLength #-}
-
-instance BitLength [Word8] where
-  bitLength v = fromIntegral (P.length v) * bitLength (head v)
-  {-# INLINABLE bitLength #-}
-
-instance BitLength [Word16] where
-  bitLength v = fromIntegral (P.length v) * bitLength (head v)
-  {-# INLINABLE bitLength #-}
-
-instance BitLength [Word32] where
-  bitLength v = fromIntegral (P.length v) * bitLength (head v)
-  {-# INLINABLE bitLength #-}
-
-instance BitLength [Word64] where
-  bitLength v = fromIntegral (P.length v) * bitLength (head v)
-  {-# INLINABLE bitLength #-}
-
-instance BitLength (DV.Vector Word8) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
-  {-# INLINABLE bitLength #-}
-
-instance BitLength (DV.Vector Word16) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
-  {-# INLINABLE bitLength #-}
-
-instance BitLength (DV.Vector Word32) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
-  {-# INLINABLE bitLength #-}
-
-instance BitLength (DV.Vector Word64) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
-  {-# INLINABLE bitLength #-}
-
-instance BitLength (DVS.Vector Word8) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
-  {-# INLINABLE bitLength #-}
-
-instance BitLength (DVS.Vector Word16) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
-  {-# INLINABLE bitLength #-}
-
-instance BitLength (DVS.Vector Word32) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
-  {-# INLINABLE bitLength #-}
-
-instance BitLength (DVS.Vector Word64) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
-  {-# INLINABLE bitLength #-}
 
 instance TestBit Bool where
   (.?.) w 0 = w

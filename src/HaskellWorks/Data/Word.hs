@@ -1,10 +1,11 @@
-{-# LANGUAGE MultiParamTypeClasses  #-}
-{-# LANGUAGE TypeFamilies           #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeFamilies          #-}
 
 module HaskellWorks.Data.Word where
 
-import Data.Word
-import HaskellWorks.Data.Bits.BitWise
+import           Data.Word
+import           HaskellWorks.Data.Bits.BitLength
+import           HaskellWorks.Data.Bits.BitWise
 
 class WordConcat a where
   type DoubleWords a
