@@ -4,23 +4,20 @@
 
 module HaskellWorks.Data.Json.Succinct.Cursor where
 
-import qualified Data.ByteString                              as BS
-import qualified Data.ByteString.Char8                        as BSC
-import           Data.ByteString.Internal                     as BSI
+import qualified Data.ByteString                           as BS
+import qualified Data.ByteString.Char8                     as BSC
+import           Data.ByteString.Internal                  as BSI
 import           Data.Conduit
 import           Data.String
-import qualified Data.Vector.Storable                         as DVS
+import qualified Data.Vector.Storable                      as DVS
 import           Data.Word
-import           Debug.Trace
 import           Foreign.ForeignPtr
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.BalancedParens    as BP
+import           HaskellWorks.Data.Succinct.BalancedParens as BP
 import           HaskellWorks.Data.Succinct.RankSelect
-import           HaskellWorks.Data.Vector.Storable.ByteString
-import           HaskellWorks.Data.VectorLike
 import           Text.Parsec
 
 class TreeCursor k where
@@ -104,7 +101,6 @@ instance IsString (JsonCursor BS.ByteString (DVS.Vector Word8)) where
     , interests       = Simple interestsV
     }
     where textBS          = BSC.pack s :: BS.ByteString
-          interests'      = jsonToInterestBits [textBS]
           interestBS      = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
           interestsV      = DVS.unfoldr genInterest interestBS :: DVS.Vector Word8
           genInterest bs  = if BS.null bs

@@ -5,23 +5,12 @@
 
 module HaskellWorks.Data.Json.Succinct.CursorSpec(spec) where
 
-import           Control.Monad
-import           Control.Monad.IO.Class
-import qualified Data.ByteString                           as BS
-import           Data.ByteString.Internal                  as BSI
-import           Data.Char
-import           Data.Conduit
-import qualified Data.Vector.Storable                      as DVS
+import qualified Data.ByteString                        as BS
+import qualified Data.Vector.Storable                   as DVS
 import           Data.Word
-import           Foreign.ForeignPtr
-import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct
-import           HaskellWorks.Data.Json.Succinct.Cursor    as C
+import           HaskellWorks.Data.Json.Succinct.Cursor as C
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.BalancedParens as BP
-import           HaskellWorks.Data.Succinct.RankSelect
-import           HaskellWorks.Data.VectorLike
 import           System.IO.MMap
 import           Test.Hspec
 

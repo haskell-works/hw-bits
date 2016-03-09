@@ -3,7 +3,6 @@
 
 module HaskellWorks.Data.Succinct.SimpleSpec (spec) where
 
-import           Data.Int
 import           Data.Vector
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise

@@ -3,7 +3,6 @@
 
 module HaskellWorks.Data.Succinct.RankSelect.InternalSpec (spec) where
 
-import           Control.Monad.IO.Class
 import qualified Data.Vector.Storable                  as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitString
