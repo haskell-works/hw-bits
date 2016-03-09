@@ -3,11 +3,9 @@
 
 module HaskellWorks.Data.Succinct.RankSelect.Rank9Spec (spec) where
 
-import           Data.Int
 import qualified Data.Vector                                             as DVN
 import qualified Data.Vector.Storable                                    as DVS
 import           Data.Word
-import           HaskellWorks.Data.Succinct
 import qualified HaskellWorks.Data.Succinct.RankSelect.Rank9.Native      as N
 import qualified HaskellWorks.Data.Succinct.RankSelect.Rank9.Positioning as P
 import qualified HaskellWorks.Data.Succinct.RankSelect.Rank9.Storable    as S

@@ -3,16 +3,10 @@
 
 module HaskellWorks.Data.Bits.BitStringSpec (spec) where
 
-import qualified Data.Bits                             as B
-import           Data.Int
-import qualified Data.Vector                           as DV
+import qualified Data.Vector                      as DV
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitString
-import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.RankSelect
 import           Test.Hspec
-import           Test.QuickCheck
 
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 

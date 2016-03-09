@@ -64,6 +64,10 @@ library
                       , HaskellWorks.Data.Succinct.BalancedParens.Simple
                       , HaskellWorks.Data.Succinct.NearestNeighbour
                       , HaskellWorks.Data.Succinct.RankSelect
+                      , HaskellWorks.Data.Succinct.RankSelect.Basic.Rank0
+                      , HaskellWorks.Data.Succinct.RankSelect.Basic.Rank1
+                      , HaskellWorks.Data.Succinct.RankSelect.Basic.Select0
+                      , HaskellWorks.Data.Succinct.RankSelect.Basic.Select1
                       , HaskellWorks.Data.Succinct.RankSelect.Internal
                       , HaskellWorks.Data.Succinct.RankSelect.Rank9
                       , HaskellWorks.Data.Succinct.RankSelect.Rank9.Native

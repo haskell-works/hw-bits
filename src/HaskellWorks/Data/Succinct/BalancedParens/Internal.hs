@@ -7,7 +7,6 @@ module HaskellWorks.Data.Succinct.BalancedParens.Internal
   , subtreeSize
   ) where
 
-import           Debug.Trace
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Internal
 
