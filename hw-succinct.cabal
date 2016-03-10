@@ -35,7 +35,6 @@ library
                       , HaskellWorks.Data.Attoparsec.Final.Parser.Internal
                       , HaskellWorks.Data.Attoparsec.Final.Parser.Text
                       , HaskellWorks.Data.Bits
-                      , HaskellWorks.Data.Bits.BitFixedSize
                       , HaskellWorks.Data.Bits.BitLength
                       , HaskellWorks.Data.Bits.BitParse
                       , HaskellWorks.Data.Bits.BitPrint
@@ -43,6 +42,8 @@ library
                       , HaskellWorks.Data.Bits.BitWise
                       , HaskellWorks.Data.Bits.BitWise.String
                       , HaskellWorks.Data.Bits.Conversion
+                      , HaskellWorks.Data.Bits.ElemFixedBitSize
+                      , HaskellWorks.Data.Bits.FixedBitSize
                       , HaskellWorks.Data.Bits.PopCount
                       , HaskellWorks.Data.Bits.PopCount.PopCount0
                       , HaskellWorks.Data.Bits.PopCount.PopCount1
