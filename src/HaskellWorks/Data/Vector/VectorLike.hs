@@ -25,12 +25,6 @@ class VectorLike v e where
   unsafeIndex :: v e -> Position -> e
   unsafeSlice :: Position -> Position -> v e -> v e
 
-class BoxedVectorLike v e where
-  bImap :: (Int -> a -> b) -> v a -> v b
-  bMap :: (a -> b) -> v a -> v b
-  bUnfoldr :: (Storable a) => (b -> Maybe (a, b)) -> b -> v a
-  bUnfoldrN :: (Storable a) => Int -> (b -> Maybe (a, b)) -> b -> v a
-
 class StorableVectorLike v e where
   sImap :: (Storable a, Storable b) => (Int -> a -> b) -> v a -> v b
   sMap :: (Storable a, Storable b) => (a -> b) -> v a -> v b
@@ -74,19 +68,6 @@ instance VectorLike DV.Vector Word8 where
   unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
-instance BoxedVectorLike DV.Vector Word8 where
-  bImap = DV.imap
-  {-# INLINABLE bImap #-}
-
-  bMap = DV.map
-  {-# INLINABLE bMap #-}
-
-  bUnfoldr = DV.unfoldr
-  {-# INLINABLE bUnfoldr #-}
-
-  bUnfoldrN = DV.unfoldrN
-  {-# INLINABLE bUnfoldrN #-}
-
 instance VectorLike DV.Vector Word16 where
   toList = DV.toList
   {-# INLINABLE toList #-}
@@ -123,19 +104,6 @@ instance VectorLike DV.Vector Word16 where
 
   unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
-
-instance BoxedVectorLike DV.Vector Word16 where
-  bImap = DV.imap
-  {-# INLINABLE bImap #-}
-
-  bMap = DV.map
-  {-# INLINABLE bMap #-}
-
-  bUnfoldr = DV.unfoldr
-  {-# INLINABLE bUnfoldr #-}
-
-  bUnfoldrN = DV.unfoldrN
-  {-# INLINABLE bUnfoldrN #-}
 
 instance VectorLike DV.Vector Word32 where
   toList = DV.toList
@@ -174,19 +142,6 @@ instance VectorLike DV.Vector Word32 where
   unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
-instance BoxedVectorLike DV.Vector Word32 where
-  bImap = DV.imap
-  {-# INLINABLE bImap #-}
-
-  bMap = DV.map
-  {-# INLINABLE bMap #-}
-
-  bUnfoldr = DV.unfoldr
-  {-# INLINABLE bUnfoldr #-}
-
-  bUnfoldrN = DV.unfoldrN
-  {-# INLINABLE bUnfoldrN #-}
-
 instance VectorLike DV.Vector Word64 where
   toList = DV.toList
   {-# INLINABLE toList #-}
@@ -223,19 +178,6 @@ instance VectorLike DV.Vector Word64 where
 
   unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
-
-instance BoxedVectorLike DV.Vector Word64 where
-  bImap = DV.imap
-  {-# INLINABLE bImap #-}
-
-  bMap = DV.map
-  {-# INLINABLE bMap #-}
-
-  bUnfoldr = DV.unfoldr
-  {-# INLINABLE bUnfoldr #-}
-
-  bUnfoldrN = DV.unfoldrN
-  {-# INLINABLE bUnfoldrN #-}
 
 instance VectorLike DVS.Vector Word8 where
   toList = DVS.toList
