@@ -50,7 +50,49 @@ instance Rank0 [Word8] where
           maybeElem = v !! fromIntegral q
   {-# INLINABLE rank0 #-}
 
+instance Rank0 [Word16] where
+  rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
+          prefix    = take (fromIntegral q) v
+          maybeElem = v !! fromIntegral q
+  {-# INLINABLE rank0 #-}
+
+instance Rank0 [Word32] where
+  rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
+          prefix    = take (fromIntegral q) v
+          maybeElem = v !! fromIntegral q
+  {-# INLINABLE rank0 #-}
+
+instance Rank0 [Word64] where
+  rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
+          prefix    = take (fromIntegral q) v
+          maybeElem = v !! fromIntegral q
+  {-# INLINABLE rank0 #-}
+
 instance Rank0 (DV.Vector Word8) where
+  rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
+          prefix    = DV.take (fromIntegral q) v
+          maybeElem = v !!! fromIntegral q
+  {-# INLINABLE rank0 #-}
+
+instance Rank0 (DV.Vector Word16) where
+  rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
+          prefix    = DV.take (fromIntegral q) v
+          maybeElem = v !!! fromIntegral q
+  {-# INLINABLE rank0 #-}
+
+instance Rank0 (DV.Vector Word32) where
+  rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
+          prefix    = DV.take (fromIntegral q) v
+          maybeElem = v !!! fromIntegral q
+  {-# INLINABLE rank0 #-}
+
+instance Rank0 (DV.Vector Word64) where
   rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
     where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
           prefix    = DV.take (fromIntegral q) v
@@ -64,21 +106,21 @@ instance Rank0 (DVS.Vector Word8) where
           maybeElem = v !!! fromIntegral q
   {-# INLINABLE rank0 #-}
 
-instance Rank0 [Word16] where
+instance Rank0 (DVS.Vector Word16) where
   rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
     where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
-          prefix    = take (fromIntegral q) v
-          maybeElem = v !! fromIntegral q
-  {-# INLINABLE rank0 #-}
-
-instance Rank0 (DV.Vector Word16) where
-  rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
-    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
-          prefix    = DV.take (fromIntegral q) v
+          prefix    = DVS.take (fromIntegral q) v
           maybeElem = v !!! fromIntegral q
   {-# INLINABLE rank0 #-}
 
-instance Rank0 (DVS.Vector Word16) where
+instance Rank0 (DVS.Vector Word32) where
+  rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
+          prefix    = DVS.take (fromIntegral q) v
+          maybeElem = v !!! fromIntegral q
+  {-# INLINABLE rank0 #-}
+
+instance Rank0 (DVS.Vector Word64) where
   rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
     where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
           prefix    = DVS.take (fromIntegral q) v

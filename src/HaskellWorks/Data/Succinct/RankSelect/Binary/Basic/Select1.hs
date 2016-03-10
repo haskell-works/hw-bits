@@ -125,6 +125,14 @@ instance Select1 Word64 where
     fromIntegral s7
   {-# INLINABLE select1 #-}
 
+instance Select1 [Bool] where
+  select1 = go 0
+    where go r _ 0 = r
+          go r (True :bs) c = go (r + 1) bs (c - 1)
+          go r (False:bs) c = go (r + 1) bs  c
+          go _ []         _ = error "Out of range"
+  {-# INLINABLE select1 #-}
+
 instance Select1 [Word8] where
   select1 v c = go v c 0
     where go :: [Word8] -> Count -> Count -> Count
@@ -135,7 +143,64 @@ instance Select1 [Word8] where
               pc            -> go (tail u) (d - pc) (acc + elemFixedBitSize u)
   {-# INLINABLE select1 #-}
 
+instance Select1 [Word16] where
+  select1 v c = go v c 0
+    where go :: [Word16] -> Count -> Count -> Count
+          go _ 0  acc = acc
+          go u d acc = let w = head u in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (tail u) (d - pc) (acc + elemFixedBitSize u)
+  {-# INLINABLE select1 #-}
+
+instance Select1 [Word32] where
+  select1 v c = go v c 0
+    where go :: [Word32] -> Count -> Count -> Count
+          go _ 0  acc = acc
+          go u d acc = let w = head u in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (tail u) (d - pc) (acc + elemFixedBitSize u)
+  {-# INLINABLE select1 #-}
+
+instance Select1 [Word64] where
+  select1 v c = go v c 0
+    where go :: [Word64] -> Count -> Count -> Count
+          go _ 0  acc = acc
+          go u d acc = let w = head u in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (tail u) (d - pc) (acc + elemFixedBitSize u)
+  {-# INLINABLE select1 #-}
+
 instance Select1 (DVS.Vector Word8) where
+  select1 v c = go 0 c 0
+    where go _ 0  acc = acc
+          go n d acc = let w = (v !!! n) in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (n + 1) (d - pc) (acc + elemFixedBitSize v)
+  {-# INLINABLE select1 #-}
+
+instance Select1 (DVS.Vector Word16) where
+  select1 v c = go 0 c 0
+    where go _ 0  acc = acc
+          go n d acc = let w = (v !!! n) in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (n + 1) (d - pc) (acc + elemFixedBitSize v)
+  {-# INLINABLE select1 #-}
+
+instance Select1 (DVS.Vector Word32) where
+  select1 v c = go 0 c 0
+    where go _ 0  acc = acc
+          go n d acc = let w = (v !!! n) in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (n + 1) (d - pc) (acc + elemFixedBitSize v)
+  {-# INLINABLE select1 #-}
+
+instance Select1 (DVS.Vector Word64) where
   select1 v c = go 0 c 0
     where go _ 0  acc = acc
           go n d acc = let w = (v !!! n) in
@@ -153,25 +218,6 @@ instance Select1 (DV.Vector Word8) where
               pc            -> go (n + 1) (d - pc) (acc + elemFixedBitSize v)
   {-# INLINABLE select1 #-}
 
-instance Select1 [Word16] where
-  select1 v c = go v c 0
-    where go :: [Word16] -> Count -> Count -> Count
-          go _ 0  acc = acc
-          go u d acc = let w = head u in
-            case popCount1 w of
-              pc | d <= pc  -> select1 w d + acc
-              pc            -> go (tail u) (d - pc) (acc + elemFixedBitSize u)
-  {-# INLINABLE select1 #-}
-
-instance Select1 (DVS.Vector Word16) where
-  select1 v c = go 0 c 0
-    where go _ 0  acc = acc
-          go n d acc = let w = (v !!! n) in
-            case popCount1 w of
-              pc | d <= pc  -> select1 w d + acc
-              pc            -> go (n + 1) (d - pc) (acc + elemFixedBitSize v)
-  {-# INLINABLE select1 #-}
-
 instance Select1 (DV.Vector Word16) where
   select1 v c = go 0 c 0
     where go _ 0  acc = acc
@@ -181,10 +227,20 @@ instance Select1 (DV.Vector Word16) where
               pc            -> go (n + 1) (d - pc) (acc + elemFixedBitSize v)
   {-# INLINABLE select1 #-}
 
-instance Select1 [Bool] where
-  select1 = go 0
-    where go r _ 0 = r
-          go r (True :bs) c = go (r + 1) bs (c - 1)
-          go r (False:bs) c = go (r + 1) bs  c
-          go _ []         _ = error "Out of range"
+instance Select1 (DV.Vector Word32) where
+  select1 v c = go 0 c 0
+    where go _ 0  acc = acc
+          go n d acc = let w = (v !!! n) in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (n + 1) (d - pc) (acc + elemFixedBitSize v)
+  {-# INLINABLE select1 #-}
+
+instance Select1 (DV.Vector Word64) where
+  select1 v c = go 0 c 0
+    where go _ 0  acc = acc
+          go n d acc = let w = (v !!! n) in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (n + 1) (d - pc) (acc + elemFixedBitSize v)
   {-# INLINABLE select1 #-}
