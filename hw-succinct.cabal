@@ -102,7 +102,8 @@ test-suite hw-succinct-test
   type:                 exitcode-stdio-1.0
   hs-source-dirs:       test
   main-is:              Spec.hs
-  other-modules:        HaskellWorks.Data.Bits.BitStringSpec
+  other-modules:        HaskellWorks.Data.Arbitrary.Count
+                      , HaskellWorks.Data.Bits.BitStringSpec
                       , HaskellWorks.Data.Bits.BitWiseSpec
                       , HaskellWorks.Data.Conduit.JsonSpec
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumnSpec

@@ -5,6 +5,7 @@ module HaskellWorks.Data.Succinct.SimpleSpec (spec) where
 
 import           Data.Vector
 import           Data.Word
+import           HaskellWorks.Data.Arbitrary.Count
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
@@ -13,31 +14,6 @@ import           Test.Hspec
 import           Test.QuickCheck
 
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
-
-newtype Count_0_8  = Count_0_8  Count deriving (Eq,Show)
-newtype Count_0_16 = Count_0_16 Count deriving (Eq,Show)
-newtype Count_0_32 = Count_0_32 Count deriving (Eq,Show)
-newtype Count_0_64 = Count_0_64 Count deriving (Eq,Show)
-
-instance Arbitrary Count_0_8 where
-  arbitrary = do
-     n <- choose (0, 8 :: Word64)
-     return (Count_0_8 (Count n))
-
-instance Arbitrary Count_0_16 where
- arbitrary = do
-    n <- choose (0, 16 :: Word64)
-    return (Count_0_16 (Count n))
-
-instance Arbitrary Count_0_32 where
- arbitrary = do
-    n <- choose (0, 32 :: Word64)
-    return (Count_0_32 (Count n))
-
-instance Arbitrary Count_0_64 where
- arbitrary = do
-    n <- choose (0, 64 :: Word64)
-    return (Count_0_64 (Count n))
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.SuccinctSpec" $ do

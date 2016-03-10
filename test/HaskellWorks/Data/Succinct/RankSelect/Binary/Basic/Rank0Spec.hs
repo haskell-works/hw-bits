@@ -5,10 +5,10 @@ module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0Spec (spec) where
 
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
+import           HaskellWorks.Data.Arbitrary.Count
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.PopCount.PopCount0
-import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
 import           Test.Hspec
@@ -16,31 +16,6 @@ import           Test.QuickCheck
 
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
-
-newtype Count_0_8  = Count_0_8  Count deriving (Eq, Show)
-newtype Count_0_16 = Count_0_16 Count deriving (Eq, Show)
-newtype Count_0_32 = Count_0_32 Count deriving (Eq, Show)
-newtype Count_0_64 = Count_0_64 Count deriving (Eq, Show)
-
-instance Arbitrary Count_0_8 where
-  arbitrary = do
-     n <- choose (0, 8 :: Word64)
-     return (Count_0_8 (Count n))
-
-instance Arbitrary Count_0_16 where
- arbitrary = do
-    n <- choose (0, 16 :: Word64)
-    return (Count_0_16 (Count n))
-
-instance Arbitrary Count_0_32 where
- arbitrary = do
-    n <- choose (0, 32 :: Word64)
-    return (Count_0_32 (Count n))
-
-instance Arbitrary Count_0_64 where
- arbitrary = do
-    n <- choose (0, 64 :: Word64)
-    return (Count_0_64 (Count n))
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
