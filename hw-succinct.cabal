@@ -111,6 +111,7 @@ test-suite hw-succinct-test
                       , HaskellWorks.Data.Json.Succinct.CursorSpec
                       , HaskellWorks.Data.Json.SuccinctSpec
                       , HaskellWorks.Data.Succinct.BalancedParensSpec
+                      , HaskellWorks.Data.Succinct.RankSelect.InternalSpec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.InternalSpec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9Spec
                       , HaskellWorks.Data.Succinct.SimpleSpec
