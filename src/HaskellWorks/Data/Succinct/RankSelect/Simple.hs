@@ -19,17 +19,20 @@ module HaskellWorks.Data.Succinct.RankSelect.Simple
     , getSimple
     ) where
 
-import qualified Data.Vector                                    as DV
-import qualified Data.Vector.Storable                           as DVS
+import qualified Data.Vector                                         as DV
+import qualified Data.Vector.Storable                                as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.RankSelect.Internal
+import           HaskellWorks.Data.Succinct.RankSelect.Basic.Rank0
+import           HaskellWorks.Data.Succinct.RankSelect.Basic.Rank1
+import           HaskellWorks.Data.Succinct.RankSelect.Basic.Select0
+import           HaskellWorks.Data.Succinct.RankSelect.Basic.Select1
 import           HaskellWorks.Data.VectorLike
-import qualified Prelude                                        as P
+import qualified Prelude                                             as P
 import           Safe
 
 newtype Simple a = Simple a deriving (P.Eq)

@@ -8,7 +8,8 @@ module HaskellWorks.Data.Succinct.BalancedParens.Internal
   ) where
 
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.RankSelect.Internal
+import           HaskellWorks.Data.Succinct.RankSelect.Basic.Rank0
+import           HaskellWorks.Data.Succinct.RankSelect.Basic.Rank1
 
 class BalancedParens v where
   findOpen :: v -> Count -> Count

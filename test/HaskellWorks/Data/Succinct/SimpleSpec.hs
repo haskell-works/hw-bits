@@ -7,7 +7,8 @@ import           Data.Vector
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct
+import           HaskellWorks.Data.Succinct.RankSelect.Basic.Rank1
+import           HaskellWorks.Data.Succinct.RankSelect.Simple
 import           Test.Hspec
 import           Test.QuickCheck
 

@@ -3,13 +3,17 @@
 
 module HaskellWorks.Data.Succinct.RankSelect.InternalSpec (spec) where
 
-import qualified Data.Vector.Storable                      as DVS
+import qualified Data.Vector.Storable                                as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect
+import           HaskellWorks.Data.Succinct.RankSelect.Basic.Rank0
+import           HaskellWorks.Data.Succinct.RankSelect.Basic.Rank1
+import           HaskellWorks.Data.Succinct.RankSelect.Basic.Select0
+import           HaskellWorks.Data.Succinct.RankSelect.Basic.Select1
 import           Test.Hspec
 import           Test.QuickCheck
 
