@@ -25,7 +25,27 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
     it "rank1 10010010 over [0..8] should be 011122233" $ do
       let bs = fromJust (fromBitString "10010010") :: Word8
       fmap (rank1 bs) [0..8] `shouldBe` [0, 1, 1, 1, 2, 2, 2, 3, 3]
+  describe "For Word32" $ do
+    it "rank1 10010010 over [0..8] should be 011122233" $ do
+      let bs = fromJust $ fromBitString "10010010" :: Word32
+      fmap (rank1 bs) [0..8] `shouldBe` [0, 1, 1, 1, 2, 2, 2, 3, 3]
+    it "rank1 11011010 00000000 over [0..9]" $ do
+      let bs = fromJust $ fromBitString "11011010 00000000" :: Word32
+      fmap (rank1 bs) [0..16] `shouldBe` [0, 1, 2, 2, 3, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+    it "rank1 11011010 10000000 over [0..9]" $ do
+      let bs = fromJust $ fromBitString "11011010 10000000" :: Word32
+      fmap (rank1 bs) [0..16] `shouldBe` [0, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6]
   describe "For Word64" $ do
+    it "rank1 10010010 over [0..8] should be 011122233" $ do
+      let bs = fromJust $ fromBitString "10010010" :: Word64
+      fmap (rank1 bs) [0..8] `shouldBe` [0, 1, 1, 1, 2, 2, 2, 3, 3]
+    it "rank1 11011010 00000000 over [0..9]" $ do
+      let bs = fromJust $ fromBitString "11011010 00000000" :: Word64
+      fmap (rank1 bs) [0..16] `shouldBe` [0, 1, 2, 2, 3, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+    it "rank1 11011010 10000000 over [0..9]" $ do
+      let bs = fromJust $ fromBitString "11011010 10000000" :: Word64
+      fmap (rank1 bs) [0..16] `shouldBe` [0, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6]
+  describe "For Word8-Word64" $ do
     it "rank1 for Word16 and Word64 should give same answer for bits 0-7" $ property $
       \(Count_0_8  i) (w :: Word8 ) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
     it "rank1 for Word16 and Word64 should give same answer for bits 0-15" $ property $
