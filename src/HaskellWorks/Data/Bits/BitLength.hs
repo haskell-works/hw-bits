@@ -13,12 +13,12 @@ module HaskellWorks.Data.Bits.BitLength
     , elemBitEnd
     ) where
 
-import qualified Data.Vector                   as DV
-import qualified Data.Vector.Storable          as DVS
+import qualified Data.Vector                         as DV
+import qualified Data.Vector.Storable                as DVS
 import           Data.Word
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.VectorLike  as VL
-import           Prelude                       as P
+import           HaskellWorks.Data.Vector.VectorLike as VL
+import           Prelude                             as P
 
 class BitLength v where
   bitLength :: v -> Count

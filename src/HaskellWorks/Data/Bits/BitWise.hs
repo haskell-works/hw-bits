@@ -14,14 +14,14 @@ module HaskellWorks.Data.Bits.BitWise
     , TestBit(..)
     ) where
 
-import qualified Data.Bits                        as B
-import qualified Data.Vector                      as DV
-import qualified Data.Vector.Storable             as DVS
+import qualified Data.Bits                           as B
+import qualified Data.Vector                         as DV
+import qualified Data.Vector.Storable                as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.VectorLike     as VL
-import           Prelude                          as P
+import           HaskellWorks.Data.Vector.VectorLike as VL
+import           Prelude                             as P
 
 -- We pervasively use precedence to avoid excessive parentheses, and we use
 -- the same precedence conventions of the C programming language: arithmetic

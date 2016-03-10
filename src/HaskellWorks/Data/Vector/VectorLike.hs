@@ -1,12 +1,12 @@
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module HaskellWorks.Data.VectorLike
+module HaskellWorks.Data.Vector.VectorLike
   ( VectorLike(..)
   ) where
 
-import qualified Data.Vector                            as DV
-import qualified Data.Vector.Storable                   as DVS
+import qualified Data.Vector                   as DV
+import qualified Data.Vector.Storable          as DVS
 import           Data.Word
 import           Foreign.Storable
 import           HaskellWorks.Data.Positioning

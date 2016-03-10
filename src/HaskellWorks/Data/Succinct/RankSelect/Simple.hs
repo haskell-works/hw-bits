@@ -31,7 +31,7 @@ import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
-import           HaskellWorks.Data.VectorLike
+import           HaskellWorks.Data.Vector.VectorLike
 import qualified Prelude                                                    as P
 import           Safe
 

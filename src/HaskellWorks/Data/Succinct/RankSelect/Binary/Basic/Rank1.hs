@@ -10,7 +10,7 @@ import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.VectorLike
+import           HaskellWorks.Data.Vector.VectorLike
 import           Prelude                                   as P
 
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
