@@ -64,16 +64,17 @@ library
                       , HaskellWorks.Data.Succinct.BalancedParens.Simple
                       , HaskellWorks.Data.Succinct.NearestNeighbour
                       , HaskellWorks.Data.Succinct.RankSelect
-                      , HaskellWorks.Data.Succinct.RankSelect.Basic
-                      , HaskellWorks.Data.Succinct.RankSelect.Basic.Rank0
-                      , HaskellWorks.Data.Succinct.RankSelect.Basic.Rank1
-                      , HaskellWorks.Data.Succinct.RankSelect.Basic.Select0
-                      , HaskellWorks.Data.Succinct.RankSelect.Basic.Select1
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Native
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Positioning
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Storable
                       , HaskellWorks.Data.Succinct.RankSelect.Internal
-                      , HaskellWorks.Data.Succinct.RankSelect.Rank9
-                      , HaskellWorks.Data.Succinct.RankSelect.Rank9.Native
-                      , HaskellWorks.Data.Succinct.RankSelect.Rank9.Positioning
-                      , HaskellWorks.Data.Succinct.RankSelect.Rank9.Storable
                       , HaskellWorks.Data.Succinct.RankSelect.Simple
                       , HaskellWorks.Data.Vector.Storable.ByteString
                       , HaskellWorks.Data.VectorLike
@@ -110,8 +111,8 @@ test-suite hw-succinct-test
                       , HaskellWorks.Data.Json.Succinct.CursorSpec
                       , HaskellWorks.Data.Json.SuccinctSpec
                       , HaskellWorks.Data.Succinct.BalancedParensSpec
-                      , HaskellWorks.Data.Succinct.RankSelect.InternalSpec
-                      , HaskellWorks.Data.Succinct.RankSelect.Rank9Spec
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.InternalSpec
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9Spec
                       , HaskellWorks.Data.Succinct.SimpleSpec
   build-depends:        base
                       , attoparsec                      >= 0.10

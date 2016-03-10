@@ -1,15 +1,15 @@
 {-# LANGUAGE FlexibleInstances #-}
 
-module HaskellWorks.Data.Succinct.RankSelect.Basic.Select0
+module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
     ( Select0(..)
     ) where
 
-import qualified Data.Vector.Storable                                as DVS
+import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.PopCount.PopCount0
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.RankSelect.Basic.Select1
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           HaskellWorks.Data.VectorLike
 
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}

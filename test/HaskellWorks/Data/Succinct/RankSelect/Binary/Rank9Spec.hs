@@ -1,14 +1,14 @@
 {-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module HaskellWorks.Data.Succinct.RankSelect.Rank9Spec (spec) where
+module HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9Spec (spec) where
 
-import qualified Data.Vector                                             as DVN
-import qualified Data.Vector.Storable                                    as DVS
+import qualified Data.Vector                                                    as DVN
+import qualified Data.Vector.Storable                                           as DVS
 import           Data.Word
-import qualified HaskellWorks.Data.Succinct.RankSelect.Rank9.Native      as N
-import qualified HaskellWorks.Data.Succinct.RankSelect.Rank9.Positioning as P
-import qualified HaskellWorks.Data.Succinct.RankSelect.Rank9.Storable    as S
+import qualified HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Native      as N
+import qualified HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Positioning as P
+import qualified HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Storable    as S
 import           Test.Hspec
 import           Test.QuickCheck
 

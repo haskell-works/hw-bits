@@ -16,11 +16,11 @@ import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens.Internal
-import           HaskellWorks.Data.Succinct.RankSelect.Basic.Rank0
-import           HaskellWorks.Data.Succinct.RankSelect.Basic.Rank1
-import           HaskellWorks.Data.Succinct.RankSelect.Basic.Select0
-import           HaskellWorks.Data.Succinct.RankSelect.Basic.Select1
-import           Prelude                                             as P
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
+import           Prelude                                                    as P
 
 newtype SimpleBalancedParens a = SimpleBalancedParens a
   deriving (BitLength, Eq, BitPrint, TestBit, Rank0, Rank1, Select0, Select1)

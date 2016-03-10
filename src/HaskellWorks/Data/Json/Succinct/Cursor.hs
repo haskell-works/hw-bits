@@ -4,21 +4,21 @@
 
 module HaskellWorks.Data.Json.Succinct.Cursor where
 
-import qualified Data.ByteString                                     as BS
-import qualified Data.ByteString.Char8                               as BSC
-import           Data.ByteString.Internal                            as BSI
+import qualified Data.ByteString                                            as BS
+import qualified Data.ByteString.Char8                                      as BSC
+import           Data.ByteString.Internal                                   as BSI
 import           Data.Conduit
 import           Data.String
-import qualified Data.Vector.Storable                                as DVS
+import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           Foreign.ForeignPtr
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.BalancedParens           as BP
-import           HaskellWorks.Data.Succinct.RankSelect.Basic.Rank1
-import           HaskellWorks.Data.Succinct.RankSelect.Basic.Select1
+import           HaskellWorks.Data.Succinct.BalancedParens                  as BP
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           HaskellWorks.Data.Succinct.RankSelect.Simple
 import           Text.Parsec
 

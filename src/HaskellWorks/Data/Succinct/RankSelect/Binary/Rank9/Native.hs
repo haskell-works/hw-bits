@@ -74,7 +74,7 @@ Nothing
 
 -}
 
-module HaskellWorks.Data.Succinct.RankSelect.Rank9.Native (
+module HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Native (
     -- * Construction
       NativeBitVector
     , prepare
@@ -94,26 +94,22 @@ module HaskellWorks.Data.Succinct.RankSelect.Rank9.Native (
 -- TODO: Compress original bit vector
 -- TODO: Carefully examine all `fromIntegral` uses
 
-import           Control.DeepSeq                                         (NFData (..))
-import           Control.Monad                                           (guard, replicateM)
-import           Data.Bits                                               (Bits, complement,
-                                                                          xor,
-                                                                          (.&.),
-                                                                          (.|.))
-import           Data.List                                               (sort)
-import           Data.Word                                               (Word16, Word64)
-import           HaskellWorks.Data.Succinct.RankSelect.Rank9.Positioning
-import           Prelude                                                 hiding
-                                                                          ((>>))
-import           Test.QuickCheck                                         (Arbitrary (..), choose)
+import           Control.DeepSeq                                                (NFData (..))
+import           Control.Monad                                                  (guard, replicateM)
+import           Data.Bits                                                      (Bits, complement, xor, (.&.), (.|.))
+import qualified Data.Bits                                                      as Bits
+import           Data.List                                                      (sort)
+import           Data.Word                                                      (Word16, Word64)
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Positioning
+import           Prelude                                                        hiding ((>>))
+import           Test.QuickCheck                                                (Arbitrary (..), choose)
+import qualified Test.QuickCheck                                                as QuickCheck
 
-import qualified Data.Bits                                               as Bits
 #ifdef LIQUID_HASKELL
-import qualified Data.Vector                                             as Unboxed
+import qualified Data.Vector                                                    as Unboxed
 #else
-import qualified Data.Vector.Unboxed                                     as Unboxed
+import qualified Data.Vector.Unboxed                                            as Unboxed
 #endif
-import qualified Test.QuickCheck                                         as QuickCheck
 
 safeIndexA v i = if i == Unboxed.length v then error "A" else (Unboxed.!) v i
 safeIndexB v i = if i == Unboxed.length v then error "B" else (Unboxed.!) v i

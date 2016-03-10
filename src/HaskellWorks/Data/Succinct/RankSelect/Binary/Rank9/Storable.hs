@@ -1,5 +1,5 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE CPP                        #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 #define LIQUID_HASKELL
 
@@ -74,7 +74,7 @@ Nothing
 
 -}
 
-module HaskellWorks.Data.Succinct.RankSelect.Rank9.Storable (
+module HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Storable (
     -- * Construction
       StorableBitVector
     , prepare
@@ -94,22 +94,22 @@ module HaskellWorks.Data.Succinct.RankSelect.Rank9.Storable (
 -- TODO: Compress original bit vector
 -- TODO: Carefully examine all `fromIntegral` uses
 
-import Control.DeepSeq (NFData(..))
-import Control.Monad (guard, replicateM)
-import Data.Bits (Bits, (.|.), (.&.), xor, complement)
-import Data.List (sort)
-import Data.Word (Word16, Word64)
-import HaskellWorks.Data.Succinct.RankSelect.Rank9.Positioning
-import Prelude hiding ((>>))  -- Use `(>>)` for right bit shift in this module
-import Test.QuickCheck (Arbitrary(..), choose)
+import           Control.DeepSeq                                                (NFData (..))
+import           Control.Monad                                                  (guard, replicateM)
+import           Data.Bits                                                      (Bits, complement, xor, (.&.), (.|.))
+import qualified Data.Bits                                                      as Bits
+import           Data.List                                                      (sort)
+import           Data.Word                                                      (Word16, Word64)
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Positioning
+import           Prelude                                                        hiding ((>>))
+import           Test.QuickCheck                                                (Arbitrary (..), choose)
+import qualified Test.QuickCheck                                                as QuickCheck
 
-import qualified Data.Bits            as Bits
 #ifdef LIQUID_HASKELL
-import qualified Data.Vector.Storable as Unboxed
+import qualified Data.Vector.Storable                                           as Unboxed
 #else
-import qualified Data.Vector.Unboxed  as Unboxed
+import qualified Data.Vector.Unboxed                                            as Unboxed
 #endif
-import qualified Test.QuickCheck      as QuickCheck
 
 -- $setup
 -- >>> import Data.Vector.Unboxed as Unboxed

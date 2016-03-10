@@ -1,9 +1,9 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module HaskellWorks.Data.Succinct.RankSelect.Rank9.Positioning where
+module HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Positioning where
 
-import Data.Word
-import Test.QuickCheck as QuickCheck
+import           Data.Word
+import           Test.QuickCheck as QuickCheck
 
 newtype Count = Count { getCount :: Word64 }
   deriving (Eq, Num, Ord, Enum, Real, Integral)

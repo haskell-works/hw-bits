@@ -8,7 +8,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Internal
     ) where
 
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Succinct.RankSelect.Basic
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic
 
 class Eq a => Rank v a where
   rank :: a -> v -> Count -> Count

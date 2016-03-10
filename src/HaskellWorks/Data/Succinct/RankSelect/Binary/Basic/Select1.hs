@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleInstances #-}
 
-module HaskellWorks.Data.Succinct.RankSelect.Basic.Select1
+module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
     ( Select1(..)
     ) where
 
