@@ -8,7 +8,6 @@ module HaskellWorks.Data.Vector.VectorLike
 import qualified Data.Vector                   as DV
 import qualified Data.Vector.Storable          as DVS
 import           Data.Word
-import           Foreign.Storable
 import           HaskellWorks.Data.Positioning
 
 class VectorLike v e where
@@ -24,12 +23,6 @@ class VectorLike v e where
   sum :: v e -> e
   unsafeIndex :: v e -> Position -> e
   unsafeSlice :: Position -> Position -> v e -> v e
-
-class StorableVectorLike v e where
-  sImap :: (Storable a, Storable b) => (Int -> a -> b) -> v a -> v b
-  sMap :: (Storable a, Storable b) => (a -> b) -> v a -> v b
-  sUnfoldr :: (Storable a) => (b -> Maybe (a, b)) -> b -> v a
-  sUnfoldrN :: (Storable a) => Int -> (b -> Maybe (a, b)) -> b -> v a
 
 instance VectorLike DV.Vector Word8 where
   toList = DV.toList
@@ -216,19 +209,6 @@ instance VectorLike DVS.Vector Word8 where
   unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
-instance StorableVectorLike DVS.Vector Word8 where
-  sImap = DVS.imap
-  {-# INLINABLE sImap #-}
-
-  sMap = DVS.map
-  {-# INLINABLE sMap #-}
-
-  sUnfoldr = DVS.unfoldr
-  {-# INLINABLE sUnfoldr #-}
-
-  sUnfoldrN = DVS.unfoldrN
-  {-# INLINABLE sUnfoldrN #-}
-
 instance VectorLike DVS.Vector Word16 where
   toList = DVS.toList
   {-# INLINABLE toList #-}
@@ -265,19 +245,6 @@ instance VectorLike DVS.Vector Word16 where
 
   unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
-
-instance StorableVectorLike DVS.Vector Word16 where
-  sImap = DVS.imap
-  {-# INLINABLE sImap #-}
-
-  sMap = DVS.map
-  {-# INLINABLE sMap #-}
-
-  sUnfoldr = DVS.unfoldr
-  {-# INLINABLE sUnfoldr #-}
-
-  sUnfoldrN = DVS.unfoldrN
-  {-# INLINABLE sUnfoldrN #-}
 
 instance VectorLike DVS.Vector Word32 where
   toList = DVS.toList
@@ -316,19 +283,6 @@ instance VectorLike DVS.Vector Word32 where
   unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
-instance StorableVectorLike DVS.Vector Word32 where
-  sImap = DVS.imap
-  {-# INLINABLE sImap #-}
-
-  sMap = DVS.map
-  {-# INLINABLE sMap #-}
-
-  sUnfoldr = DVS.unfoldr
-  {-# INLINABLE sUnfoldr #-}
-
-  sUnfoldrN = DVS.unfoldrN
-  {-# INLINABLE sUnfoldrN #-}
-
 instance VectorLike DVS.Vector Word64 where
   toList = DVS.toList
   {-# INLINABLE toList #-}
@@ -365,16 +319,3 @@ instance VectorLike DVS.Vector Word64 where
 
   unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
-
-instance StorableVectorLike DVS.Vector Word64 where
-  sImap = DVS.imap
-  {-# INLINABLE sImap #-}
-
-  sMap = DVS.map
-  {-# INLINABLE sMap #-}
-
-  sUnfoldr = DVS.unfoldr
-  {-# INLINABLE sUnfoldr #-}
-
-  sUnfoldrN = DVS.unfoldrN
-  {-# INLINABLE sUnfoldrN #-}

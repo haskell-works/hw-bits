@@ -79,6 +79,7 @@ library
                       , HaskellWorks.Data.Succinct.RankSelect.Simple
                       , HaskellWorks.Data.Vector.BoxedVectorLike
                       , HaskellWorks.Data.Vector.Storable.ByteString
+                      , HaskellWorks.Data.Vector.StorableVectorLike
                       , HaskellWorks.Data.Vector.VectorLike
                       , HaskellWorks.Data.Word
   build-depends:        base                            >= 4.7  && < 5
