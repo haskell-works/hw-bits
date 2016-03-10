@@ -30,6 +30,9 @@ spec = describe "HaskellWorks.Data.BitStringSpec" $ do
   it "fromBitString \"11100100 10101111 1\" :: Maybe (DV.Vector Word8)" $
     let v = fromBitString "11100100 10101111 1" :: Maybe (DV.Vector Word8) in
     v `shouldBe` Just (DV.fromList [39, 245, 1])
+  it "fromBitString \"11100100 10101111 1\" :: Maybe (DV.Vector Word16)" $
+    let v = fromBitString "11100100 10101111 1" :: Maybe (DV.Vector Word16) in
+    v `shouldBe` Just (DV.fromList [39 + 62720, 1])
   it "fromBitString \"\" :: Maybe (DV.Vector Word8)" $
     let v = fromBitString "" :: Maybe (DV.Vector Word8) in
     v `shouldBe` Just (DV.fromList [])

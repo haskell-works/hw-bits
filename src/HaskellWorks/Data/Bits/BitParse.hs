@@ -57,21 +57,21 @@ instance BitParse Word16 where
   bitParse1 = do
     (a :: Word8) <- bitParse1
     (b :: Word8) <- bitParse0
-    return $ fromIntegral (b .<. bitLength a) .|. fromIntegral a
+    return $ (fromIntegral b .<. bitLength a) .|. fromIntegral a
 
 instance BitParse Word32 where
   bitParse0 = option 0 bitParse1
   bitParse1 = do
     (a :: Word16) <- bitParse1
     (b :: Word16) <- bitParse0
-    return $ fromIntegral (b .<. bitLength a) .|. fromIntegral a
+    return $ (fromIntegral b .<. bitLength a) .|. fromIntegral a
 
 instance BitParse Word64 where
   bitParse0 = option 0 bitParse1
   bitParse1 = do
     (a :: Word32) <- bitParse1
     (b :: Word32) <- bitParse0
-    return $ fromIntegral (b .<. bitLength a) .|. fromIntegral a
+    return $ (fromIntegral b .<. bitLength a) .|. fromIntegral a
 
 instance BitParse [Word8] where
   bitParse0 = option [] bitParse1
