@@ -35,6 +35,7 @@ library
                       , HaskellWorks.Data.Attoparsec.Final.Parser.Internal
                       , HaskellWorks.Data.Attoparsec.Final.Parser.Text
                       , HaskellWorks.Data.Bits
+                      , HaskellWorks.Data.Bits.BitFixedSize
                       , HaskellWorks.Data.Bits.BitLength
                       , HaskellWorks.Data.Bits.BitParse
                       , HaskellWorks.Data.Bits.BitPrint
