@@ -7,6 +7,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import qualified Data.Vector                                              as DV
 import qualified Data.Vector.Storable                                     as DVS
 import           Data.Word
+import           HaskellWorks.Data.Bits.ElemFixedBitSize
 import           HaskellWorks.Data.Bits.PopCount.PopCount0
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1 as X
@@ -44,21 +45,42 @@ instance Rank0 [Bool] where
 
 instance Rank0 [Word8] where
   rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
-    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` 8, ((p - 1) `rem` 8) + 1)
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
           prefix    = take (fromIntegral q) v
           maybeElem = v !! fromIntegral q
   {-# INLINABLE rank0 #-}
 
 instance Rank0 (DV.Vector Word8) where
   rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
-    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` 8, ((p - 1) `rem` 8) + 1)
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
           prefix    = DV.take (fromIntegral q) v
           maybeElem = v !!! fromIntegral q
   {-# INLINABLE rank0 #-}
 
 instance Rank0 (DVS.Vector Word8) where
   rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
-    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` 8, ((p - 1) `rem` 8) + 1)
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
+          prefix    = DVS.take (fromIntegral q) v
+          maybeElem = v !!! fromIntegral q
+  {-# INLINABLE rank0 #-}
+
+instance Rank0 [Word16] where
+  rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
+          prefix    = take (fromIntegral q) v
+          maybeElem = v !! fromIntegral q
+  {-# INLINABLE rank0 #-}
+
+instance Rank0 (DV.Vector Word16) where
+  rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
+          prefix    = DV.take (fromIntegral q) v
+          maybeElem = v !!! fromIntegral q
+  {-# INLINABLE rank0 #-}
+
+instance Rank0 (DVS.Vector Word16) where
+  rank0 v p = popCount0 prefix + if r == 0 then 0 else (`rank0` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` elemFixedBitSize v, ((p - 1) `rem` elemFixedBitSize v) + 1)
           prefix    = DVS.take (fromIntegral q) v
           maybeElem = v !!! fromIntegral q
   {-# INLINABLE rank0 #-}

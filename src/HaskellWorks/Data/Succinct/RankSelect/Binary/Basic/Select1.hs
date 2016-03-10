@@ -8,6 +8,7 @@ import qualified Data.Vector                               as DV
 import qualified Data.Vector.Storable                      as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
+import           HaskellWorks.Data.Bits.ElemFixedBitSize
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Vector.VectorLike
@@ -126,11 +127,12 @@ instance Select1 Word64 where
 
 instance Select1 [Word8] where
   select1 v c = go v c 0
-    where go _ 0  acc = acc
-          go v d acc = let w = head v in
+    where go :: [Word8] -> Count -> Count -> Count
+          go _ 0  acc = acc
+          go u d acc = let w = head u in
             case popCount1 w of
               pc | d <= pc  -> select1 w d + acc
-              pc            -> go (tail v) (d - pc) (acc + 8)
+              pc            -> go (tail u) (d - pc) (acc + elemFixedBitSize u)
   {-# INLINABLE select1 #-}
 
 instance Select1 (DVS.Vector Word8) where
@@ -139,7 +141,7 @@ instance Select1 (DVS.Vector Word8) where
           go n d acc = let w = (v !!! n) in
             case popCount1 w of
               pc | d <= pc  -> select1 w d + acc
-              pc            -> go (n + 1) (d - pc) (acc + 8)
+              pc            -> go (n + 1) (d - pc) (acc + elemFixedBitSize v)
   {-# INLINABLE select1 #-}
 
 instance Select1 (DV.Vector Word8) where
@@ -148,7 +150,35 @@ instance Select1 (DV.Vector Word8) where
           go n d acc = let w = (v !!! n) in
             case popCount1 w of
               pc | d <= pc  -> select1 w d + acc
-              pc            -> go (n + 1) (d - pc) (acc + 8)
+              pc            -> go (n + 1) (d - pc) (acc + elemFixedBitSize v)
+  {-# INLINABLE select1 #-}
+
+instance Select1 [Word16] where
+  select1 v c = go v c 0
+    where go :: [Word16] -> Count -> Count -> Count
+          go _ 0  acc = acc
+          go u d acc = let w = head u in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (tail u) (d - pc) (acc + elemFixedBitSize u)
+  {-# INLINABLE select1 #-}
+
+instance Select1 (DVS.Vector Word16) where
+  select1 v c = go 0 c 0
+    where go _ 0  acc = acc
+          go n d acc = let w = (v !!! n) in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (n + 1) (d - pc) (acc + elemFixedBitSize v)
+  {-# INLINABLE select1 #-}
+
+instance Select1 (DV.Vector Word16) where
+  select1 v c = go 0 c 0
+    where go _ 0  acc = acc
+          go n d acc = let w = (v !!! n) in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (n + 1) (d - pc) (acc + elemFixedBitSize v)
   {-# INLINABLE select1 #-}
 
 instance Select1 [Bool] where
