@@ -4,6 +4,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
     ( Select1(..)
     ) where
 
+import qualified Data.Vector                               as DV
 import qualified Data.Vector.Storable                      as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
@@ -123,7 +124,25 @@ instance Select1 Word64 where
     fromIntegral s7
   {-# INLINABLE select1 #-}
 
+instance Select1 [Word8] where
+  select1 v c = go v c 0
+    where go _ 0  acc = acc
+          go v d acc = let w = head v in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (tail v) (d - pc) (acc + 8)
+  {-# INLINABLE select1 #-}
+
 instance Select1 (DVS.Vector Word8) where
+  select1 v c = go 0 c 0
+    where go _ 0  acc = acc
+          go n d acc = let w = (v !!! n) in
+            case popCount1 w of
+              pc | d <= pc  -> select1 w d + acc
+              pc            -> go (n + 1) (d - pc) (acc + 8)
+  {-# INLINABLE select1 #-}
+
+instance Select1 (DV.Vector Word8) where
   select1 v c = go 0 c 0
     where go _ 0  acc = acc
           go n d acc = let w = (v !!! n) in

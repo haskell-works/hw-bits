@@ -4,6 +4,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
     ( Select0(..)
     ) where
 
+import qualified Data.Vector                                                as DV
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
@@ -16,15 +17,6 @@ import           HaskellWorks.Data.VectorLike
 
 class Select0 v where
   select0 :: v -> Count -> Count
-
-instance Select0 (DVS.Vector Word8) where
-  select0 v c = go 0 c 0
-    where go _ 0  acc = acc
-          go n d acc = let w = (v !!! n) in
-            case popCount0 w of
-              pc | d <= pc  -> select0 w d + acc
-              pc            -> go (n + 1) (d - pc) (acc + 8)
-  {-# INLINABLE select0 #-}
 
 -- TODO: Implement NOT in terms of select for word-16
 instance Select0 Word8 where
@@ -50,3 +42,31 @@ instance Select0 [Bool] where
           go r (True:bs)  c = go (r + 1) bs  c
           go _ []         _ = error "Out of range"
   {-# INLINABLE select0 #-}
+
+instance Select0 [Word8] where
+  select0 v c = go v c 0
+    where go _ 0  acc = acc
+          go v d acc = let w = head v in
+            case popCount0 w of
+              pc | d <= pc  -> select0 w d + acc
+              pc            -> go (tail v) (d - pc) (acc + 8)
+  {-# INLINABLE select0 #-}
+
+instance Select0 (DV.Vector Word8) where
+  select0 v c = go 0 c 0
+    where go _ 0  acc = acc
+          go n d acc = let w = (v !!! n) in
+            case popCount0 w of
+              pc | d <= pc  -> select0 w d + acc
+              pc            -> go (n + 1) (d - pc) (acc + 8)
+  {-# INLINABLE select0 #-}
+
+instance Select0 (DVS.Vector Word8) where
+  select0 v c = go 0 c 0
+    where go _ 0  acc = acc
+          go n d acc = let w = (v !!! n) in
+            case popCount0 w of
+              pc | d <= pc  -> select0 w d + acc
+              pc            -> go (n + 1) (d - pc) (acc + 8)
+  {-# INLINABLE select0 #-}
+
