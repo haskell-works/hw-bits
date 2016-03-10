@@ -4,6 +4,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
     ( Rank1(..)
     ) where
 
+import qualified Data.Vector                               as DV
 import qualified Data.Vector.Storable                      as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
@@ -67,6 +68,20 @@ instance Rank1 Word64 where
     let r3 = (r2 .&. 0x0f0f0f0f0f0f0f0f) + ((r2 .>. 4) .&. 0x0f0f0f0f0f0f0f0f)  in
     let r4 = r3 `mod` 255                                                       in
     Count $ fromIntegral r4
+  {-# INLINABLE rank1 #-}
+
+instance Rank1 [Word8] where
+  rank1 v p = popCount1 prefix + if r == 0 then 0 else (`rank1` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` 8, ((p - 1) `rem` 8) + 1)
+          prefix    = take (fromIntegral q) v
+          maybeElem = v !! fromIntegral q
+  {-# INLINABLE rank1 #-}
+
+instance Rank1 (DV.Vector Word8) where
+  rank1 v p = popCount1 prefix + if r == 0 then 0 else (`rank1` r) maybeElem
+    where (q, r)    = if p < 1 then (0, 0) else ((p - 1) `quot` 8, ((p - 1) `rem` 8) + 1)
+          prefix    = DV.take (fromIntegral q) v
+          maybeElem = v !!! fromIntegral q
   {-# INLINABLE rank1 #-}
 
 instance Rank1 (DVS.Vector Word8) where
