@@ -31,7 +31,7 @@ instance FromBools Word8 where
 
 instance FromBools Word16 where
   fromBools [] = Nothing
-  fromBools xs = case splitAt 8 xs of
+  fromBools xs = case splitAt 16 xs of
     (as, zs) -> case as ++ [False, False, False, False, False, False, False, False, False, False, False, False, False, False] of
       (a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:_) ->
         Just (
