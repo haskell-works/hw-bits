@@ -18,34 +18,34 @@ instance FromBools Word8 where
   fromBools [] = Nothing
   fromBools xs = go 0 0 xs
     where go _ w []        = Just (w, [])
-          go n w (x:xs)
-            | n < fixedBitSize w  = go (n + 1) (if x then w .|. (1 .<. n) else w) xs
+          go n w (y:ys)
+            | n < fixedBitSize w  = go (n + 1) (if y then w .|. (1 .<. n) else w) ys
             | n < 0               = error "Invalid index"
-            | otherwise           = Just (w, x:xs)
+            | otherwise           = Just (w, y:ys)
 
 instance FromBools Word16 where
   fromBools [] = Nothing
   fromBools xs = go 0 0 xs
     where go _ w []        = Just (w, [])
-          go n w (x:xs)
-            | n < fixedBitSize w  = go (n + 1) (if x then w .|. (1 .<. n) else w) xs
+          go n w (y:ys)
+            | n < fixedBitSize w  = go (n + 1) (if y then w .|. (1 .<. n) else w) ys
             | n < 0               = error "Invalid index"
-            | otherwise           = Just (w, x:xs)
+            | otherwise           = Just (w, y:ys)
 
 instance FromBools Word32 where
   fromBools [] = Nothing
   fromBools xs = go 0 0 xs
     where go _ w []        = Just (w, [])
-          go n w (x:xs)
-            | n < fixedBitSize w  = go (n + 1) (if x then w .|. (1 .<. n) else w) xs
+          go n w (y:ys)
+            | n < fixedBitSize w  = go (n + 1) (if y then w .|. (1 .<. n) else w) ys
             | n < 0               = error "Invalid index"
-            | otherwise           = Just (w, x:xs)
+            | otherwise           = Just (w, y:ys)
 
 instance FromBools Word64 where
   fromBools [] = Nothing
   fromBools xs = go 0 0 xs
     where go _ w []        = Just (w, [])
-          go n w (x:xs)
-            | n < fixedBitSize w  = go (n + 1) (if x then w .|. (1 .<. n) else w) xs
+          go n w (y:ys)
+            | n < fixedBitSize w  = go (n + 1) (if y then w .|. (1 .<. n) else w) ys
             | n < 0               = error "Invalid index"
-            | otherwise           = Just (w, x:xs)
+            | otherwise           = Just (w, y:ys)
