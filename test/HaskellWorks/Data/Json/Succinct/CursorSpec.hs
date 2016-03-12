@@ -16,12 +16,16 @@ import           Test.Hspec
 
 {-# ANN module ("HLint: ignore Redundant do"        :: String) #-}
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
+{-# ANN module ("HLint: redundant bracket"          :: String) #-}
 
 fc :: C.TreeCursor k => k -> k
 fc = C.firstChild
 
 ns :: C.TreeCursor k => k -> k
 ns = C.nextSibling
+
+pn :: C.TreeCursor k => k -> k
+pn = C.parent
 
 cd :: C.TreeCursor k => k -> Count
 cd = C.depth
@@ -135,19 +139,35 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
     it "depth at first child of object at second child of array" $ do
       let cursor = "[null, {\"field\": 1}]" :: JsonCursor BS.ByteString (DVS.Vector Word8)
       cd ((ns . fc . ns . fc) cursor)  `shouldBe` 3
-    it "can memory map a json file" $ do
+    it "can navigate down and forwards" $ do
       (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
       let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (DVS.Vector Word8)
-      jsonCursorType cursor `shouldBe` JsonCursorObject
-      jsonCursorType (fc cursor) `shouldBe` JsonCursorString
-      jsonCursorType ((ns . fc) cursor) `shouldBe` JsonCursorObject
-      jsonCursorType ((fc . ns . fc) cursor) `shouldBe` JsonCursorString
-      jsonCursorType ((ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
-      jsonCursorType ((ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
-      jsonCursorType ((ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorObject
-      jsonCursorType ((fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
-      jsonCursorType ((ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
-      jsonCursorType ((ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
-      jsonCursorType ((ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
-      jsonCursorType ((ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType                                                              cursor  `shouldBe` JsonCursorObject
+      jsonCursorType ((                                                       fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((                                                  ns . fc) cursor) `shouldBe` JsonCursorObject
+      jsonCursorType ((                                             fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((                                        ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((                                   ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((                              ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorObject
+      jsonCursorType ((                         fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((                    ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((               ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((          ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
+      jsonCursorType ((     ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
       jsonCursorType ((ns . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorNumber
+    it "can navigate up" $ do
+      (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
+      let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      (                                                        pn . fc) cursor `shouldBe`                               cursor
+      (                                                   pn . ns . fc) cursor `shouldBe`                               cursor
+      (                                              pn . fc . ns . fc) cursor `shouldBe` (                    ns . fc) cursor
+      (                                         pn . ns . fc . ns . fc) cursor `shouldBe` (                    ns . fc) cursor
+      (                                    pn . ns . ns . fc . ns . fc) cursor `shouldBe` (                    ns . fc) cursor
+      (                               pn . ns . ns . ns . fc . ns . fc) cursor `shouldBe` (                    ns . fc) cursor
+      (                          pn . fc . ns . ns . ns . fc . ns . fc) cursor `shouldBe` (ns . ns . ns . fc . ns . fc) cursor
+      (                     pn . ns . fc . ns . ns . ns . fc . ns . fc) cursor `shouldBe` (ns . ns . ns . fc . ns . fc) cursor
+      (                pn . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor `shouldBe` (ns . ns . ns . fc . ns . fc) cursor
+      (           pn . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor `shouldBe` (ns . ns . ns . fc . ns . fc) cursor
+      (      pn . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor `shouldBe` (ns . ns . ns . fc . ns . fc) cursor
+      ( pn . ns . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor `shouldBe` (ns . ns . ns . fc . ns . fc) cursor
+
