@@ -8,47 +8,29 @@ module HaskellWorks.Data.Bits.FromBools
     ) where
 
 import           Data.Word
+import           Debug.Trace
 import           HaskellWorks.Data.Bits.BitWise
+import           HaskellWorks.Data.Bits.FixedBitSize
 
 class FromBools a where
   fromBools :: [Bool] -> Maybe (a, [Bool])
 
 instance FromBools Word8 where
   fromBools [] = Nothing
-  fromBools xs = case splitAt 8 xs of
-    (as, zs) -> case as ++ [False, False, False, False, False, False, False] of
-      (a:b:c:d:e:f:g:h:_) ->
-        Just (
-          (if a then 0x01 else 0) .|.
-          (if b then 0x02 else 0) .|.
-          (if c then 0x04 else 0) .|.
-          (if d then 0x08 else 0) .|.
-          (if e then 0x10 else 0) .|.
-          (if f then 0x20 else 0) .|.
-          (if g then 0x40 else 0) .|.
-          (if h then 0x80 else 0),
-          zs)
+  fromBools xs = go 0 0 xs
+    where go _ w []        = Just (w, [])
+          go n w (x:xs)
+            | n < fixedBitSize w  = trace ("n = " ++ show n) $
+                                    go (n + 1) (if x then w .|. (1 .<. n) else w) xs
+            | n < 0               = error "Invalid index"
+            | otherwise           = Just (w, x:xs)
 
 instance FromBools Word16 where
   fromBools [] = Nothing
-  fromBools xs = case splitAt 16 xs of
-    (as, zs) -> case as ++ [False, False, False, False, False, False, False, False, False, False, False, False, False, False] of
-      (a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:_) ->
-        Just (
-          (if a then 0x0001 else 0) .|.
-          (if b then 0x0002 else 0) .|.
-          (if c then 0x0004 else 0) .|.
-          (if d then 0x0008 else 0) .|.
-          (if e then 0x0010 else 0) .|.
-          (if f then 0x0020 else 0) .|.
-          (if g then 0x0040 else 0) .|.
-          (if h then 0x0080 else 0) .|.
-          (if i then 0x0100 else 0) .|.
-          (if j then 0x0200 else 0) .|.
-          (if k then 0x0400 else 0) .|.
-          (if l then 0x0800 else 0) .|.
-          (if m then 0x1000 else 0) .|.
-          (if n then 0x2000 else 0) .|.
-          (if o then 0x4000 else 0) .|.
-          (if p then 0x8000 else 0),
-          zs)
+  fromBools xs = go 0 0 xs
+    where go _ w []        = Just (w, [])
+          go n w (x:xs)
+            | n < fixedBitSize w  = trace ("n = " ++ show n) $
+                                    go (n + 1) (if x then w .|. (1 .<. n) else w) xs
+            | n < 0               = error "Invalid index"
+            | otherwise           = Just (w, x:xs)
