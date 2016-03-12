@@ -12,7 +12,6 @@ import           Data.Conduit
 import           Data.String
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
-import           Debug.Trace
 import           Foreign.ForeignPtr
 import           HaskellWorks.Data.Bits.FromBools
 import           HaskellWorks.Data.Conduit.Json
@@ -200,56 +199,24 @@ instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word8)) where
 
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word16)) where
   jsonCursorType k = jsonCursorType' c
-    where c   = cursorText (trace "---> KA " k) `BS.index` i
+    where c   = cursorText k `BS.index` i
           i   = fromIntegral (select1 ik (rank1 bpk (cursorRank k)) - 1)
-          ik  = interests (trace "---> KB " k)
-          bpk = balancedParens (trace "---> KC " k)
+          ik  = interests k
+          bpk = balancedParens k
 
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word32)) where
-  jsonCursorType k = case c of
-    91  {- [ -} -> JsonCursorArray
-    116 {- t -} -> JsonCursorBool
-    102 {- f -} -> JsonCursorBool
-    48  {- 0 -} -> JsonCursorNumber
-    49  {- 1 -} -> JsonCursorNumber
-    50  {- 2 -} -> JsonCursorNumber
-    51  {- 3 -} -> JsonCursorNumber
-    52  {- 4 -} -> JsonCursorNumber
-    53  {- 5 -} -> JsonCursorNumber
-    54  {- 6 -} -> JsonCursorNumber
-    55  {- 7 -} -> JsonCursorNumber
-    56  {- 8 -} -> JsonCursorNumber
-    57  {- 9 -} -> JsonCursorNumber
-    43  {- + -} -> JsonCursorNumber
-    45  {- - -} -> JsonCursorNumber
-    110 {- n -} -> JsonCursorNull
-    123 {- { -} -> JsonCursorObject
-    34  {- " -} -> JsonCursorString
-    _   -> error "Invalid JsonCursor cursorRank"
-    where c = cursorText k `BS.index` fromIntegral (select1 (interests k) (rank1 (balancedParens k) (cursorRank k)) - 1)
+  jsonCursorType k = jsonCursorType' c
+    where c   = cursorText k `BS.index` i
+          i   = fromIntegral (select1 ik (rank1 bpk (cursorRank k)) - 1)
+          ik  = interests k
+          bpk = balancedParens k
 
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word64)) where
-  jsonCursorType k = case c of
-    91  {- [ -} -> JsonCursorArray
-    116 {- t -} -> JsonCursorBool
-    102 {- f -} -> JsonCursorBool
-    48  {- 0 -} -> JsonCursorNumber
-    49  {- 1 -} -> JsonCursorNumber
-    50  {- 2 -} -> JsonCursorNumber
-    51  {- 3 -} -> JsonCursorNumber
-    52  {- 4 -} -> JsonCursorNumber
-    53  {- 5 -} -> JsonCursorNumber
-    54  {- 6 -} -> JsonCursorNumber
-    55  {- 7 -} -> JsonCursorNumber
-    56  {- 8 -} -> JsonCursorNumber
-    57  {- 9 -} -> JsonCursorNumber
-    43  {- + -} -> JsonCursorNumber
-    45  {- - -} -> JsonCursorNumber
-    110 {- n -} -> JsonCursorNull
-    123 {- { -} -> JsonCursorObject
-    34  {- " -} -> JsonCursorString
-    _   -> error "Invalid JsonCursor cursorRank"
-    where c = cursorText k `BS.index` fromIntegral (select1 (interests k) (rank1 (balancedParens k) (cursorRank k)) - 1)
+  jsonCursorType k = jsonCursorType' c
+    where c   = cursorText k `BS.index` i
+          i   = fromIntegral (select1 ik (rank1 bpk (cursorRank k)) - 1)
+          ik  = interests k
+          bpk = balancedParens k
 
 instance TreeCursor (JsonCursor BS.ByteString (DVS.Vector Word8)) where
   firstChild  k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
