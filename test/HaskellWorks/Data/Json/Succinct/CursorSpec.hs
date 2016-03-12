@@ -93,8 +93,8 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
       cd ((ns . fc . ns . fc) cursor)  `shouldBe` 3
   genSpec "JsonCursor BS.ByteString (DVS.Vector Word8)"  (undefined :: JsonCursor BS.ByteString (DVS.Vector Word8))
   genSpec "JsonCursor BS.ByteString (DVS.Vector Word16)" (undefined :: JsonCursor BS.ByteString (DVS.Vector Word16))
-  -- genSpec "JsonCursor BS.ByteString (DVS.Vector Word32)" (undefined :: JsonCursor BS.ByteString (DVS.Vector Word32))
-  -- genSpec "JsonCursor BS.ByteString (DVS.Vector Word64)" (undefined :: JsonCursor BS.ByteString (DVS.Vector Word64))
+  genSpec "JsonCursor BS.ByteString (DVS.Vector Word32)" (undefined :: JsonCursor BS.ByteString (DVS.Vector Word32))
+  genSpec "JsonCursor BS.ByteString (DVS.Vector Word64)" (undefined :: JsonCursor BS.ByteString (DVS.Vector Word64))
 
 genSpec :: forall t . (IsString t, HasJsonCursorType t, Show t) => String -> t -> SpecWith ()
 genSpec t _ = do

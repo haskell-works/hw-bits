@@ -135,37 +135,39 @@ instance IsString (JsonCursor BS.ByteString (DVS.Vector Word16)) where
             else Just (BS.head bs, BS.tail bs)
           bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
 
--- instance IsString (JsonCursor BS.ByteString (DVS.Vector Word32)) where
---   fromString :: String -> JsonCursor BS.ByteString (DVS.Vector Word32)
---   fromString s = JsonCursor
---     { cursorText      = textBS
---     , cursorRank      = 1
---     , balancedParens  = SimpleBalancedParens (DVS.unsafeCast bpV :: DVS.Vector Word32)
---     , interests       = Simple interestsV
---     }
---     where textBS          = BSC.pack s :: BS.ByteString
---           interestBS      = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
---           interestsV      = DVS.unsafeCast (DVS.unfoldr genInterest interestBS) :: DVS.Vector Word32
---           genInterest bs  = if BS.null bs
---             then Nothing
---             else Just (BS.head bs, BS.tail bs)
---           bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
+instance IsString (JsonCursor BS.ByteString (DVS.Vector Word32)) where
+  fromString :: String -> JsonCursor BS.ByteString (DVS.Vector Word32)
+  fromString s = JsonCursor
+    { cursorText      = textBS
+    , cursorRank      = 1
+    , balancedParens  = SimpleBalancedParens bpV
+    , interests       = Simple interestsV
+    }
+    where textBS            = BSC.pack s :: BS.ByteString
+          interestBS        = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
+          interestBS'       = applyToMultipleOf (`BS.snoc` fromIntegral (ord ' ')) interestBS 4
+          interestsV        = DVS.unsafeCast (DVS.unfoldr genInterest interestBS') :: DVS.Vector Word32
+          genInterest bs    = if BS.null bs
+            then Nothing
+            else Just (BS.head bs, BS.tail bs)
+          bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
 
--- instance IsString (JsonCursor BS.ByteString (DVS.Vector Word64)) where
---   fromString :: String -> JsonCursor BS.ByteString (DVS.Vector Word64)
---   fromString s = JsonCursor
---     { cursorText      = textBS
---     , cursorRank      = 1
---     , balancedParens  = SimpleBalancedParens (DVS.unsafeCast bpV :: DVS.Vector Word64)
---     , interests       = Simple interestsV
---     }
---     where textBS          = BSC.pack s :: BS.ByteString
---           interestBS      = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
---           interestsV      = DVS.unsafeCast (DVS.unfoldr genInterest interestBS) :: DVS.Vector Word64
---           genInterest bs  = if BS.null bs
---             then Nothing
---             else Just (BS.head bs, BS.tail bs)
---           bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
+instance IsString (JsonCursor BS.ByteString (DVS.Vector Word64)) where
+  fromString :: String -> JsonCursor BS.ByteString (DVS.Vector Word64)
+  fromString s = JsonCursor
+    { cursorText      = textBS
+    , cursorRank      = 1
+    , balancedParens  = SimpleBalancedParens bpV
+    , interests       = Simple interestsV
+    }
+    where textBS            = BSC.pack s :: BS.ByteString
+          interestBS        = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
+          interestBS'       = applyToMultipleOf (`BS.snoc` fromIntegral (ord ' ')) interestBS 8
+          interestsV        = DVS.unsafeCast (DVS.unfoldr genInterest interestBS') :: DVS.Vector Word64
+          genInterest bs    = if BS.null bs
+            then Nothing
+            else Just (BS.head bs, BS.tail bs)
+          bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
 
 jsonCursorType' :: Word8 -> JsonCursorType
 jsonCursorType' c = case c of
