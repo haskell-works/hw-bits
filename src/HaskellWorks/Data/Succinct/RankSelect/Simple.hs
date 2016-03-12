@@ -36,6 +36,9 @@ import           Safe
 
 newtype Simple a = Simple a deriving (P.Eq)
 
+instance P.Functor Simple where
+  fmap f (Simple a) = Simple (f a)
+
 getSimple :: Simple a -> a
 getSimple (Simple a) = a
 

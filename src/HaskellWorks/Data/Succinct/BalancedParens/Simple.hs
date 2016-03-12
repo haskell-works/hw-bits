@@ -25,6 +25,9 @@ import           Prelude                                                    as P
 newtype SimpleBalancedParens a = SimpleBalancedParens a
   deriving (BitLength, Eq, BitPrint, TestBit, Rank0, Rank1, Select0, Select1)
 
+instance Functor SimpleBalancedParens where
+  fmap f (SimpleBalancedParens a) = SimpleBalancedParens (f a)
+
 instance (BitPrint a, ToBitString a) => Show (SimpleBalancedParens a) where
   show = toBitString
 

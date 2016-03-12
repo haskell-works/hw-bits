@@ -1,11 +1,15 @@
+{-# LANGUAGE ExplicitForAll        #-}
+{-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE InstanceSigs          #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
 
 module HaskellWorks.Data.Json.Succinct.CursorSpec(spec) where
 
 import qualified Data.ByteString                        as BS
+import           Data.String
 import qualified Data.Vector.Storable                   as DVS
 import           Data.Word
 import           HaskellWorks.Data.Json.Succinct
@@ -87,9 +91,17 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
     it "depth at first child of object at second child of array" $ do
       let cursor = "[null, {\"field\": 1}]" :: JsonCursor String [Bool]
       cd ((ns . fc . ns . fc) cursor)  `shouldBe` 3
-  describe "Cursor for (DVS.Vector Word8)" $ do
+  genSpec "JsonCursor BS.ByteString (DVS.Vector Word8)"  (undefined :: JsonCursor BS.ByteString (DVS.Vector Word8))
+  genSpec "JsonCursor BS.ByteString (DVS.Vector Word16)" (undefined :: JsonCursor BS.ByteString (DVS.Vector Word16))
+  -- genSpec "JsonCursor BS.ByteString (DVS.Vector Word32)" (undefined :: JsonCursor BS.ByteString (DVS.Vector Word32))
+  -- genSpec "JsonCursor BS.ByteString (DVS.Vector Word64)" (undefined :: JsonCursor BS.ByteString (DVS.Vector Word64))
+
+genSpec :: forall t . (IsString t, HasJsonCursorType t, Show t) => String -> t -> SpecWith ()
+genSpec t _ = do
+  describe ("Cursor for (" ++ t ++ ")") $ do
     it "initialises to beginning of empty object" $ do
-      let cursor = "{}" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      let cursor = "{}" :: t
+      print $ "--> " ++ (show cursor)
       jsonCursorType cursor `shouldBe` JsonCursorObject
     it "initialises to beginning of empty object preceded by spaces" $ do
       let cursor = " {}" :: JsonCursor BS.ByteString (DVS.Vector Word8)
