@@ -12,19 +12,19 @@ import           Data.Word
 import           HaskellWorks.Data.Positioning
 
 class FixedBitSize a where
-  fixxedBitSize :: a -> Count
+  fixedBitSize :: a -> Count
 
 instance FixedBitSize Bool where
-  fixxedBitSize _ = 1
+  fixedBitSize _ = 1
 
 instance FixedBitSize Word8 where
-  fixxedBitSize _ = 8
+  fixedBitSize _ = 8
 
 instance FixedBitSize Word16 where
-  fixxedBitSize _ = 16
+  fixedBitSize _ = 16
 
 instance FixedBitSize Word32 where
-  fixxedBitSize _ = 32
+  fixedBitSize _ = 32
 
 instance FixedBitSize Word64 where
-  fixxedBitSize _ = 64
+  fixedBitSize _ = 64
