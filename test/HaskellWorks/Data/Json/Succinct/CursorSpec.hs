@@ -170,4 +170,20 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
       (           pn . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor `shouldBe` (ns . ns . ns . fc . ns . fc) cursor
       (      pn . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor `shouldBe` (ns . ns . ns . fc . ns . fc) cursor
       ( pn . ns . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor `shouldBe` (ns . ns . ns . fc . ns . fc) cursor
+    it "can get subtree size" $ do
+      (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
+      let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (DVS.Vector Word8)
+      ss                                                              cursor  `shouldBe` 45
+      ss ((                                                       fc) cursor) `shouldBe` 1
+      ss ((                                                  ns . fc) cursor) `shouldBe` 43
+      ss ((                                             fc . ns . fc) cursor) `shouldBe` 1
+      ss ((                                        ns . fc . ns . fc) cursor) `shouldBe` 1
+      ss ((                                   ns . ns . fc . ns . fc) cursor) `shouldBe` 1
+      ss ((                              ns . ns . ns . fc . ns . fc) cursor) `shouldBe` 9
+      ss ((                         fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` 1
+      ss ((                    ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` 1
+      ss ((               ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` 1
+      ss ((          ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` 1
+      ss ((     ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` 1
+      ss ((ns . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` 1
 
