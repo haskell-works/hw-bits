@@ -14,7 +14,7 @@ import qualified Data.Vector.Storable                                       as D
 import           Data.Word
 import           Debug.Trace
 import           Foreign.ForeignPtr
-import           HaskellWorks.Data.Bits.BitWise
+import           HaskellWorks.Data.Bits.FromBools
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
@@ -110,7 +110,7 @@ instance IsString (JsonCursor BS.ByteString (DVS.Vector Word8)) where
           genInterest bs  = if BS.null bs
             then Nothing
             else Just (BS.head bs, BS.tail bs)
-          bpV             = DVS.unfoldr fromBits (jsonToInterestBalancedParens [textBS])
+          bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
 
 (^^^) :: (a -> a) -> Count -> a -> a
 (^^^) f n = foldl (.) id (replicate (fromIntegral n) f)
@@ -133,7 +133,7 @@ instance IsString (JsonCursor BS.ByteString (DVS.Vector Word16)) where
           genInterest bs    = if BS.null bs
             then Nothing
             else Just (BS.head bs, BS.tail bs)
-          bpV             = DVS.unfoldr fromBits (jsonToInterestBalancedParens [textBS])
+          bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
 
 -- instance IsString (JsonCursor BS.ByteString (DVS.Vector Word32)) where
 --   fromString :: String -> JsonCursor BS.ByteString (DVS.Vector Word32)
@@ -149,7 +149,7 @@ instance IsString (JsonCursor BS.ByteString (DVS.Vector Word16)) where
 --           genInterest bs  = if BS.null bs
 --             then Nothing
 --             else Just (BS.head bs, BS.tail bs)
---           bpV             = DVS.unfoldr fromBits (jsonToInterestBalancedParens [textBS])
+--           bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
 
 -- instance IsString (JsonCursor BS.ByteString (DVS.Vector Word64)) where
 --   fromString :: String -> JsonCursor BS.ByteString (DVS.Vector Word64)
@@ -165,7 +165,7 @@ instance IsString (JsonCursor BS.ByteString (DVS.Vector Word16)) where
 --           genInterest bs  = if BS.null bs
 --             then Nothing
 --             else Just (BS.head bs, BS.tail bs)
---           bpV             = DVS.unfoldr fromBits (jsonToInterestBalancedParens [textBS])
+--           bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
 
 jsonCursorType' :: Word8 -> JsonCursorType
 jsonCursorType' c = case c of
@@ -264,7 +264,7 @@ instance FromForeignRegion (JsonCursor BS.ByteString (DVS.Vector Word8)) where
   fromForeignRegion (fptr, offset, size) = JsonCursor
     { cursorText     = textBS
     , interests      = Simple interestsV
-    , balancedParens = SimpleBalancedParens (DVS.unfoldr fromBits (jsonToInterestBalancedParens [textBS]))
+    , balancedParens = SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS]))
     , cursorRank     = 1
     }
     where textBS          = BSI.fromForeignPtr (castForeignPtr fptr) offset size :: ByteString
@@ -273,54 +273,3 @@ instance FromForeignRegion (JsonCursor BS.ByteString (DVS.Vector Word8)) where
           genInterest bs  = if BS.null bs
             then Nothing
             else Just (BS.head bs, BS.tail bs)
-
-class FromBits a where
-  fromBits :: [Bool] -> Maybe (a, [Bool])
-
-instance FromBits Word8 where
-  fromBits [] = Nothing
-  fromBits xs = case splitAt 8 xs of
-    (as, zs) -> case as ++ [False, False, False, False, False, False, False] of
-      (a:b:c:d:e:f:g:h:_) ->
-        Just (
-          (if a then 0x01 else 0) .|.
-          (if b then 0x02 else 0) .|.
-          (if c then 0x04 else 0) .|.
-          (if d then 0x08 else 0) .|.
-          (if e then 0x10 else 0) .|.
-          (if f then 0x20 else 0) .|.
-          (if g then 0x40 else 0) .|.
-          (if h then 0x80 else 0),
-          zs)
-
-instance FromBits Word16 where
-  fromBits [] = Nothing
-  fromBits xs = case splitAt 8 xs of
-    (as, zs) -> case as ++ [False, False, False, False, False, False, False, False, False, False, False, False, False, False] of
-      (a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:_) ->
-        Just (
-          (if a then 0x0001 else 0) .|.
-          (if b then 0x0002 else 0) .|.
-          (if c then 0x0004 else 0) .|.
-          (if d then 0x0008 else 0) .|.
-          (if e then 0x0010 else 0) .|.
-          (if f then 0x0020 else 0) .|.
-          (if g then 0x0040 else 0) .|.
-          (if h then 0x0080 else 0) .|.
-          (if i then 0x0100 else 0) .|.
-          (if j then 0x0200 else 0) .|.
-          (if k then 0x0400 else 0) .|.
-          (if l then 0x0800 else 0) .|.
-          (if m then 0x1000 else 0) .|.
-          (if n then 0x2000 else 0) .|.
-          (if o then 0x4000 else 0) .|.
-          (if p then 0x8000 else 0),
-          zs)
-
-
-
-
-
-
-
-

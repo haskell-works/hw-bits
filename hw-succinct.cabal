@@ -43,6 +43,7 @@ library
                       , HaskellWorks.Data.Bits.Conversion
                       , HaskellWorks.Data.Bits.ElemFixedBitSize
                       , HaskellWorks.Data.Bits.FixedBitSize
+                      , HaskellWorks.Data.Bits.FromBools
                       , HaskellWorks.Data.Bits.PopCount
                       , HaskellWorks.Data.Bits.PopCount.PopCount0
                       , HaskellWorks.Data.Bits.PopCount.PopCount1
