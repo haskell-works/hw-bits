@@ -111,28 +111,51 @@ import qualified Data.Vector                                                    
 import qualified Data.Vector.Unboxed                                            as Unboxed
 #endif
 
+safeIndexA :: Unboxed.Vector a -> Int -> a
 safeIndexA v i = if i == Unboxed.length v then error "A" else (Unboxed.!) v i
+safeIndexB :: Unboxed.Vector a -> Int -> a
 safeIndexB v i = if i == Unboxed.length v then error "B" else (Unboxed.!) v i
+safeIndexC :: Unboxed.Vector a -> Int -> a
 safeIndexC v i = if i == Unboxed.length v then error "C" else (Unboxed.!) v i
+safeIndexD :: Unboxed.Vector a -> Int -> a
 safeIndexD v i = if i == Unboxed.length v then error "D" else (Unboxed.!) v i
+safeIndexE :: Unboxed.Vector a -> Int -> a
 safeIndexE v i = if i == Unboxed.length v then error "E" else (Unboxed.!) v i
+safeIndexF :: Unboxed.Vector a -> Int -> a
 safeIndexF v i = if i == Unboxed.length v then error "F" else (Unboxed.!) v i
+safeIndexG :: Unboxed.Vector a -> Int -> a
 safeIndexG v i = if i == Unboxed.length v then error "G" else (Unboxed.!) v i
+safeIndexH :: Unboxed.Vector a -> Int -> a
 safeIndexH v i = if i == Unboxed.length v then error "H" else (Unboxed.!) v i
+safeIndexI :: Unboxed.Vector a -> Int -> a
 safeIndexI v i = if i == Unboxed.length v then error "I" else (Unboxed.!) v i
+safeIndexJ :: Unboxed.Vector a -> Int -> a
 safeIndexJ v i = if i == Unboxed.length v then error "J" else (Unboxed.!) v i
+safeIndexK :: Unboxed.Vector a -> Int -> a
 safeIndexK v i = if i == Unboxed.length v then error "K" else (Unboxed.!) v i
+safeIndexL :: Unboxed.Vector a -> Int -> a
 safeIndexL v i = if i == Unboxed.length v then error "L" else (Unboxed.!) v i
+safeIndexM :: Unboxed.Vector a -> Int -> a
 safeIndexM v i = if i == Unboxed.length v then error "M" else (Unboxed.!) v i
+safeIndexN :: Unboxed.Vector a -> Int -> a
 safeIndexN v i = if i == Unboxed.length v then error "N" else (Unboxed.!) v i
+safeIndexO :: Unboxed.Vector a -> Int -> a
 safeIndexO v i = if i == Unboxed.length v then error "O" else (Unboxed.!) v i
+safeIndexP :: Unboxed.Vector a -> Int -> a
 safeIndexP v i = if i == Unboxed.length v then error "P" else (Unboxed.!) v i
+safeIndexQ :: Unboxed.Vector a -> Int -> a
 safeIndexQ v i = if i == Unboxed.length v then error "Q" else (Unboxed.!) v i
+safeIndexR :: Unboxed.Vector a -> Int -> a
 safeIndexR v i = if i == Unboxed.length v then error "R" else (Unboxed.!) v i
+safeIndexS :: Unboxed.Vector a -> Int -> a
 safeIndexS v i = if i == Unboxed.length v then error "S" else (Unboxed.!) v i
+safeIndexT :: Unboxed.Vector a -> Int -> a
 safeIndexT v i = if i == Unboxed.length v then error "T" else (Unboxed.!) v i
+safeIndexU :: Unboxed.Vector a -> Int -> a
 safeIndexU v i = if i == Unboxed.length v then error "U" else (Unboxed.!) v i
+safeIndexV :: Unboxed.Vector a -> Int -> a
 safeIndexV v i = if i == Unboxed.length v then error "V" else (Unboxed.!) v i
+safeIndexW :: Unboxed.Vector a -> Int -> a
 safeIndexW v i = if i == Unboxed.length v then error "W" else (Unboxed.!) v i
 
 

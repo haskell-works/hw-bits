@@ -28,7 +28,6 @@ library
   hs-source-dirs:       src
   exposed-modules:      HaskellWorks.Data.Attoparsec.Final.IsChar
                       , HaskellWorks.Data.Attoparsec.Final.IsChar.Char
-                      , HaskellWorks.Data.Attoparsec.Final.IsChar.Word8
                       , HaskellWorks.Data.Attoparsec.Final.IsChar.Internal
                       , HaskellWorks.Data.Attoparsec.Final.Parser
                       , HaskellWorks.Data.Attoparsec.Final.Parser.ByteString

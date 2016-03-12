@@ -43,10 +43,10 @@ instance BitPrint Word64 where
   bitPrint w = case leSplit w of (a, b) -> bitPrint a . (' ':) . bitPrint b
 
 instance BitPrint [Bool] where
-  bitPrint ws = ('\"':) . go 0 ws . ('\"':)
-    where go n []     = id
-          go n [w]    = bitPrint w
-          go n (w:ws) = bitPrint w . maybePrependSeperatorat n . go (n + 1) ws
+  bitPrint ws = ('\"':) . go (0 :: Int) ws . ('\"':)
+    where go _ []     = id
+          go _ [u]    = bitPrint u
+          go n (u:us) = bitPrint u . maybePrependSeperatorat n . go (n + 1) us
           maybePrependSeperatorat n = if n `mod` 8 == 7 then (' ':) else id
 
 instance BitPrint [Word8] where

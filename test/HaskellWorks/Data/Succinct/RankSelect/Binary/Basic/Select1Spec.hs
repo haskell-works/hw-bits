@@ -102,7 +102,6 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
   describe "For [Word64]" $ do
     it "select1 10010010 over [0..3] should be 023568" $ do
       let bs = fromJust $ fromBitString "10010010" :: [Word64]
-      print $ ">>>>> " ++ toBitString bs
       fmap (select1 bs) [0..3] `shouldBe` [0, 1, 4, 7]
     it "select1 11000001 10000000 01000000 over [0..5] should be 023568" $ do
       let bs = fromJust $ fromBitString "11000001 10000000 01000000" :: [Word64]

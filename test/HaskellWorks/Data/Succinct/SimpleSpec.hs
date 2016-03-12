@@ -7,7 +7,6 @@ import           Data.Vector
 import           Data.Word
 import           HaskellWorks.Data.Arbitrary.Count
 import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Simple
 import           Test.Hspec

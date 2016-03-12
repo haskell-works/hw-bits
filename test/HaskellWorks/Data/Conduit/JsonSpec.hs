@@ -1,8 +1,7 @@
-{-# LANGUAGE OverloadedStrings    #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module HaskellWorks.Data.Conduit.JsonSpec (spec) where
 
-import           Control.Monad.Trans.Resource (MonadThrow)
 import           Data.ByteString
 import           Data.Conduit
 import           Data.Int
@@ -20,23 +19,8 @@ jsonToBits :: [ByteString] -> [Bool]
 jsonToBits json = runListConduit json $
   textToJsonToken =$= jsonToken2Markers =$= markerToByteString =$= byteStringToBits
 
-jsonToMarkerBS :: [ByteString] -> [ByteString]
-jsonToMarkerBS json = runListConduit json $
-  textToJsonToken =$= jsonToken2Markers =$= markerToByteString
-
-jsonToMarkers :: [ByteString] -> [Int64]
-jsonToMarkers json = runListConduit json $
-  textToJsonToken =$= jsonToken2Markers
-
 jsonToken2Markers2 :: [(ParseDelta Offset, JsonToken)] -> [Int64]
-jsonToken2Markers2 json = runListConduit json $ jsonToken2Markers
-
-identity :: Monad m => Conduit i m i
-identity = do
-  ma <- await
-  case ma of
-    Just a -> yield a
-    Nothing -> return ()
+jsonToken2Markers2 json = runListConduit json jsonToken2Markers
 
 spec :: Spec
 spec = describe "Data.Conduit.Succinct.JsonSpec" $ do

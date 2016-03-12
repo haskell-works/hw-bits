@@ -1,7 +1,6 @@
 module HaskellWorks.Data.Attoparsec.Final.IsChar
-    ( IsChar(..)
+    ( module X
     ) where
 
-import HaskellWorks.Data.Attoparsec.Final.IsChar.Char
-import HaskellWorks.Data.Attoparsec.Final.IsChar.Internal
-import HaskellWorks.Data.Attoparsec.Final.IsChar.Word8
+import           HaskellWorks.Data.Attoparsec.Final.IsChar.Char     as X
+import           HaskellWorks.Data.Attoparsec.Final.IsChar.Internal as X

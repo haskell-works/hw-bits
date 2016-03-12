@@ -10,27 +10,15 @@ module HaskellWorks.Data.Json.Final.Tokenize.Internal
 
 import           Control.Applicative
 import           Control.Monad
-import qualified Data.Attoparsec.ByteString                as ABS
 import qualified Data.Attoparsec.ByteString.Char8          as BC
 import qualified Data.Attoparsec.Combinator                as AC
-import qualified Data.Attoparsec.Internal                  as I
 import qualified Data.Attoparsec.Types                     as T
 import           Data.Bits
-import           Data.ByteString                           (ByteString)
-import qualified Data.ByteString.Internal                  as BI
 import           Data.Char
-import           Data.MonoTraversable
 import           Data.String
-import           Data.Word8
 import           HaskellWorks.Data.Attoparsec.Final.IsChar
 import           HaskellWorks.Data.Attoparsec.Final.Parser as AFP
 import           HaskellWorks.Data.Json.Token
-
-isHexDigitChar :: Char -> Bool
-isHexDigitChar c =
-  '0' <= c && c <= '9' ||
-  'a' <= c && c <= 'z' ||
-  'A' <= c && c <= 'Z'
 
 hexDigitNumeric :: AFP.Parser t => T.Parser t Int
 hexDigitNumeric = do
@@ -52,15 +40,15 @@ hexDigit = hexDigitNumeric <|> hexDigitAlphaLower <|> hexDigitAlphaUpper
 
 parseJsonTokenString :: (JsonTokenLike j, AFP.Parser t, Alternative (T.Parser t), IsString t) => T.Parser t j
 parseJsonTokenString = do
-  string "\""
+  _ <- string "\""
   value <- many (verbatimChar <|> escapedChar <|> escapedCode)
-  string "\""
+  _ <- string "\""
   return $ jsonTokenString value
   where
     verbatimChar  = satisfyChar (BC.notInClass "\"\\") <?> "invalid string character"
     escapedChar   = string "\\" >> BC.choice (zipWith escapee chars replacements)
     escapedCode   = do
-      string "\\u"
+      _ <- string "\\u"
       a <- hexDigit
       b <- hexDigit
       c <- hexDigit
@@ -90,8 +78,8 @@ parseJsonTokenColon = string ":" >> return jsonTokenColon
 
 parseJsonTokenWhitespace :: (JsonTokenLike j, AFP.Parser t, IsString t) => T.Parser t j
 parseJsonTokenWhitespace = do
-  AC.many1' $ BC.choice [string " ", string "\t", string "\n", string "\r"]
-  return $ jsonTokenWhitespace
+  _ <- AC.many1' $ BC.choice [string " ", string "\t", string "\n", string "\r"]
+  return jsonTokenWhitespace
 
 parseJsonTokenNull :: (JsonTokenLike j, AFP.Parser t, IsString t) => T.Parser t j
 parseJsonTokenNull = string "null" >> return jsonTokenNull

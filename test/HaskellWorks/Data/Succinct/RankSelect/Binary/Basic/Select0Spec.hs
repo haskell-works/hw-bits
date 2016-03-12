@@ -49,7 +49,6 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
   describe "For Word64" $ do
     it "select0 10010010 over [0..5] should be 023568" $ do
       let bs = fromJust $ fromBitString "10010010" :: Word64
-      print $ ">>> " ++ toBitString (comp bs)
       fmap (select0 bs) [0..5] `shouldBe` [0, 2, 3, 5, 6, 8]
     it "select0 11000001 10000000 01000000 over [0..5] should be 023568" $ do
       let bs = fromJust $ fromBitString "11000001 10000000 01000000" :: Word64
@@ -169,7 +168,6 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
   describe "For (DV.Vector Word64)" $ do
     it "select0 10010010 over [0..5] should be 023568" $ do
       let bs = fromJust $ fromBitString "10010010" :: DV.Vector Word64
-      print $ ">>> " ++ toBitString bs
       fmap (select0 bs) [0..5] `shouldBe` [0, 2, 3, 5, 6, 8]
     it "select0 11000001 10000000 01000000 over [0..5] should be 023568" $ do
       let bs = fromJust $ fromBitString "11000001 10000000 01000000" :: (DV.Vector Word64)
