@@ -51,6 +51,18 @@ Run the following in the shell:
          302 json78m <- BSL.readFile "/Users/jky/Downloads/78mbs.json"
         1400 let !x = decode json78m :: Maybe Value
 
+### Parsing large Json files in Haskell with hw-succinct
+
+    Mem (MB) CMD
+    -------- ---------------------------------------------------------
+         296 import Foreign
+         296 import qualified Data.Vector.Storable as DVS
+         296 import qualified Data.ByteString as BS
+         296 import System.IO.MMap
+         296 import Data.Word
+         296 (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/78mbs.json" ReadOnly Nothing
+         306 let !cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (DVS.Vector Word8)
+
 ## References
 * [Original Pull Request](https://github.com/snoyberg/conduit/pull/244)
 * [Typed Tagless Final Interpreters](http://okmij.org/ftp/tagless-final/course/lecture.pdf)
