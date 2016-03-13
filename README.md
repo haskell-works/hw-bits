@@ -42,6 +42,15 @@ Run the following in the shell:
     285,182.9 146,392.6 1,956,264.5 82,679.8 14,099.6 val data = Parse.parse(json)
                         ***********
 
+### Parsing large Json files in Haskell with Aeson
+
+    Mem (MB) CMD
+    -------- ---------------------------------------------------------
+         302 import Data.Aeson
+         302 import qualified  Data.ByteString.Lazy as BSL
+         302 json78m <- BSL.readFile "/Users/jky/Downloads/78mbs.json"
+        1400 let !x = decode json78m :: Maybe Value
+
 ## References
 * [Original Pull Request](https://github.com/snoyberg/conduit/pull/244)
 * [Typed Tagless Final Interpreters](http://okmij.org/ftp/tagless-final/course/lecture.pdf)
