@@ -82,35 +82,35 @@ instance Select1 (Simple [P.Bool]) where
   {-# INLINABLE select1 #-}
 
 instance Rank1 (Simple (DV.Vector Word8)) where
-  rank1 (Simple v) = rankWords (toList v)
+  rank1 (Simple v) = rank1 v
   {-# INLINABLE rank1 #-}
 
 instance Rank1 (Simple (DV.Vector Word16)) where
-  rank1 (Simple v) = rankWords (toList v)
+  rank1 (Simple v) = rank1 v
   {-# INLINABLE rank1 #-}
 
 instance Rank1 (Simple (DV.Vector Word32)) where
-  rank1 (Simple v) = rankWords (toList v)
+  rank1 (Simple v) = rank1 v
   {-# INLINABLE rank1 #-}
 
 instance Rank1 (Simple (DV.Vector Word64)) where
-  rank1 (Simple v) = rankWords (toList v)
+  rank1 (Simple v) = rank1 v
   {-# INLINABLE rank1 #-}
 
 instance Select1 (Simple (DV.Vector Word8)) where
-  select1 (Simple v) = selectWords 0 (toList v)
+  select1 (Simple v) = select1 v
   {-# INLINABLE select1 #-}
 
 instance Select1 (Simple (DV.Vector Word16))  where
-  select1 (Simple v) = selectWords 0 (toList v)
+  select1 (Simple v) = select1 v
   {-# INLINABLE select1 #-}
 
 instance Select1 (Simple (DV.Vector Word32))  where
-  select1 (Simple v) = selectWords 0 (toList v)
+  select1 (Simple v) = select1 v
   {-# INLINABLE select1 #-}
 
 instance Select1 (Simple (DV.Vector Word64))  where
-  select1 (Simple v) = selectWords 0 (toList v)
+  select1 (Simple v) = select1 v
   {-# INLINABLE select1 #-}
 
 instance TestBit (Simple (DVS.Vector Word8)) where
@@ -138,15 +138,15 @@ instance Rank1 (Simple (DVS.Vector Word8)) where
   {-# INLINABLE rank1 #-}
 
 instance Rank1 (Simple (DVS.Vector Word16)) where
-  rank1 (Simple v) = rankWords (toList v)
+  rank1 (Simple v) = rank1 v
   {-# INLINABLE rank1 #-}
 
 instance Rank1 (Simple (DVS.Vector Word32)) where
-  rank1 (Simple v) = rankWords (toList v)
+  rank1 (Simple v) = rank1 v
   {-# INLINABLE rank1 #-}
 
 instance Rank1 (Simple (DVS.Vector Word64)) where
-  rank1 (Simple v) = rankWords (toList v)
+  rank1 (Simple v) = rank1 v
   {-# INLINABLE rank1 #-}
 
 instance Select1 (Simple (DVS.Vector Word8)) where
@@ -154,15 +154,15 @@ instance Select1 (Simple (DVS.Vector Word8)) where
   {-# INLINABLE select1 #-}
 
 instance Select1 (Simple (DVS.Vector Word16))  where
-  select1 (Simple v) = selectWords 0 (toList v)
+  select1 (Simple v) = select1 v
   {-# INLINABLE select1 #-}
 
 instance Select1 (Simple (DVS.Vector Word32))  where
-  select1 (Simple v) = selectWords 0 (toList v)
+  select1 (Simple v) = select1 v
   {-# INLINABLE select1 #-}
 
 instance Select1 (Simple (DVS.Vector Word64))  where
-  select1 (Simple v) = selectWords 0 (toList v)
+  select1 (Simple v) = select1 v
   {-# INLINABLE select1 #-}
 
 rankWords :: (P.Num a, PopCount1 a, Rank1 a, BitLength a) => [a] -> Count -> Count

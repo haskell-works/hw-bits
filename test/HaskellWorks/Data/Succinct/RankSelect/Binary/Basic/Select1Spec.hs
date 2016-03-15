@@ -177,6 +177,9 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
     it "select1 11011010 00000000 over [0..5]" $ do
       let bs = fromJust $ fromBitString "11011010 00000000" :: DVS.Vector Word8
       fmap (select1 bs) [0..5] `shouldBe` [0, 1, 2, 4, 5, 7]
+    it "select 01000000 00000100 over [0..2]" $ do
+      let bs = fromJust $ fromBitString "01000000 00000100" :: DVS.Vector Word8
+      fmap (select1 bs) [0..2] `shouldBe` [0, 2, 14]
   describe "For (DVS.Vector Word16)" $ do
     it "select1 10010010 over [0..3] should be 023568" $ do
       let bs = fromJust $ fromBitString "10010010" :: DVS.Vector Word16
@@ -190,6 +193,9 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
     it "select1 11011010 00000000 over [0..5]" $ do
       let bs = fromJust $ fromBitString "11011010 00000000" :: DVS.Vector Word16
       fmap (select1 bs) [0..5] `shouldBe` [0, 1, 2, 4, 5, 7]
+    it "select 01000000 00000100 over [0..2]" $ do
+      let bs = fromJust $ fromBitString "01000000 00000100" :: DVS.Vector Word16
+      fmap (select1 bs) [0..2] `shouldBe` [0, 2, 14]
   describe "For (DVS.Vector Word32)" $ do
     it "select1 10010010 over [0..3] should be 023568" $ do
       let bs = fromJust $ fromBitString "10010010" :: DVS.Vector Word32
@@ -203,6 +209,9 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
     it "select1 11011010 00000000 over [0..5]" $ do
       let bs = fromJust $ fromBitString "11011010 00000000" :: DVS.Vector Word32
       fmap (select1 bs) [0..5] `shouldBe` [0, 1, 2, 4, 5, 7]
+    it "select 01000000 00000100 over [0..2]" $ do
+      let bs = fromJust $ fromBitString "01000000 00000100" :: DVS.Vector Word32
+      fmap (select1 bs) [0..2] `shouldBe` [0, 2, 14]
   describe "For (DVS.Vector Word64)" $ do
     it "select1 10010010 over [0..3] should be 023568" $ do
       let bs = fromJust $ fromBitString "10010010" :: DVS.Vector Word64
@@ -216,3 +225,6 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
     it "select1 11011010 00000000 over [0..5]" $ do
       let bs = fromJust $ fromBitString "11011010 00000000" :: DVS.Vector Word64
       fmap (select1 bs) [0..5] `shouldBe` [0, 1, 2, 4, 5, 7]
+    it "select 01000000 00000100 over [0..2]" $ do
+      let bs = fromJust $ fromBitString "01000000 00000100" :: DVS.Vector Word64
+      fmap (select1 bs) [0..2] `shouldBe` [0, 2, 14]
