@@ -180,6 +180,9 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
     it "select 01000000 00000100 over [0..2]" $ do
       let bs = fromJust $ fromBitString "01000000 00000100" :: DVS.Vector Word8
       fmap (select1 bs) [0..2] `shouldBe` [0, 2, 14]
+    it "select 10000010 00000000 00100000 00010000 over [0..4]" $ do
+      let bs = fromJust $ fromBitString "10000010 00000000 00100000 00010000" :: DVS.Vector Word8
+      fmap (select1 bs) [0..4] `shouldBe` [0, 1, 7, 19, 28]
   describe "For (DVS.Vector Word16)" $ do
     it "select1 10010010 over [0..3] should be 023568" $ do
       let bs = fromJust $ fromBitString "10010010" :: DVS.Vector Word16
@@ -196,6 +199,9 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
     it "select 01000000 00000100 over [0..2]" $ do
       let bs = fromJust $ fromBitString "01000000 00000100" :: DVS.Vector Word16
       fmap (select1 bs) [0..2] `shouldBe` [0, 2, 14]
+    it "select 10000010 00000000 00100000 00010000 over [0..4]" $ do
+      let bs = fromJust $ fromBitString "10000010 00000000 00100000 00010000" :: DVS.Vector Word16
+      fmap (select1 bs) [0..4] `shouldBe` [0, 1, 7, 19, 28]
   describe "For (DVS.Vector Word32)" $ do
     it "select1 10010010 over [0..3] should be 023568" $ do
       let bs = fromJust $ fromBitString "10010010" :: DVS.Vector Word32
@@ -212,6 +218,9 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
     it "select 01000000 00000100 over [0..2]" $ do
       let bs = fromJust $ fromBitString "01000000 00000100" :: DVS.Vector Word32
       fmap (select1 bs) [0..2] `shouldBe` [0, 2, 14]
+    it "select 10000010 00000000 00100000 00010000 over [0..4]" $ do
+      let bs = fromJust $ fromBitString "10000010 00000000 00100000 00010000" :: DVS.Vector Word32
+      fmap (select1 bs) [0..4] `shouldBe` [0, 1, 7, 19, 28]
   describe "For (DVS.Vector Word64)" $ do
     it "select1 10010010 over [0..3] should be 023568" $ do
       let bs = fromJust $ fromBitString "10010010" :: DVS.Vector Word64
@@ -228,3 +237,6 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
     it "select 01000000 00000100 over [0..2]" $ do
       let bs = fromJust $ fromBitString "01000000 00000100" :: DVS.Vector Word64
       fmap (select1 bs) [0..2] `shouldBe` [0, 2, 14]
+    it "select 10000010 00000000 00100000 00010000 over [0..4]" $ do
+      let bs = fromJust $ fromBitString "10000010 00000000 00100000 00010000" :: DVS.Vector Word64
+      fmap (select1 bs) [0..4] `shouldBe` [0, 1, 7, 19, 28]
