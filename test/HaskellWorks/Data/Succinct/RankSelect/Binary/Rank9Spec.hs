@@ -32,7 +32,4 @@ spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
     \(VectorRank as i) ->
       let sv = S.prepare (DVS.fromList as :: DVS.Vector Word64) in
       let nv = N.prepare (DVN.fromList as :: DVN.Vector Word64) in
-      N.rank nv i == N.rank nv i &&
-      -- S.rank sv i == S.rank sv i &&
-      -- S.rank sv i == N.rank nv i &&
-      True
+      S.rank sv i == N.rank nv i
