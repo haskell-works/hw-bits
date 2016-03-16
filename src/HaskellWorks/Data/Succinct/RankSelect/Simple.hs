@@ -25,15 +25,12 @@ import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitPrint
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.Bits.PopCount.PopCount1
-import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           HaskellWorks.Data.Vector.VectorLike
 import qualified Prelude                                                    as P
-import           Safe
 
 newtype Simple a = Simple a deriving (P.Eq, BitPrint)
 
