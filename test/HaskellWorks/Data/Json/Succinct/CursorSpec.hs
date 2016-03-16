@@ -12,6 +12,7 @@ import qualified Data.ByteString                        as BS
 import           Data.String
 import qualified Data.Vector.Storable                   as DVS
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Json.Succinct
 import           HaskellWorks.Data.Json.Succinct.Cursor as C
 import           HaskellWorks.Data.Positioning
@@ -95,6 +96,24 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
   genSpec "JsonCursor BS.ByteString (DVS.Vector Word16)" (undefined :: JsonCursor BS.ByteString (DVS.Vector Word16))
   genSpec "JsonCursor BS.ByteString (DVS.Vector Word32)" (undefined :: JsonCursor BS.ByteString (DVS.Vector Word32))
   genSpec "JsonCursor BS.ByteString (DVS.Vector Word64)" (undefined :: JsonCursor BS.ByteString (DVS.Vector Word64))
+  it "Loads same Json consistentally from different backing vectors" $ do
+    let cursor8   = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (DVS.Vector Word8)
+    let cursor16  = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (DVS.Vector Word16)
+    let cursor32  = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (DVS.Vector Word32)
+    let cursor64  = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (DVS.Vector Word64)
+    cursorText cursor8 `shouldBe` cursorText cursor16
+    cursorText cursor8 `shouldBe` cursorText cursor32
+    cursorText cursor8 `shouldBe` cursorText cursor64
+    let ic8   = toBitString $ interests cursor8
+    let ic16  = toBitString $ interests cursor16
+    let ic32  = toBitString $ interests cursor32
+    let ic64  = toBitString $ interests cursor64
+    ic16 `shouldBeginWith` ic8
+    ic32 `shouldBeginWith` ic16
+    ic64 `shouldBeginWith` ic32
+
+shouldBeginWith :: (Eq a, Show a) => [a] -> [a] -> IO ()
+shouldBeginWith as bs = take (length bs) as `shouldBe` bs
 
 genSpec :: forall t . (IsString t, HasJsonCursorType t, Show t) => String -> t -> SpecWith ()
 genSpec t _ = do

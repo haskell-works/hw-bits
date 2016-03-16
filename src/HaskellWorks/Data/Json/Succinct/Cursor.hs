@@ -127,7 +127,7 @@ instance IsString (JsonCursor BS.ByteString (DVS.Vector Word16)) where
     }
     where textBS            = BSC.pack s :: BS.ByteString
           interestBS        = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
-          interestBS'       = applyToMultipleOf (`BS.snoc` fromIntegral (ord ' ')) interestBS 2
+          interestBS'       = applyToMultipleOf (`BS.snoc` 0) interestBS 2
           interestsV        = DVS.unsafeCast (DVS.unfoldr genInterest interestBS') :: DVS.Vector Word16
           genInterest bs    = if BS.null bs
             then Nothing
@@ -144,7 +144,7 @@ instance IsString (JsonCursor BS.ByteString (DVS.Vector Word32)) where
     }
     where textBS            = BSC.pack s :: BS.ByteString
           interestBS        = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
-          interestBS'       = applyToMultipleOf (`BS.snoc` fromIntegral (ord ' ')) interestBS 4
+          interestBS'       = applyToMultipleOf (`BS.snoc` 0) interestBS 4
           interestsV        = DVS.unsafeCast (DVS.unfoldr genInterest interestBS') :: DVS.Vector Word32
           genInterest bs    = if BS.null bs
             then Nothing
@@ -161,7 +161,7 @@ instance IsString (JsonCursor BS.ByteString (DVS.Vector Word64)) where
     }
     where textBS            = BSC.pack s :: BS.ByteString
           interestBS        = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
-          interestBS'       = applyToMultipleOf (`BS.snoc` fromIntegral (ord ' ')) interestBS 8
+          interestBS'       = applyToMultipleOf (`BS.snoc` 0) interestBS 8
           interestsV        = DVS.unsafeCast (DVS.unfoldr genInterest interestBS') :: DVS.Vector Word64
           genInterest bs    = if BS.null bs
             then Nothing

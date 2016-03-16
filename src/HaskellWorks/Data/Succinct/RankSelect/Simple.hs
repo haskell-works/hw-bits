@@ -22,6 +22,7 @@ import qualified Data.Vector                                                as D
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength
+import           HaskellWorks.Data.Bits.BitPrint
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
@@ -34,7 +35,7 @@ import           HaskellWorks.Data.Vector.VectorLike
 import qualified Prelude                                                    as P
 import           Safe
 
-newtype Simple a = Simple a deriving (P.Eq)
+newtype Simple a = Simple a deriving (P.Eq, BitPrint)
 
 instance P.Functor Simple where
   fmap f (Simple a) = Simple (f a)
