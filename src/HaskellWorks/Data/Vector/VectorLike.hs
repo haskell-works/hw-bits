@@ -20,6 +20,7 @@ class VectorLike v where
   (!!!) :: v -> Position -> Elem v
   concat :: [v] -> v
   empty :: v
+  drop :: Count -> v -> v
   filter :: (Elem v -> Bool) -> v -> v
   generate :: Int -> (Int -> Elem v) -> v
   length :: v -> Count
@@ -58,6 +59,9 @@ instance VectorLike BS.ByteString where
   snoc = BS.snoc
   {-# INLINABLE snoc #-}
 
+  drop = BS.drop . fromIntegral
+  {-# INLINABLE drop #-}
+
   unsafeIndex v (Position i) = BS.index v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
@@ -93,6 +97,9 @@ instance VectorLike (DV.Vector Word8) where
 
   snoc = DV.snoc
   {-# INLINABLE snoc #-}
+
+  drop = DV.drop . fromIntegral
+  {-# INLINABLE drop #-}
 
   unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
@@ -131,6 +138,9 @@ instance VectorLike (DV.Vector Word16) where
   snoc = DV.snoc
   {-# INLINABLE snoc #-}
 
+  drop = DV.drop . fromIntegral
+  {-# INLINABLE drop #-}
+
   unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
@@ -166,6 +176,9 @@ instance VectorLike (DV.Vector Word32) where
 
   snoc = DV.snoc
   {-# INLINABLE snoc #-}
+
+  drop = DV.drop . fromIntegral
+  {-# INLINABLE drop #-}
 
   unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
@@ -203,6 +216,9 @@ instance VectorLike (DV.Vector Word64) where
   snoc = DV.snoc
   {-# INLINABLE snoc #-}
 
+  drop = DV.drop . fromIntegral
+  {-# INLINABLE drop #-}
+
   unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
@@ -238,6 +254,9 @@ instance VectorLike (DVS.Vector Word8) where
 
   snoc = DVS.snoc
   {-# INLINABLE snoc #-}
+
+  drop = DVS.drop . fromIntegral
+  {-# INLINABLE drop #-}
 
   unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
@@ -275,6 +294,9 @@ instance VectorLike (DVS.Vector Word16) where
   snoc = DVS.snoc
   {-# INLINABLE snoc #-}
 
+  drop = DVS.drop . fromIntegral
+  {-# INLINABLE drop #-}
+
   unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
@@ -311,6 +333,9 @@ instance VectorLike (DVS.Vector Word32) where
   snoc = DVS.snoc
   {-# INLINABLE snoc #-}
 
+  drop = DVS.drop . fromIntegral
+  {-# INLINABLE drop #-}
+
   unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
@@ -346,6 +371,9 @@ instance VectorLike (DVS.Vector Word64) where
 
   snoc = DVS.snoc
   {-# INLINABLE snoc #-}
+
+  drop = DVS.drop . fromIntegral
+  {-# INLINABLE drop #-}
 
   unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
