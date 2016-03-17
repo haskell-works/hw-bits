@@ -6,6 +6,7 @@ module HaskellWorks.Data.Vector.VectorLike
   ( VectorLike(..)
   ) where
 
+import qualified Data.ByteString               as BS
 import qualified Data.Vector                   as DV
 import qualified Data.Vector.Storable          as DVS
 import           Data.Word
@@ -23,9 +24,45 @@ class VectorLike v where
   generate :: Int -> (Int -> Elem v) -> v
   length :: v -> Count
   snoc :: v -> Elem v -> v
-  sum :: v -> Elem v
   unsafeIndex :: v -> Position -> Elem v
   unsafeSlice :: Position -> Position -> v -> v
+
+instance VectorLike BS.ByteString where
+  type Elem BS.ByteString = Word8
+
+  toList = BS.unpack
+  {-# INLINABLE toList #-}
+
+  fromList = BS.pack
+  {-# INLINABLE fromList #-}
+
+  (!!!) v (Position i) = v `BS.index` fromIntegral i
+  {-# INLINABLE (!!!) #-}
+
+  concat = BS.concat
+  {-# INLINABLE concat #-}
+
+  empty = BS.empty
+  {-# INLINABLE empty #-}
+
+  filter = BS.filter
+  {-# INLINABLE filter #-}
+
+  generate n f = fst (BS.unfoldrN n go 0)
+    where go i = if i /= n then Just (f i, i + 1) else Nothing
+  {-# INLINABLE generate #-}
+
+  length = Count . fromIntegral . BS.length
+  {-# INLINABLE length #-}
+
+  snoc = BS.snoc
+  {-# INLINABLE snoc #-}
+
+  unsafeIndex v (Position i) = BS.index v (fromIntegral i)
+  {-# INLINABLE unsafeIndex #-}
+
+  unsafeSlice (Position i) (Position j) = BS.take (fromIntegral j) . BS.drop (fromIntegral i)
+  {-# INLINABLE unsafeSlice #-}
 
 instance VectorLike (DV.Vector Word8) where
   type Elem (DV.Vector Word8) = Word8
@@ -57,14 +94,12 @@ instance VectorLike (DV.Vector Word8) where
   snoc = DV.snoc
   {-# INLINABLE snoc #-}
 
-  sum = DV.sum
-  {-# INLINABLE sum #-}
-
   unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
   unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
+
 
 instance VectorLike (DV.Vector Word16) where
   type Elem (DV.Vector Word16) = Word16
@@ -95,9 +130,6 @@ instance VectorLike (DV.Vector Word16) where
 
   snoc = DV.snoc
   {-# INLINABLE snoc #-}
-
-  sum = DV.sum
-  {-# INLINABLE sum #-}
 
   unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
@@ -135,9 +167,6 @@ instance VectorLike (DV.Vector Word32) where
   snoc = DV.snoc
   {-# INLINABLE snoc #-}
 
-  sum = DV.sum
-  {-# INLINABLE sum #-}
-
   unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
@@ -173,9 +202,6 @@ instance VectorLike (DV.Vector Word64) where
 
   snoc = DV.snoc
   {-# INLINABLE snoc #-}
-
-  sum = DV.sum
-  {-# INLINABLE sum #-}
 
   unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
@@ -213,9 +239,6 @@ instance VectorLike (DVS.Vector Word8) where
   snoc = DVS.snoc
   {-# INLINABLE snoc #-}
 
-  sum = DVS.sum
-  {-# INLINABLE sum #-}
-
   unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
@@ -251,9 +274,6 @@ instance VectorLike (DVS.Vector Word16) where
 
   snoc = DVS.snoc
   {-# INLINABLE snoc #-}
-
-  sum = DVS.sum
-  {-# INLINABLE sum #-}
 
   unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
@@ -291,9 +311,6 @@ instance VectorLike (DVS.Vector Word32) where
   snoc = DVS.snoc
   {-# INLINABLE snoc #-}
 
-  sum = DVS.sum
-  {-# INLINABLE sum #-}
-
   unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
 
@@ -329,9 +346,6 @@ instance VectorLike (DVS.Vector Word64) where
 
   snoc = DVS.snoc
   {-# INLINABLE snoc #-}
-
-  sum = DVS.sum
-  {-# INLINABLE sum #-}
 
   unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   {-# INLINABLE unsafeIndex #-}
