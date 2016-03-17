@@ -15,8 +15,8 @@ import           HaskellWorks.Data.Positioning
 class VectorLike v where
   type Elem v
 
-  toList :: v -> [Elem v]
-  fromList :: [Elem v] -> v
+  vToList :: v -> [Elem v]
+  vFromList :: [Elem v] -> v
   (!!!) :: v -> Position -> Elem v
   concat :: [v] -> v
   empty :: v
@@ -32,11 +32,11 @@ class VectorLike v where
 instance VectorLike BS.ByteString where
   type Elem BS.ByteString = Word8
 
-  toList = BS.unpack
-  {-# INLINABLE toList #-}
+  vToList = BS.unpack
+  {-# INLINABLE vToList #-}
 
-  fromList = BS.pack
-  {-# INLINABLE fromList #-}
+  vFromList = BS.pack
+  {-# INLINABLE vFromList #-}
 
   (!!!) v (Position i) = v `BS.index` fromIntegral i
   {-# INLINABLE (!!!) #-}
@@ -75,11 +75,11 @@ instance VectorLike BS.ByteString where
 instance VectorLike (DV.Vector Word8) where
   type Elem (DV.Vector Word8) = Word8
 
-  toList = DV.toList
-  {-# INLINABLE toList #-}
+  vToList = DV.toList
+  {-# INLINABLE vToList #-}
 
-  fromList = DV.fromList
-  {-# INLINABLE fromList #-}
+  vFromList = DV.fromList
+  {-# INLINABLE vFromList #-}
 
   (!!!) v (Position i) = v DV.! fromIntegral i
   {-# INLINABLE (!!!) #-}
@@ -118,11 +118,11 @@ instance VectorLike (DV.Vector Word8) where
 instance VectorLike (DV.Vector Word16) where
   type Elem (DV.Vector Word16) = Word16
 
-  toList = DV.toList
-  {-# INLINABLE toList #-}
+  vToList = DV.toList
+  {-# INLINABLE vToList #-}
 
-  fromList = DV.fromList
-  {-# INLINABLE fromList #-}
+  vFromList = DV.fromList
+  {-# INLINABLE vFromList #-}
 
   (!!!) v (Position i) = v DV.! fromIntegral i
   {-# INLINABLE (!!!) #-}
@@ -160,11 +160,11 @@ instance VectorLike (DV.Vector Word16) where
 instance VectorLike (DV.Vector Word32) where
   type Elem (DV.Vector Word32) = Word32
 
-  toList = DV.toList
-  {-# INLINABLE toList #-}
+  vToList = DV.toList
+  {-# INLINABLE vToList #-}
 
-  fromList = DV.fromList
-  {-# INLINABLE fromList #-}
+  vFromList = DV.fromList
+  {-# INLINABLE vFromList #-}
 
   (!!!) v (Position i) = v DV.! fromIntegral i
   {-# INLINABLE (!!!) #-}
@@ -202,11 +202,11 @@ instance VectorLike (DV.Vector Word32) where
 instance VectorLike (DV.Vector Word64) where
   type Elem (DV.Vector Word64) = Word64
 
-  toList = DV.toList
-  {-# INLINABLE toList #-}
+  vToList = DV.toList
+  {-# INLINABLE vToList #-}
 
-  fromList = DV.fromList
-  {-# INLINABLE fromList #-}
+  vFromList = DV.fromList
+  {-# INLINABLE vFromList #-}
 
   (!!!) v (Position i) = v DV.! fromIntegral i
   {-# INLINABLE (!!!) #-}
@@ -244,11 +244,11 @@ instance VectorLike (DV.Vector Word64) where
 instance VectorLike (DVS.Vector Word8) where
   type Elem (DVS.Vector Word8) = Word8
 
-  toList = DVS.toList
-  {-# INLINABLE toList #-}
+  vToList = DVS.toList
+  {-# INLINABLE vToList #-}
 
-  fromList = DVS.fromList
-  {-# INLINABLE fromList #-}
+  vFromList = DVS.fromList
+  {-# INLINABLE vFromList #-}
 
   (!!!) v (Position i) = v DVS.! fromIntegral i
   {-# INLINABLE (!!!) #-}
@@ -286,11 +286,11 @@ instance VectorLike (DVS.Vector Word8) where
 instance VectorLike (DVS.Vector Word16) where
   type Elem (DVS.Vector Word16) = Word16
 
-  toList = DVS.toList
-  {-# INLINABLE toList #-}
+  vToList = DVS.toList
+  {-# INLINABLE vToList #-}
 
-  fromList = DVS.fromList
-  {-# INLINABLE fromList #-}
+  vFromList = DVS.fromList
+  {-# INLINABLE vFromList #-}
 
   (!!!) v (Position i) = v DVS.! fromIntegral i
   {-# INLINABLE (!!!) #-}
@@ -328,11 +328,11 @@ instance VectorLike (DVS.Vector Word16) where
 instance VectorLike (DVS.Vector Word32) where
   type Elem (DVS.Vector Word32) = Word32
 
-  toList = DVS.toList
-  {-# INLINABLE toList #-}
+  vToList = DVS.toList
+  {-# INLINABLE vToList #-}
 
-  fromList = DVS.fromList
-  {-# INLINABLE fromList #-}
+  vFromList = DVS.fromList
+  {-# INLINABLE vFromList #-}
 
   (!!!) v (Position i) = v DVS.! fromIntegral i
   {-# INLINABLE (!!!) #-}
@@ -370,11 +370,11 @@ instance VectorLike (DVS.Vector Word32) where
 instance VectorLike (DVS.Vector Word64) where
   type Elem (DVS.Vector Word64) = Word64
 
-  toList = DVS.toList
-  {-# INLINABLE toList #-}
+  vToList = DVS.toList
+  {-# INLINABLE vToList #-}
 
-  fromList = DVS.fromList
-  {-# INLINABLE fromList #-}
+  vFromList = DVS.fromList
+  {-# INLINABLE vFromList #-}
 
   (!!!) v (Position i) = v DVS.! fromIntegral i
   {-# INLINABLE (!!!) #-}
