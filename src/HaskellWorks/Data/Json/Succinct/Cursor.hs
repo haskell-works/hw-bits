@@ -145,7 +145,7 @@ jsonCursorTypeForVector :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteStrin
 jsonCursorTypeForVector k = jsonCursorType' (cursorText k !!! jsonCursorPos k)
 
 jsonTokenAt :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonToken
-jsonTokenAt k = case ABC.parse parseJsonToken (vdrop (toCount (jsonCursorPos k)) (cursorText k)) of
+jsonTokenAt k = case ABC.parse parseJsonToken (vDrop (toCount (jsonCursorPos k)) (cursorText k)) of
   ABC.Fail {} -> error "Failed to parse token in cursor"
   ABC.Done _ r -> r
 

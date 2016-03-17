@@ -18,16 +18,16 @@ class VectorLike v where
   vToList :: v -> [Elem v]
   vFromList :: [Elem v] -> v
   (!!!) :: v -> Position -> Elem v
-  concat :: [v] -> v
-  empty :: v
-  filter :: (Elem v -> Bool) -> v -> v
-  generate :: Int -> (Int -> Elem v) -> v
-  length :: v -> Count
-  snoc :: v -> Elem v -> v
-  vdrop :: Count -> v -> v
-  vtake :: Count -> v -> v
-  unsafeIndex :: v -> Position -> Elem v
-  unsafeSlice :: Position -> Position -> v -> v
+  vConcat :: [v] -> v
+  vEmpty :: v
+  vFilter :: (Elem v -> Bool) -> v -> v
+  vGenerate :: Int -> (Int -> Elem v) -> v
+  vLength :: v -> Count
+  vSnoc :: v -> Elem v -> v
+  vDrop :: Count -> v -> v
+  vTake :: Count -> v -> v
+  vIndex :: v -> Position -> Elem v
+  vSlice :: Position -> Position -> v -> v
 
 instance VectorLike BS.ByteString where
   type Elem BS.ByteString = Word8
@@ -41,36 +41,36 @@ instance VectorLike BS.ByteString where
   (!!!) v (Position i) = v `BS.index` fromIntegral i
   {-# INLINABLE (!!!) #-}
 
-  concat = BS.concat
-  {-# INLINABLE concat #-}
+  vConcat = BS.concat
+  {-# INLINABLE vConcat #-}
 
-  empty = BS.empty
-  {-# INLINABLE empty #-}
+  vEmpty = BS.empty
+  {-# INLINABLE vEmpty #-}
 
-  filter = BS.filter
-  {-# INLINABLE filter #-}
+  vFilter = BS.filter
+  {-# INLINABLE vFilter #-}
 
-  generate n f = fst (BS.unfoldrN n go 0)
+  vGenerate n f = fst (BS.unfoldrN n go 0)
     where go i = if i /= n then Just (f i, i + 1) else Nothing
-  {-# INLINABLE generate #-}
+  {-# INLINABLE vGenerate #-}
 
-  length = Count . fromIntegral . BS.length
-  {-# INLINABLE length #-}
+  vLength = Count . fromIntegral . BS.length
+  {-# INLINABLE vLength #-}
 
-  snoc = BS.snoc
-  {-# INLINABLE snoc #-}
+  vSnoc = BS.snoc
+  {-# INLINABLE vSnoc #-}
 
-  vdrop = BS.drop . fromIntegral
-  {-# INLINABLE vdrop #-}
+  vDrop = BS.drop . fromIntegral
+  {-# INLINABLE vDrop #-}
 
-  vtake = BS.take . fromIntegral
-  {-# INLINABLE vtake #-}
+  vTake = BS.take . fromIntegral
+  {-# INLINABLE vTake #-}
 
-  unsafeIndex v (Position i) = BS.index v (fromIntegral i)
-  {-# INLINABLE unsafeIndex #-}
+  vIndex v (Position i) = BS.index v (fromIntegral i)
+  {-# INLINABLE vIndex #-}
 
-  unsafeSlice (Position i) (Position j) = BS.take (fromIntegral j) . BS.drop (fromIntegral i)
-  {-# INLINABLE unsafeSlice #-}
+  vSlice (Position i) (Position j) = BS.take (fromIntegral j) . BS.drop (fromIntegral i)
+  {-# INLINABLE vSlice #-}
 
 instance VectorLike (DV.Vector Word8) where
   type Elem (DV.Vector Word8) = Word8
@@ -84,35 +84,35 @@ instance VectorLike (DV.Vector Word8) where
   (!!!) v (Position i) = v DV.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
-  concat = DV.concat
-  {-# INLINABLE concat #-}
+  vConcat = DV.concat
+  {-# INLINABLE vConcat #-}
 
-  empty = DV.empty
-  {-# INLINABLE empty #-}
+  vEmpty = DV.empty
+  {-# INLINABLE vEmpty #-}
 
-  filter = DV.filter
-  {-# INLINABLE filter #-}
+  vFilter = DV.filter
+  {-# INLINABLE vFilter #-}
 
-  generate = DV.generate
-  {-# INLINABLE generate #-}
+  vGenerate = DV.generate
+  {-# INLINABLE vGenerate #-}
 
-  length = Count . fromIntegral . DV.length
-  {-# INLINABLE length #-}
+  vLength = Count . fromIntegral . DV.length
+  {-# INLINABLE vLength #-}
 
-  snoc = DV.snoc
-  {-# INLINABLE snoc #-}
+  vSnoc = DV.snoc
+  {-# INLINABLE vSnoc #-}
 
-  vdrop = DV.drop . fromIntegral
-  {-# INLINABLE vdrop #-}
+  vDrop = DV.drop . fromIntegral
+  {-# INLINABLE vDrop #-}
 
-  vtake = DV.take . fromIntegral
-  {-# INLINABLE vtake #-}
+  vTake = DV.take . fromIntegral
+  {-# INLINABLE vTake #-}
 
-  unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
-  {-# INLINABLE unsafeIndex #-}
+  vIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
+  {-# INLINABLE vIndex #-}
 
-  unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE unsafeSlice #-}
+  vSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
+  {-# INLINABLE vSlice #-}
 
 
 instance VectorLike (DV.Vector Word16) where
@@ -127,35 +127,35 @@ instance VectorLike (DV.Vector Word16) where
   (!!!) v (Position i) = v DV.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
-  concat = DV.concat
-  {-# INLINABLE concat #-}
+  vConcat = DV.concat
+  {-# INLINABLE vConcat #-}
 
-  empty = DV.empty
-  {-# INLINABLE empty #-}
+  vEmpty = DV.empty
+  {-# INLINABLE vEmpty #-}
 
-  filter = DV.filter
-  {-# INLINABLE filter #-}
+  vFilter = DV.filter
+  {-# INLINABLE vFilter #-}
 
-  generate = DV.generate
-  {-# INLINABLE generate #-}
+  vGenerate = DV.generate
+  {-# INLINABLE vGenerate #-}
 
-  length = Count . fromIntegral . DV.length
-  {-# INLINABLE length #-}
+  vLength = Count . fromIntegral . DV.length
+  {-# INLINABLE vLength #-}
 
-  snoc = DV.snoc
-  {-# INLINABLE snoc #-}
+  vSnoc = DV.snoc
+  {-# INLINABLE vSnoc #-}
 
-  vdrop = DV.drop . fromIntegral
-  {-# INLINABLE vdrop #-}
+  vDrop = DV.drop . fromIntegral
+  {-# INLINABLE vDrop #-}
 
-  vtake = DV.take . fromIntegral
-  {-# INLINABLE vtake #-}
+  vTake = DV.take . fromIntegral
+  {-# INLINABLE vTake #-}
 
-  unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
-  {-# INLINABLE unsafeIndex #-}
+  vIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
+  {-# INLINABLE vIndex #-}
 
-  unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE unsafeSlice #-}
+  vSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
+  {-# INLINABLE vSlice #-}
 
 instance VectorLike (DV.Vector Word32) where
   type Elem (DV.Vector Word32) = Word32
@@ -169,35 +169,35 @@ instance VectorLike (DV.Vector Word32) where
   (!!!) v (Position i) = v DV.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
-  concat = DV.concat
-  {-# INLINABLE concat #-}
+  vConcat = DV.concat
+  {-# INLINABLE vConcat #-}
 
-  empty = DV.empty
-  {-# INLINABLE empty #-}
+  vEmpty = DV.empty
+  {-# INLINABLE vEmpty #-}
 
-  filter = DV.filter
-  {-# INLINABLE filter #-}
+  vFilter = DV.filter
+  {-# INLINABLE vFilter #-}
 
-  generate = DV.generate
-  {-# INLINABLE generate #-}
+  vGenerate = DV.generate
+  {-# INLINABLE vGenerate #-}
 
-  length = Count . fromIntegral . DV.length
-  {-# INLINABLE length #-}
+  vLength = Count . fromIntegral . DV.length
+  {-# INLINABLE vLength #-}
 
-  snoc = DV.snoc
-  {-# INLINABLE snoc #-}
+  vSnoc = DV.snoc
+  {-# INLINABLE vSnoc #-}
 
-  vdrop = DV.drop . fromIntegral
-  {-# INLINABLE vdrop #-}
+  vDrop = DV.drop . fromIntegral
+  {-# INLINABLE vDrop #-}
 
-  vtake = DV.take . fromIntegral
-  {-# INLINABLE vtake #-}
+  vTake = DV.take . fromIntegral
+  {-# INLINABLE vTake #-}
 
-  unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
-  {-# INLINABLE unsafeIndex #-}
+  vIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
+  {-# INLINABLE vIndex #-}
 
-  unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE unsafeSlice #-}
+  vSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
+  {-# INLINABLE vSlice #-}
 
 instance VectorLike (DV.Vector Word64) where
   type Elem (DV.Vector Word64) = Word64
@@ -211,35 +211,35 @@ instance VectorLike (DV.Vector Word64) where
   (!!!) v (Position i) = v DV.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
-  concat = DV.concat
-  {-# INLINABLE concat #-}
+  vConcat = DV.concat
+  {-# INLINABLE vConcat #-}
 
-  empty = DV.empty
-  {-# INLINABLE empty #-}
+  vEmpty = DV.empty
+  {-# INLINABLE vEmpty #-}
 
-  filter = DV.filter
-  {-# INLINABLE filter #-}
+  vFilter = DV.filter
+  {-# INLINABLE vFilter #-}
 
-  generate = DV.generate
-  {-# INLINABLE generate #-}
+  vGenerate = DV.generate
+  {-# INLINABLE vGenerate #-}
 
-  length = Count . fromIntegral . DV.length
-  {-# INLINABLE length #-}
+  vLength = Count . fromIntegral . DV.length
+  {-# INLINABLE vLength #-}
 
-  snoc = DV.snoc
-  {-# INLINABLE snoc #-}
+  vSnoc = DV.snoc
+  {-# INLINABLE vSnoc #-}
 
-  vdrop = DV.drop . fromIntegral
-  {-# INLINABLE vdrop #-}
+  vDrop = DV.drop . fromIntegral
+  {-# INLINABLE vDrop #-}
 
-  vtake = DV.take . fromIntegral
-  {-# INLINABLE vtake #-}
+  vTake = DV.take . fromIntegral
+  {-# INLINABLE vTake #-}
 
-  unsafeIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
-  {-# INLINABLE unsafeIndex #-}
+  vIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
+  {-# INLINABLE vIndex #-}
 
-  unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE unsafeSlice #-}
+  vSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
+  {-# INLINABLE vSlice #-}
 
 instance VectorLike (DVS.Vector Word8) where
   type Elem (DVS.Vector Word8) = Word8
@@ -253,35 +253,35 @@ instance VectorLike (DVS.Vector Word8) where
   (!!!) v (Position i) = v DVS.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
-  concat = DVS.concat
-  {-# INLINABLE concat #-}
+  vConcat = DVS.concat
+  {-# INLINABLE vConcat #-}
 
-  empty = DVS.empty
-  {-# INLINABLE empty #-}
+  vEmpty = DVS.empty
+  {-# INLINABLE vEmpty #-}
 
-  filter = DVS.filter
-  {-# INLINABLE filter #-}
+  vFilter = DVS.filter
+  {-# INLINABLE vFilter #-}
 
-  generate = DVS.generate
-  {-# INLINABLE generate #-}
+  vGenerate = DVS.generate
+  {-# INLINABLE vGenerate #-}
 
-  length = Count . fromIntegral . DVS.length
-  {-# INLINABLE length #-}
+  vLength = Count . fromIntegral . DVS.length
+  {-# INLINABLE vLength #-}
 
-  snoc = DVS.snoc
-  {-# INLINABLE snoc #-}
+  vSnoc = DVS.snoc
+  {-# INLINABLE vSnoc #-}
 
-  vdrop = DVS.drop . fromIntegral
-  {-# INLINABLE vdrop #-}
+  vDrop = DVS.drop . fromIntegral
+  {-# INLINABLE vDrop #-}
 
-  vtake = DVS.take . fromIntegral
-  {-# INLINABLE vtake #-}
+  vTake = DVS.take . fromIntegral
+  {-# INLINABLE vTake #-}
 
-  unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
-  {-# INLINABLE unsafeIndex #-}
+  vIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
+  {-# INLINABLE vIndex #-}
 
-  unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE unsafeSlice #-}
+  vSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
+  {-# INLINABLE vSlice #-}
 
 instance VectorLike (DVS.Vector Word16) where
   type Elem (DVS.Vector Word16) = Word16
@@ -295,35 +295,35 @@ instance VectorLike (DVS.Vector Word16) where
   (!!!) v (Position i) = v DVS.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
-  concat = DVS.concat
-  {-# INLINABLE concat #-}
+  vConcat = DVS.concat
+  {-# INLINABLE vConcat #-}
 
-  empty = DVS.empty
-  {-# INLINABLE empty #-}
+  vEmpty = DVS.empty
+  {-# INLINABLE vEmpty #-}
 
-  filter = DVS.filter
-  {-# INLINABLE filter #-}
+  vFilter = DVS.filter
+  {-# INLINABLE vFilter #-}
 
-  generate = DVS.generate
-  {-# INLINABLE generate #-}
+  vGenerate = DVS.generate
+  {-# INLINABLE vGenerate #-}
 
-  length = Count . fromIntegral . DVS.length
-  {-# INLINABLE length #-}
+  vLength = Count . fromIntegral . DVS.length
+  {-# INLINABLE vLength #-}
 
-  snoc = DVS.snoc
-  {-# INLINABLE snoc #-}
+  vSnoc = DVS.snoc
+  {-# INLINABLE vSnoc #-}
 
-  vdrop = DVS.drop . fromIntegral
-  {-# INLINABLE vdrop #-}
+  vDrop = DVS.drop . fromIntegral
+  {-# INLINABLE vDrop #-}
 
-  vtake = DVS.take . fromIntegral
-  {-# INLINABLE vtake #-}
+  vTake = DVS.take . fromIntegral
+  {-# INLINABLE vTake #-}
 
-  unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
-  {-# INLINABLE unsafeIndex #-}
+  vIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
+  {-# INLINABLE vIndex #-}
 
-  unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE unsafeSlice #-}
+  vSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
+  {-# INLINABLE vSlice #-}
 
 instance VectorLike (DVS.Vector Word32) where
   type Elem (DVS.Vector Word32) = Word32
@@ -337,35 +337,35 @@ instance VectorLike (DVS.Vector Word32) where
   (!!!) v (Position i) = v DVS.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
-  concat = DVS.concat
-  {-# INLINABLE concat #-}
+  vConcat = DVS.concat
+  {-# INLINABLE vConcat #-}
 
-  empty = DVS.empty
-  {-# INLINABLE empty #-}
+  vEmpty = DVS.empty
+  {-# INLINABLE vEmpty #-}
 
-  filter = DVS.filter
-  {-# INLINABLE filter #-}
+  vFilter = DVS.filter
+  {-# INLINABLE vFilter #-}
 
-  generate = DVS.generate
-  {-# INLINABLE generate #-}
+  vGenerate = DVS.generate
+  {-# INLINABLE vGenerate #-}
 
-  length = Count . fromIntegral . DVS.length
-  {-# INLINABLE length #-}
+  vLength = Count . fromIntegral . DVS.length
+  {-# INLINABLE vLength #-}
 
-  snoc = DVS.snoc
-  {-# INLINABLE snoc #-}
+  vSnoc = DVS.snoc
+  {-# INLINABLE vSnoc #-}
 
-  vdrop = DVS.drop . fromIntegral
-  {-# INLINABLE vdrop #-}
+  vDrop = DVS.drop . fromIntegral
+  {-# INLINABLE vDrop #-}
 
-  vtake = DVS.take . fromIntegral
-  {-# INLINABLE vtake #-}
+  vTake = DVS.take . fromIntegral
+  {-# INLINABLE vTake #-}
 
-  unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
-  {-# INLINABLE unsafeIndex #-}
+  vIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
+  {-# INLINABLE vIndex #-}
 
-  unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE unsafeSlice #-}
+  vSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
+  {-# INLINABLE vSlice #-}
 
 instance VectorLike (DVS.Vector Word64) where
   type Elem (DVS.Vector Word64) = Word64
@@ -379,32 +379,32 @@ instance VectorLike (DVS.Vector Word64) where
   (!!!) v (Position i) = v DVS.! fromIntegral i
   {-# INLINABLE (!!!) #-}
 
-  concat = DVS.concat
-  {-# INLINABLE concat #-}
+  vConcat = DVS.concat
+  {-# INLINABLE vConcat #-}
 
-  empty = DVS.empty
-  {-# INLINABLE empty #-}
+  vEmpty = DVS.empty
+  {-# INLINABLE vEmpty #-}
 
-  filter = DVS.filter
-  {-# INLINABLE filter #-}
+  vFilter = DVS.filter
+  {-# INLINABLE vFilter #-}
 
-  generate = DVS.generate
-  {-# INLINABLE generate #-}
+  vGenerate = DVS.generate
+  {-# INLINABLE vGenerate #-}
 
-  length = Count . fromIntegral . DVS.length
-  {-# INLINABLE length #-}
+  vLength = Count . fromIntegral . DVS.length
+  {-# INLINABLE vLength #-}
 
-  snoc = DVS.snoc
-  {-# INLINABLE snoc #-}
+  vSnoc = DVS.snoc
+  {-# INLINABLE vSnoc #-}
 
-  vdrop = DVS.drop . fromIntegral
-  {-# INLINABLE vdrop #-}
+  vDrop = DVS.drop . fromIntegral
+  {-# INLINABLE vDrop #-}
 
-  vtake = DVS.take . fromIntegral
-  {-# INLINABLE vtake #-}
+  vTake = DVS.take . fromIntegral
+  {-# INLINABLE vTake #-}
 
-  unsafeIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
-  {-# INLINABLE unsafeIndex #-}
+  vIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
+  {-# INLINABLE vIndex #-}
 
-  unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE unsafeSlice #-}
+  vSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
+  {-# INLINABLE vSlice #-}

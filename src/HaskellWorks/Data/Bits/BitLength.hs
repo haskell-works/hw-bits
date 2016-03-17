@@ -18,7 +18,7 @@ import qualified Data.Vector                         as DV
 import qualified Data.Vector.Storable                as DVS
 import           Data.Word
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Vector.VectorLike as VL
+import           HaskellWorks.Data.Vector.VectorLike
 import           Prelude                             as P
 
 class BitLength v where
@@ -80,33 +80,33 @@ instance BitLength [Word64] where
   {-# INLINABLE bitLength #-}
 
 instance BitLength (DV.Vector Word8) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
+  bitLength v = vLength v * bitLength (v !!! 0)
   {-# INLINABLE bitLength #-}
 
 instance BitLength (DV.Vector Word16) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
+  bitLength v = vLength v * bitLength (v !!! 0)
   {-# INLINABLE bitLength #-}
 
 instance BitLength (DV.Vector Word32) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
+  bitLength v = vLength v * bitLength (v !!! 0)
   {-# INLINABLE bitLength #-}
 
 instance BitLength (DV.Vector Word64) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
+  bitLength v = vLength v * bitLength (v !!! 0)
   {-# INLINABLE bitLength #-}
 
 instance BitLength (DVS.Vector Word8) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
+  bitLength v = vLength v * bitLength (v !!! 0)
   {-# INLINABLE bitLength #-}
 
 instance BitLength (DVS.Vector Word16) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
+  bitLength v = vLength v * bitLength (v !!! 0)
   {-# INLINABLE bitLength #-}
 
 instance BitLength (DVS.Vector Word32) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
+  bitLength v = vLength v * bitLength (v !!! 0)
   {-# INLINABLE bitLength #-}
 
 instance BitLength (DVS.Vector Word64) where
-  bitLength v = VL.length v * bitLength (v !!! 0)
+  bitLength v = vLength v * bitLength (v !!! 0)
   {-# INLINABLE bitLength #-}
