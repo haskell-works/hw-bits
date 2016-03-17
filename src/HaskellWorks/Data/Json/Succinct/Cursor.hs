@@ -121,7 +121,7 @@ jsonTokenAt k = case ABC.parse parseJsonToken (vDrop (toCount (jsonCursorPos k))
   ABC.Done _ r -> r
 
 instance HasJsonCursorType (JsonCursor String [Bool]) where
-  jsonCursorType k = jsonCursorType' (cursorText k !! fromIntegral (jsonCursorPos k))
+  jsonCursorType = jsonCursorType' . jsonCursorElemAt
 
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word8)) where
   jsonCursorType = jsonCursorType' . chr . fromIntegral . jsonCursorElemAt
