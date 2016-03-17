@@ -29,6 +29,49 @@ class VectorLike v where
   vIndex :: v -> Position -> Elem v
   vSlice :: Position -> Position -> v -> v
 
+
+instance VectorLike String where
+  type Elem String = Char
+
+  vToList = id
+  {-# INLINABLE vToList #-}
+
+  vFromList = id
+  {-# INLINABLE vFromList #-}
+
+  (!!!) v (Position i) = v !! fromIntegral i
+  {-# INLINABLE (!!!) #-}
+
+  vConcat = concat
+  {-# INLINABLE vConcat #-}
+
+  vEmpty = ""
+  {-# INLINABLE vEmpty #-}
+
+  vFilter = filter
+  {-# INLINABLE vFilter #-}
+
+  vGenerate n f = f `fmap` [0 .. (n - 1)]
+  {-# INLINABLE vGenerate #-}
+
+  vLength = Count . fromIntegral . length
+  {-# INLINABLE vLength #-}
+
+  vSnoc v c = v ++ [c]
+  {-# INLINABLE vSnoc #-}
+
+  vDrop = drop . fromIntegral
+  {-# INLINABLE vDrop #-}
+
+  vTake = take . fromIntegral
+  {-# INLINABLE vTake #-}
+
+  vIndex v (Position i) = v !! fromIntegral i
+  {-# INLINABLE vIndex #-}
+
+  vSlice (Position i) (Position j) = take (fromIntegral j) . drop (fromIntegral i)
+  {-# INLINABLE vSlice #-}
+
 instance VectorLike BS.ByteString where
   type Elem BS.ByteString = Word8
 
