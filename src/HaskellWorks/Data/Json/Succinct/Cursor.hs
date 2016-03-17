@@ -145,7 +145,7 @@ jsonCursorTypeForVector k = jsonCursorType' (cursorText k `BS.index` jsonCursorP
 
 jsonTokenAt :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonToken
 jsonTokenAt k = case ABC.parse parseJsonToken (BS.drop (jsonCursorPos k) (cursorText k)) of
-  ABC.Fail _ _ _ -> error "Failed to parse token in cursor"
+  ABC.Fail {} -> error "Failed to parse token in cursor"
   ABC.Done _ r -> r
 
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word8)) where
