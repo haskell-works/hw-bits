@@ -9,6 +9,7 @@ import qualified Data.Attoparsec.ByteString.Char8                           as A
 import qualified Data.ByteString                                            as BS
 import qualified Data.ByteString.Char8                                      as BSC
 import           Data.ByteString.Internal                                   as BSI
+import           Data.Char
 import           Data.Conduit
 import           Data.String
 import qualified Data.Vector.Storable                                       as DVS
@@ -78,29 +79,6 @@ instance TreeCursor (JsonCursor String [Bool]) where
   depth       k = BP.depth (balancedParens k) (select1 (balancedParens k) (cursorRank k))
   subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
 
-instance HasJsonCursorType (JsonCursor String [Bool]) where
-  jsonCursorType k = case c of
-    '[' -> JsonCursorArray
-    't' -> JsonCursorBool
-    'f' -> JsonCursorBool
-    '0' -> JsonCursorNumber
-    '1' -> JsonCursorNumber
-    '2' -> JsonCursorNumber
-    '3' -> JsonCursorNumber
-    '4' -> JsonCursorNumber
-    '5' -> JsonCursorNumber
-    '6' -> JsonCursorNumber
-    '7' -> JsonCursorNumber
-    '8' -> JsonCursorNumber
-    '9' -> JsonCursorNumber
-    '+' -> JsonCursorNumber
-    '-' -> JsonCursorNumber
-    'n' -> JsonCursorNull
-    '{' -> JsonCursorObject
-    '"' -> JsonCursorString
-    _   -> error "Invalid JsonCursor cursorRank"
-    where c = cursorText k !! fromIntegral (select1 (interests k) (cursorRank k) - 1)
-
 instance (Monad m, DVS.Storable a) => Stream (DVS.Vector a) m a where
   uncons v | DVS.null v = return Nothing
            | otherwise = return (Just (DVS.head v, DVS.tail v))
@@ -114,26 +92,29 @@ applyToMultipleOf f bs n = (f ^^^ ((n - (fromIntegral (BS.length bs) `mod` n)) `
 jsonBsToInterestBs :: ByteString -> ByteString
 jsonBsToInterestBs textBS = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
 
-jsonCursorType' :: Word8 -> JsonCursorType
+instance HasJsonCursorType (JsonCursor String [Bool]) where
+  jsonCursorType k = jsonCursorType' (cursorText k !! fromIntegral (select1 (interests k) (cursorRank k) - 1))
+
+jsonCursorType' :: Char -> JsonCursorType
 jsonCursorType' c = case c of
-  91  {- [ -} -> JsonCursorArray
-  116 {- t -} -> JsonCursorBool
-  102 {- f -} -> JsonCursorBool
-  48  {- 0 -} -> JsonCursorNumber
-  49  {- 1 -} -> JsonCursorNumber
-  50  {- 2 -} -> JsonCursorNumber
-  51  {- 3 -} -> JsonCursorNumber
-  52  {- 4 -} -> JsonCursorNumber
-  53  {- 5 -} -> JsonCursorNumber
-  54  {- 6 -} -> JsonCursorNumber
-  55  {- 7 -} -> JsonCursorNumber
-  56  {- 8 -} -> JsonCursorNumber
-  57  {- 9 -} -> JsonCursorNumber
-  43  {- + -} -> JsonCursorNumber
-  45  {- - -} -> JsonCursorNumber
-  110 {- n -} -> JsonCursorNull
-  123 {- { -} -> JsonCursorObject
-  34  {- " -} -> JsonCursorString
+  '[' -> JsonCursorArray
+  't' -> JsonCursorBool
+  'f' -> JsonCursorBool
+  '0' -> JsonCursorNumber
+  '1' -> JsonCursorNumber
+  '2' -> JsonCursorNumber
+  '3' -> JsonCursorNumber
+  '4' -> JsonCursorNumber
+  '5' -> JsonCursorNumber
+  '6' -> JsonCursorNumber
+  '7' -> JsonCursorNumber
+  '8' -> JsonCursorNumber
+  '9' -> JsonCursorNumber
+  '+' -> JsonCursorNumber
+  '-' -> JsonCursorNumber
+  'n' -> JsonCursorNull
+  '{' -> JsonCursorObject
+  '"' -> JsonCursorString
   _   -> error "Invalid JsonCursor cursorRank"
 
 jsonCursorPos :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> Position
@@ -142,7 +123,7 @@ jsonCursorPos k = toPosition (select1 ik (rank1 bpk (cursorRank k)) - 1)
         bpk = balancedParens k
 
 jsonCursorTypeForVector :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonCursorType
-jsonCursorTypeForVector k = jsonCursorType' (cursorText k !!! jsonCursorPos k)
+jsonCursorTypeForVector k = jsonCursorType' (chr (fromIntegral (cursorText k !!! jsonCursorPos k)))
 
 jsonTokenAt :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonToken
 jsonTokenAt k = case ABC.parse parseJsonToken (vDrop (toCount (jsonCursorPos k)) (cursorText k)) of
