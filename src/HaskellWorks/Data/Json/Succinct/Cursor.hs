@@ -92,9 +92,6 @@ applyToMultipleOf f bs n = (f ^^^ ((n - (fromIntegral (BS.length bs) `mod` n)) `
 jsonBsToInterestBs :: ByteString -> ByteString
 jsonBsToInterestBs textBS = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
 
-instance HasJsonCursorType (JsonCursor String [Bool]) where
-  jsonCursorType k = jsonCursorType' (cursorText k !! fromIntegral (select1 (interests k) (cursorRank k) - 1))
-
 jsonCursorType' :: Char -> JsonCursorType
 jsonCursorType' c = case c of
   '[' -> JsonCursorArray
@@ -117,30 +114,36 @@ jsonCursorType' c = case c of
   '"' -> JsonCursorString
   _   -> error "Invalid JsonCursor cursorRank"
 
-jsonCursorPos :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> Position
+jsonCursorPos :: (Rank1 v, Select1 (Simple v), VectorLike s) => JsonCursor s v -> Position
 jsonCursorPos k = toPosition (select1 ik (rank1 bpk (cursorRank k)) - 1)
   where ik  = interests k
         bpk = balancedParens k
 
-jsonCursorTypeForVector :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonCursorType
-jsonCursorTypeForVector k = jsonCursorType' (chr (fromIntegral (cursorText k !!! jsonCursorPos k)))
+jsonCharAt :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> Char
+jsonCharAt k = chr (fromIntegral (cursorText k !!! jsonCursorPos k))
+
+jsonElemAtIndex :: (Rank1 v, Select1 (Simple v), VectorLike s) => JsonCursor s v -> Elem s
+jsonElemAtIndex k = cursorText k !!! jsonCursorPos k
 
 jsonTokenAt :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonToken
 jsonTokenAt k = case ABC.parse parseJsonToken (vDrop (toCount (jsonCursorPos k)) (cursorText k)) of
   ABC.Fail {} -> error "Failed to parse token in cursor"
   ABC.Done _ r -> r
 
+instance HasJsonCursorType (JsonCursor String [Bool]) where
+  jsonCursorType k = jsonCursorType' (cursorText k !! fromIntegral (select1 (interests k) (cursorRank k) - 1))
+
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word8)) where
-  jsonCursorType = jsonCursorTypeForVector
+  jsonCursorType = jsonCursorType' . jsonCharAt
 
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word16)) where
-  jsonCursorType = jsonCursorTypeForVector
+  jsonCursorType = jsonCursorType' . jsonCharAt
 
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word32)) where
-  jsonCursorType = jsonCursorTypeForVector
+  jsonCursorType = jsonCursorType' . jsonCharAt
 
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word64)) where
-  jsonCursorType = jsonCursorTypeForVector
+  jsonCursorType = jsonCursorType' . jsonCharAt
 
 instance TreeCursor (JsonCursor BS.ByteString (DVS.Vector Word8)) where
   firstChild  k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
