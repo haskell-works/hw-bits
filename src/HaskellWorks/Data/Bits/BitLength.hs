@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
@@ -29,10 +30,10 @@ class BitLength v where
 --------------------------------------------------------------------------------
 -- Functions
 
-elemBitLength :: (VectorLike v e, BitLength e) => v e -> Count
+elemBitLength :: (VectorLike v, BitLength (Elem v)) => v -> Count
 elemBitLength v = bitLength (v !!! 0)
 
-elemBitEnd :: (VectorLike v e, BitLength e) => v e -> Position
+elemBitEnd :: (VectorLike v, BitLength (Elem v)) => v -> Position
 elemBitEnd v = endPosition (v !!! 0)
 
 --------------------------------------------------------------------------------

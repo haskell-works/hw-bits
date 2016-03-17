@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeFamilies          #-}
 
 module HaskellWorks.Data.Vector.VectorLike
   ( VectorLike(..)
@@ -10,21 +11,25 @@ import qualified Data.Vector.Storable          as DVS
 import           Data.Word
 import           HaskellWorks.Data.Positioning
 
-class VectorLike v e where
-  toList :: v e -> [e]
-  fromList :: [e] -> v e
-  (!!!) :: v e -> Position -> e
-  concat :: [v e] -> v e
-  empty :: v e
-  filter :: (e -> Bool) -> v e -> v e
-  generate :: Int -> (Int -> e) -> v e
-  length :: v e -> Count
-  snoc :: v e -> e -> v e
-  sum :: v e -> e
-  unsafeIndex :: v e -> Position -> e
-  unsafeSlice :: Position -> Position -> v e -> v e
+class VectorLike v where
+  type Elem v
 
-instance VectorLike DV.Vector Word8 where
+  toList :: v -> [Elem v]
+  fromList :: [Elem v] -> v
+  (!!!) :: v -> Position -> Elem v
+  concat :: [v] -> v
+  empty :: v
+  filter :: (Elem v -> Bool) -> v -> v
+  generate :: Int -> (Int -> Elem v) -> v
+  length :: v -> Count
+  snoc :: v -> Elem v -> v
+  sum :: v -> Elem v
+  unsafeIndex :: v -> Position -> Elem v
+  unsafeSlice :: Position -> Position -> v -> v
+
+instance VectorLike (DV.Vector Word8) where
+  type Elem (DV.Vector Word8) = Word8
+
   toList = DV.toList
   {-# INLINABLE toList #-}
 
@@ -61,7 +66,9 @@ instance VectorLike DV.Vector Word8 where
   unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
-instance VectorLike DV.Vector Word16 where
+instance VectorLike (DV.Vector Word16) where
+  type Elem (DV.Vector Word16) = Word16
+
   toList = DV.toList
   {-# INLINABLE toList #-}
 
@@ -98,7 +105,9 @@ instance VectorLike DV.Vector Word16 where
   unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
-instance VectorLike DV.Vector Word32 where
+instance VectorLike (DV.Vector Word32) where
+  type Elem (DV.Vector Word32) = Word32
+
   toList = DV.toList
   {-# INLINABLE toList #-}
 
@@ -135,7 +144,9 @@ instance VectorLike DV.Vector Word32 where
   unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
-instance VectorLike DV.Vector Word64 where
+instance VectorLike (DV.Vector Word64) where
+  type Elem (DV.Vector Word64) = Word64
+
   toList = DV.toList
   {-# INLINABLE toList #-}
 
@@ -172,7 +183,9 @@ instance VectorLike DV.Vector Word64 where
   unsafeSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
-instance VectorLike DVS.Vector Word8 where
+instance VectorLike (DVS.Vector Word8) where
+  type Elem (DVS.Vector Word8) = Word8
+
   toList = DVS.toList
   {-# INLINABLE toList #-}
 
@@ -209,7 +222,9 @@ instance VectorLike DVS.Vector Word8 where
   unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
-instance VectorLike DVS.Vector Word16 where
+instance VectorLike (DVS.Vector Word16) where
+  type Elem (DVS.Vector Word16) = Word16
+
   toList = DVS.toList
   {-# INLINABLE toList #-}
 
@@ -246,7 +261,9 @@ instance VectorLike DVS.Vector Word16 where
   unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
-instance VectorLike DVS.Vector Word32 where
+instance VectorLike (DVS.Vector Word32) where
+  type Elem (DVS.Vector Word32) = Word32
+
   toList = DVS.toList
   {-# INLINABLE toList #-}
 
@@ -283,7 +300,9 @@ instance VectorLike DVS.Vector Word32 where
   unsafeSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
   {-# INLINABLE unsafeSlice #-}
 
-instance VectorLike DVS.Vector Word64 where
+instance VectorLike (DVS.Vector Word64) where
+  type Elem (DVS.Vector Word64) = Word64
+
   toList = DVS.toList
   {-# INLINABLE toList #-}
 
