@@ -24,6 +24,7 @@ import           HaskellWorks.Data.Succinct.BalancedParens                  as B
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           HaskellWorks.Data.Succinct.RankSelect.Simple
+import           HaskellWorks.Data.Vector.VectorLike
 import           Text.Parsec
 
 class TreeCursor k where
@@ -135,16 +136,16 @@ jsonCursorType' c = case c of
   34  {- " -} -> JsonCursorString
   _   -> error "Invalid JsonCursor cursorRank"
 
-jsonCursorPos :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> Int
-jsonCursorPos k = fromIntegral (select1 ik (rank1 bpk (cursorRank k)) - 1)
+jsonCursorPos :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> Position
+jsonCursorPos k = toPosition (select1 ik (rank1 bpk (cursorRank k)) - 1)
   where ik  = interests k
         bpk = balancedParens k
 
 jsonCursorTypeForVector :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonCursorType
-jsonCursorTypeForVector k = jsonCursorType' (cursorText k `BS.index` jsonCursorPos k)
+jsonCursorTypeForVector k = jsonCursorType' (cursorText k !!! jsonCursorPos k)
 
 jsonTokenAt :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonToken
-jsonTokenAt k = case ABC.parse parseJsonToken (BS.drop (jsonCursorPos k) (cursorText k)) of
+jsonTokenAt k = case ABC.parse parseJsonToken (vdrop (toCount (jsonCursorPos k)) (cursorText k)) of
   ABC.Fail {} -> error "Failed to parse token in cursor"
   ABC.Done _ r -> r
 
