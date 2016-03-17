@@ -132,12 +132,13 @@ jsonCursorType' c = case c of
   34  {- " -} -> JsonCursorString
   _   -> error "Invalid JsonCursor cursorRank"
 
-jsonCursorTypeForVector :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonCursorType
-jsonCursorTypeForVector k = jsonCursorType' c
-  where c   = cursorText k `BS.index` i
-        i   = fromIntegral (select1 ik (rank1 bpk (cursorRank k)) - 1)
-        ik  = interests k
+jsonCursorPos :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> Int
+jsonCursorPos k = fromIntegral (select1 ik (rank1 bpk (cursorRank k)) - 1)
+  where ik  = interests k
         bpk = balancedParens k
+
+jsonCursorTypeForVector :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonCursorType
+jsonCursorTypeForVector k = jsonCursorType' (cursorText k `BS.index` jsonCursorPos k)
 
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word8)) where
   jsonCursorType = jsonCursorTypeForVector
