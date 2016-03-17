@@ -19,14 +19,14 @@ class BalancedParens v where
 firstChild :: v -> Count -> Count
 firstChild _ = (+ 1)
 
-nextSibling :: (BalancedParens v) => v -> Count -> Count
+nextSibling :: BalancedParens v => v -> Count -> Count
 nextSibling v p = findClose v p + 1
 
-parent :: (BalancedParens v) => v -> Count -> Count
+parent :: BalancedParens v => v -> Count -> Count
 parent = enclose
 
 depth :: (BalancedParens v, Rank0 v, Rank1 v) => v -> Count -> Count
 depth v p = let q = findOpen v p in rank1 v q - rank0 v q
 
-subtreeSize :: (BalancedParens v) => v -> Count -> Count
+subtreeSize :: BalancedParens v => v -> Count -> Count
 subtreeSize v p = (findClose v p - p + 1) `quot` 2

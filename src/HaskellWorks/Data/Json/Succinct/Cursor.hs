@@ -72,13 +72,6 @@ instance IsString (JsonCursor String [Bool]) where
     where bs          = BSC.pack s :: BS.ByteString
           interests'  = jsonToInterestBits [bs]
 
-instance TreeCursor (JsonCursor String [Bool]) where
-  firstChild  k = k { cursorRank = rank1 (balancedParens k) (BP.firstChild   (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
-  nextSibling k = k { cursorRank = rank1 (balancedParens k) (BP.nextSibling  (balancedParens k) (select1 (balancedParens k) (cursorRank k))) }
-  parent      k = k { cursorRank = BP.parent (balancedParens k) (cursorRank k) }
-  depth       k = BP.depth (balancedParens k) (select1 (balancedParens k) (cursorRank k))
-  subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
-
 instance (Monad m, DVS.Storable a) => Stream (DVS.Vector a) m a where
   uncons v | DVS.null v = return Nothing
            | otherwise = return (Just (DVS.head v, DVS.tail v))
@@ -128,7 +121,7 @@ jsonTokenAt k = case ABC.parse parseJsonToken (vDrop (toCount (jsonCursorPos k))
   ABC.Done _ r -> r
 
 instance HasJsonCursorType (JsonCursor String [Bool]) where
-  jsonCursorType k = jsonCursorType' (cursorText k !! fromIntegral (select1 (interests k) (cursorRank k) - 1))
+  jsonCursorType k = jsonCursorType' (cursorText k !! fromIntegral (jsonCursorPos k))
 
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word8)) where
   jsonCursorType = jsonCursorType' . chr . fromIntegral . jsonCursorElemAt
@@ -141,6 +134,13 @@ instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word32)) where
 
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word64)) where
   jsonCursorType = jsonCursorType' . chr . fromIntegral . jsonCursorElemAt
+
+instance TreeCursor (JsonCursor String [Bool]) where
+  firstChild  k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
+  nextSibling k = k { cursorRank = BP.nextSibling  (balancedParens k) (cursorRank k) }
+  parent      k = k { cursorRank = BP.parent (balancedParens k) (cursorRank k) }
+  depth       k = BP.depth (balancedParens k) (cursorRank k)
+  subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
 
 instance TreeCursor (JsonCursor BS.ByteString (DVS.Vector Word8)) where
   firstChild  k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
