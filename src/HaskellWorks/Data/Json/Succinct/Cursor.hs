@@ -5,6 +5,7 @@
 
 module HaskellWorks.Data.Json.Succinct.Cursor where
 
+import qualified Data.Attoparsec.ByteString.Char8                           as ABC
 import qualified Data.ByteString                                            as BS
 import qualified Data.ByteString.Char8                                      as BSC
 import           Data.ByteString.Internal                                   as BSI
@@ -15,7 +16,9 @@ import           Data.Word
 import           Foreign.ForeignPtr
 import           HaskellWorks.Data.Bits.FromBools
 import           HaskellWorks.Data.Conduit.Json
+import           HaskellWorks.Data.Json.Final.Tokenize.Internal
 import           HaskellWorks.Data.Json.Succinct.Transform
+import           HaskellWorks.Data.Json.Token
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens                  as BP
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
@@ -139,6 +142,11 @@ jsonCursorPos k = fromIntegral (select1 ik (rank1 bpk (cursorRank k)) - 1)
 
 jsonCursorTypeForVector :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonCursorType
 jsonCursorTypeForVector k = jsonCursorType' (cursorText k `BS.index` jsonCursorPos k)
+
+jsonTokenAt :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonToken
+jsonTokenAt k = case ABC.parse parseJsonToken (BS.drop (jsonCursorPos k) (cursorText k)) of
+  ABC.Fail _ _ _ -> error "Failed to parse token in cursor"
+  ABC.Done _ r -> r
 
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word8)) where
   jsonCursorType = jsonCursorTypeForVector
