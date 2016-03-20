@@ -28,7 +28,6 @@ import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           HaskellWorks.Data.Succinct.RankSelect.Simple
 import           HaskellWorks.Data.Vector.VectorLike
-import           Text.Parsec
 
 class HasJsonCursorType k where
   jsonCursorType :: k -> JsonCursorType
@@ -66,10 +65,6 @@ instance IsString (JsonCursor String [Bool]) where
     }
     where bs          = BSC.pack s :: BS.ByteString
           interests'  = jsonToInterestBits [bs]
-
-instance (Monad m, DVS.Storable a) => Stream (DVS.Vector a) m a where
-  uncons v | DVS.null v = return Nothing
-           | otherwise = return (Just (DVS.head v, DVS.tail v))
 
 (^^^) :: (a -> a) -> Count -> a -> a
 (^^^) f n = foldl (.) id (replicate (fromIntegral n) f)
@@ -112,8 +107,9 @@ jsonCursorElemAt k = cursorText k !!! jsonCursorPos k
 
 jsonTokenAt :: (Rank1 v, Select1 (Simple v)) => JsonCursor ByteString v -> JsonToken
 jsonTokenAt k = case ABC.parse parseJsonToken (vDrop (toCount (jsonCursorPos k)) (cursorText k)) of
-  ABC.Fail {} -> error "Failed to parse token in cursor"
-  ABC.Done _ r -> r
+  ABC.Fail    {}  -> error "Failed to parse token in cursor"
+  ABC.Partial _   -> error "Failed to parse token in cursor"
+  ABC.Done    _ r -> r
 
 instance HasJsonCursorType (JsonCursor String [Bool]) where
   jsonCursorType = jsonCursorType' . jsonCursorElemAt
