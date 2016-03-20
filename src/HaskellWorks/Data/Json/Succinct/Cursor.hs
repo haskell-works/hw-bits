@@ -15,6 +15,9 @@ import           Data.String
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           Foreign.ForeignPtr
+import           HaskellWorks.Data.Bits.BitLength
+import           HaskellWorks.Data.Bits.BitPrint
+import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.FromBools
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Final.Tokenize.Internal
@@ -22,6 +25,7 @@ import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Json.Token
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens                  as BP
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           HaskellWorks.Data.Succinct.RankSelect.Simple
@@ -169,6 +173,18 @@ instance TreeCursor (JsonCursor BS.ByteString (DVS.Vector Word64)) where
   parent      k = k { cursorRank = BP.parent       (balancedParens k) (cursorRank k) }
   depth       k = BP.depth (balancedParens k) (cursorRank k)
   subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
+
+firstChild'  k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
+
+nextSibling' k = k { cursorRank = BP.nextSibling  (balancedParens k) (cursorRank k) }
+
+parent'      k = k { cursorRank = BP.parent       (balancedParens k) (cursorRank k) }
+
+depth' :: (BitLength v, TestBit v, Rank1 v, Rank0 v, BitPrint v) => JsonCursor t v -> Count
+depth' k = BP.depth (balancedParens k) (cursorRank k)
+
+subtreeSize' :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> Count
+subtreeSize' k = BP.subtreeSize (balancedParens k) (cursorRank k)
 
 instance FromByteString (DVS.Vector Word8) where
   fromByteString :: ByteString -> JsonCursor BS.ByteString (DVS.Vector Word8)

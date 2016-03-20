@@ -9,7 +9,6 @@ module HaskellWorks.Data.Succinct.BalancedParens.Simple
   , openAt
   ) where
 
-import           Data.Typeable
 import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitPrint
 import           HaskellWorks.Data.Bits.BitString
@@ -58,7 +57,7 @@ findClose' c v p =
       else findClose' (c + 1) v (p + 1)
     else findClose' (c - 1) v (p + 1)
 
-instance (Typeable a, BitPrint a, BitLength a, TestBit a) => BalancedParens (SimpleBalancedParens a) where
+instance (BitPrint a, BitLength a, TestBit a) => BalancedParens (SimpleBalancedParens a) where
   findOpen  v p = if v `openAt`  p then p else findOpen'  (Count 0) v (p - 1)
   findClose v p = if v `closeAt` p then p else findClose' (Count 0) v (p + 1)
   enclose       = findOpen' (Count 1)
