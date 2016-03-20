@@ -8,17 +8,20 @@
 
 module HaskellWorks.Data.Json.Succinct.CursorSpec(spec) where
 
-import qualified Data.ByteString                                          as BS
+import qualified Data.ByteString                                            as BS
 import           Data.String
-import qualified Data.Vector.Storable                                     as DVS
+import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitPrint
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.Json.Succinct.Cursor                   as C
+import           HaskellWorks.Data.Json.Succinct.Cursor                     as C
+import           HaskellWorks.Data.Json.Token
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
+import           HaskellWorks.Data.Succinct.RankSelect.Simple
 import           System.IO.MMap
 import           Test.Hspec
 
@@ -114,6 +117,7 @@ genSpec :: forall t .
   , BitLength         t
   , Rank0             t
   , Rank1             t
+  , Select1           (Simple t)
   , IsString          (JsonCursor BS.ByteString t)
   , HasJsonCursorType (JsonCursor BS.ByteString t)
   , Show              t)
@@ -223,3 +227,19 @@ genSpec t _ = do
       ss ((          ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` 1
       ss ((     ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` 1
       ss ((ns . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` 1
+    it "can get token at cursor" $ do
+      (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
+      let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString t
+      jsonTokenAt                                                              cursor  `shouldBe` JsonTokenBraceL
+      jsonTokenAt ((                                                       fc) cursor) `shouldBe` JsonTokenString "widget"
+      jsonTokenAt ((                                                  ns . fc) cursor) `shouldBe` JsonTokenBraceL
+      jsonTokenAt ((                                             fc . ns . fc) cursor) `shouldBe` JsonTokenString "debug"
+      jsonTokenAt ((                                        ns . fc . ns . fc) cursor) `shouldBe` JsonTokenString "on"
+      jsonTokenAt ((                                   ns . ns . fc . ns . fc) cursor) `shouldBe` JsonTokenString "window"
+      jsonTokenAt ((                              ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonTokenBraceL
+      jsonTokenAt ((                         fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonTokenString "title"
+      jsonTokenAt ((                    ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonTokenString "Sample Konfabulator Widget"
+      jsonTokenAt ((               ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonTokenString "name"
+      jsonTokenAt ((          ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonTokenString "main_window"
+      jsonTokenAt ((     ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonTokenString "width"
+      jsonTokenAt ((ns . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonTokenNumber 500.0
