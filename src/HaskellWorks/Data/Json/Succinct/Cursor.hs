@@ -22,7 +22,6 @@ import           HaskellWorks.Data.Bits.FromBools
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Final.Tokenize.Internal
 import           HaskellWorks.Data.Json.Succinct.Transform
-import           HaskellWorks.Data.Json.Token
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens                  as BP
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
@@ -31,13 +30,6 @@ import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           HaskellWorks.Data.Succinct.RankSelect.Simple
 import           HaskellWorks.Data.Vector.VectorLike
 import           Text.Parsec
-
-class TreeCursor k where
-  firstChild :: k -> k
-  nextSibling :: k -> k
-  parent :: k -> k
-  depth :: k -> Count
-  subtreeSize :: k -> Count
 
 class HasJsonCursorType k where
   jsonCursorType :: k -> JsonCursorType
@@ -139,52 +131,20 @@ instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word32)) where
 instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word64)) where
   jsonCursorType = jsonCursorType' . chr . fromIntegral . jsonCursorElemAt
 
-instance TreeCursor (JsonCursor String [Bool]) where
-  firstChild  k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
-  nextSibling k = k { cursorRank = BP.nextSibling  (balancedParens k) (cursorRank k) }
-  parent      k = k { cursorRank = BP.parent (balancedParens k) (cursorRank k) }
-  depth       k = BP.depth (balancedParens k) (cursorRank k)
-  subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
+firstChild :: JsonCursor t v -> JsonCursor t v
+firstChild k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
 
-instance TreeCursor (JsonCursor BS.ByteString (DVS.Vector Word8)) where
-  firstChild  k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
-  nextSibling k = k { cursorRank = BP.nextSibling  (balancedParens k) (cursorRank k) }
-  parent      k = k { cursorRank = BP.parent       (balancedParens k) (cursorRank k) }
-  depth       k = BP.depth (balancedParens k) (cursorRank k)
-  subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
+nextSibling :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> JsonCursor t v
+nextSibling k = k { cursorRank = BP.nextSibling  (balancedParens k) (cursorRank k) }
 
-instance TreeCursor (JsonCursor BS.ByteString (DVS.Vector Word16)) where
-  firstChild  k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
-  nextSibling k = k { cursorRank = BP.nextSibling  (balancedParens k) (cursorRank k) }
-  parent      k = k { cursorRank = BP.parent       (balancedParens k) (cursorRank k) }
-  depth       k = BP.depth (balancedParens k) (cursorRank k)
-  subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
+parent :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> JsonCursor t v
+parent k = k { cursorRank = BP.parent (balancedParens k) (cursorRank k) }
 
-instance TreeCursor (JsonCursor BS.ByteString (DVS.Vector Word32)) where
-  firstChild  k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
-  nextSibling k = k { cursorRank = BP.nextSibling  (balancedParens k) (cursorRank k) }
-  parent      k = k { cursorRank = BP.parent       (balancedParens k) (cursorRank k) }
-  depth       k = BP.depth (balancedParens k) (cursorRank k)
-  subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
+depth :: (BitLength v, TestBit v, Rank1 v, Rank0 v, BitPrint v) => JsonCursor t v -> Count
+depth k = BP.depth (balancedParens k) (cursorRank k)
 
-instance TreeCursor (JsonCursor BS.ByteString (DVS.Vector Word64)) where
-  firstChild  k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
-  nextSibling k = k { cursorRank = BP.nextSibling  (balancedParens k) (cursorRank k) }
-  parent      k = k { cursorRank = BP.parent       (balancedParens k) (cursorRank k) }
-  depth       k = BP.depth (balancedParens k) (cursorRank k)
-  subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
-
-firstChild'  k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
-
-nextSibling' k = k { cursorRank = BP.nextSibling  (balancedParens k) (cursorRank k) }
-
-parent'      k = k { cursorRank = BP.parent       (balancedParens k) (cursorRank k) }
-
-depth' :: (BitLength v, TestBit v, Rank1 v, Rank0 v, BitPrint v) => JsonCursor t v -> Count
-depth' k = BP.depth (balancedParens k) (cursorRank k)
-
-subtreeSize' :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> Count
-subtreeSize' k = BP.subtreeSize (balancedParens k) (cursorRank k)
+subtreeSize :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> Count
+subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
 
 instance FromByteString (DVS.Vector Word8) where
   fromByteString :: ByteString -> JsonCursor BS.ByteString (DVS.Vector Word8)

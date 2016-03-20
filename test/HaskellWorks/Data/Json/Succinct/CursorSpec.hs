@@ -8,14 +8,18 @@
 
 module HaskellWorks.Data.Json.Succinct.CursorSpec(spec) where
 
-import qualified Data.ByteString                        as BS
+import qualified Data.ByteString                                          as BS
 import           Data.String
-import qualified Data.Vector.Storable                   as DVS
+import qualified Data.Vector.Storable                                     as DVS
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitPrint
 import           HaskellWorks.Data.Bits.BitString
-import           HaskellWorks.Data.Json.Succinct.Cursor as C
+import           HaskellWorks.Data.Bits.BitWise
+import           HaskellWorks.Data.Json.Succinct.Cursor                   as C
 import           HaskellWorks.Data.Positioning
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           System.IO.MMap
 import           Test.Hspec
 
@@ -23,19 +27,19 @@ import           Test.Hspec
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
 {-# ANN module ("HLint: redundant bracket"          :: String) #-}
 
-fc :: C.TreeCursor k => k -> k
+fc :: JsonCursor t v -> JsonCursor t v
 fc = C.firstChild
 
-ns :: C.TreeCursor k => k -> k
+ns :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> JsonCursor t v
 ns = C.nextSibling
 
-pn :: C.TreeCursor k => k -> k
+pn :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> JsonCursor t v
 pn = C.parent
 
-cd :: C.TreeCursor k => k -> Count
+cd :: (BitLength v, TestBit v, Rank1 v, Rank0 v, BitPrint v) => JsonCursor t v -> Count
 cd = C.depth
 
-ss :: C.TreeCursor k => k -> Count
+ss :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> Count
 ss = C.subtreeSize
 
 spec :: Spec
@@ -119,9 +123,12 @@ genSpec :: forall t .
   ( Eq                t
   , BitPrint          t
   , FromForeignRegion t
+  , TestBit           t
+  , BitLength         t
+  , Rank0             t
+  , Rank1             t
   , IsString          (JsonCursor BS.ByteString t)
   , HasJsonCursorType (JsonCursor BS.ByteString t)
-  , TreeCursor        (JsonCursor BS.ByteString t)
   , Show              t)
   => String -> t -> SpecWith ()
 genSpec t _ = do
