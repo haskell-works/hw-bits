@@ -28,6 +28,7 @@ import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           HaskellWorks.Data.Succinct.RankSelect.Simple
 import           HaskellWorks.Data.Vector.VectorLike
+import           HaskellWorks.Function
 
 class HasJsonCursorType k where
   jsonCursorType :: k -> JsonCursorType
@@ -66,11 +67,8 @@ instance IsString (JsonCursor String [Bool]) where
     where bs          = BSC.pack s :: BS.ByteString
           interests'  = jsonToInterestBits [bs]
 
-(^^^) :: (a -> a) -> Count -> a -> a
-(^^^) f n = foldl (.) id (replicate (fromIntegral n) f)
-
 applyToMultipleOf :: (BS.ByteString -> BS.ByteString) -> BS.ByteString -> Count -> BS.ByteString
-applyToMultipleOf f bs n = (f ^^^ ((n - (fromIntegral (BS.length bs) `mod` n)) `mod` n)) bs
+applyToMultipleOf f bs n = (f `applyN` fromIntegral ((n - (fromIntegral (BS.length bs) `mod` n)) `mod` n)) bs
 
 jsonBsToInterestBs :: ByteString -> ByteString
 jsonBsToInterestBs textBS = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)

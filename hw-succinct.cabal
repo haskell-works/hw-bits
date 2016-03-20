@@ -82,6 +82,7 @@ library
                       , HaskellWorks.Data.Vector.Storable.ByteString
                       , HaskellWorks.Data.Vector.StorableVectorLike
                       , HaskellWorks.Data.Vector.VectorLike
+                      , HaskellWorks.Function
                       , HaskellWorks.Data.Word
   build-depends:        base                            >= 4.7  && < 5
                       , attoparsec                      >= 0.10
