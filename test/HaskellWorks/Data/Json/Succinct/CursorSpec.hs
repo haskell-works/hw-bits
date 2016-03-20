@@ -17,7 +17,6 @@ import           HaskellWorks.Data.Bits.BitPrint
 import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Json.Succinct.Cursor                   as C
-import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           System.IO.MMap
@@ -27,23 +26,11 @@ import           Test.Hspec
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
 {-# ANN module ("HLint: redundant bracket"          :: String) #-}
 
-fc :: JsonCursor t v -> JsonCursor t v
-fc = C.firstChild
-
-ns :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> JsonCursor t v
-ns = C.nextSibling
-
-pn :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> JsonCursor t v
-pn = C.parent
-
-cd :: (BitLength v, TestBit v, Rank1 v, Rank0 v, BitPrint v) => JsonCursor t v -> Count
-cd = C.depth
-
-ss :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> Count
-ss = C.subtreeSize
-
 spec :: Spec
 spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
+  let fc = C.firstChild
+  let ns = C.nextSibling
+  let cd = C.depth
   describe "Cursor for [Bool]" $ do
     it "initialises to beginning of empty object" $ do
       let cursor = "{}" :: JsonCursor String [Bool]
@@ -132,6 +119,11 @@ genSpec :: forall t .
   , Show              t)
   => String -> t -> SpecWith ()
 genSpec t _ = do
+  let fc = C.firstChild
+  let ns = C.nextSibling
+  let pn = C.parent
+  let cd = C.depth
+  let ss = C.subtreeSize
   describe ("Cursor for (" ++ t ++ ")") $ do
     it "initialises to beginning of empty object" $ do
       let cursor = "{}" :: JsonCursor BS.ByteString t

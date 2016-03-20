@@ -16,7 +16,6 @@ import qualified Data.Vector.Storable                                       as D
 import           Data.Word
 import           Foreign.ForeignPtr
 import           HaskellWorks.Data.Bits.BitLength
-import           HaskellWorks.Data.Bits.BitPrint
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.FromBools
 import           HaskellWorks.Data.Conduit.Json
@@ -134,16 +133,16 @@ instance HasJsonCursorType (JsonCursor BS.ByteString (DVS.Vector Word64)) where
 firstChild :: JsonCursor t v -> JsonCursor t v
 firstChild k = k { cursorRank = BP.firstChild   (balancedParens k) (cursorRank k) }
 
-nextSibling :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> JsonCursor t v
+nextSibling :: (BitLength v, TestBit v) => JsonCursor t v -> JsonCursor t v
 nextSibling k = k { cursorRank = BP.nextSibling  (balancedParens k) (cursorRank k) }
 
-parent :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> JsonCursor t v
+parent :: (BitLength v, TestBit v) => JsonCursor t v -> JsonCursor t v
 parent k = k { cursorRank = BP.parent (balancedParens k) (cursorRank k) }
 
-depth :: (BitLength v, TestBit v, Rank1 v, Rank0 v, BitPrint v) => JsonCursor t v -> Count
+depth :: (BitLength v, TestBit v, Rank1 v, Rank0 v) => JsonCursor t v -> Count
 depth k = BP.depth (balancedParens k) (cursorRank k)
 
-subtreeSize :: (BitLength v, TestBit v, BitPrint v) => JsonCursor t v -> Count
+subtreeSize :: (BitLength v, TestBit v) => JsonCursor t v -> Count
 subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
 
 instance FromByteString (DVS.Vector Word8) where
