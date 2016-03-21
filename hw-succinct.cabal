@@ -89,6 +89,7 @@ library
                       , bytestring
                       , conduit                         >= 1.1  && < 1.3
                       , deepseq                         <  1.5
+                      , ghc-prim
                       , lens
                       , mmap
                       , mono-traversable
