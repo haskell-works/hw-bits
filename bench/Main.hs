@@ -1,9 +1,10 @@
 module Main where
 
 import           Criterion.Main
-import qualified Data.Vector.Storable                               as DVS
-import           Data.Word                                          (Word64)
-import           HaskellWorks.Data.Bits.PopCount.PopCount1
+import qualified Data.Vector.Storable                                as DVS
+import           Data.Word                                           (Word64)
+import qualified HaskellWorks.Data.Bits.PopCount.PopCount1.Broadword as PC1BW
+import qualified HaskellWorks.Data.Bits.PopCount.PopCount1.GHC       as PC1GHC
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic
 
@@ -19,6 +20,7 @@ main = defaultMain
     [ bench "Rank - Once"   (whnf (rank1    bv) 1)
     , bench "Select - Once" (whnf (select1  bv) 1)
     , bench "Rank - Many"   (nf   (map (getCount . rank1  bv)) [0, 1000..10000000])
-    , bench "PopCnt - Once" (whnf popCount1 bv)
+    , bench "PopCnt1 Broadword - Once" (whnf PC1BW.popCount1 bv)
+    , bench "PopCnt1 GHC       - Once" (whnf PC1GHC.popCount1 bv)
     ] )
   ]
