@@ -145,3 +145,16 @@ test-suite hw-succinct-test
 source-repository head
   type:     git
   location: https://github.com/haskell-works/hw-succinct
+
+benchmark bench
+    Type: exitcode-stdio-1.0
+    HS-Source-Dirs: bench
+    Main-Is: Main.hs
+    GHC-Options: -O2 -Wall
+    Default-Language: Haskell2010
+    Build-Depends:
+        base            >= 4       && < 5   ,
+        criterion       >= 1.1.0.0 && < 1.2 ,
+        hw-succinct                         ,
+        vector          >= 0.6     && < 0.12
+
