@@ -20,7 +20,7 @@ main = defaultMain
     [ bench "Rank - Once"   (whnf (rank1    bv) 1)
     , bench "Select - Once" (whnf (select1  bv) 1)
     , bench "Rank - Many"   (nf   (map (getCount . rank1  bv)) [0, 1000..10000000])
-    , bench "PopCnt1 Broadword - Once" (whnf PC1BW.popCount1 bv)
-    , bench "PopCnt1 GHC       - Once" (whnf PC1GHC.popCount1 bv)
+    , bench "PopCnt1 Broadword - Once" (nf   (map (\n -> getCount (PC1BW.popCount1  (DVS.take n bv)))) [0, 1000..10000000])
+    , bench "PopCnt1 GHC       - Once" (nf   (map (\n -> getCount (PC1GHC.popCount1 (DVS.take n bv)))) [0, 1000..10000000])
     ] )
   ]
