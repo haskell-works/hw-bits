@@ -3,7 +3,6 @@
 
 module HaskellWorks.Data.Bits.BitString
   ( FromBitString(..)
-  , ToBitString(..)
   ) where
 
 import qualified Data.Vector                     as DV
@@ -15,9 +14,6 @@ import           Text.ParserCombinators.Parsec
 
 class FromBitString a where
   fromBitString :: String -> Maybe a
-
-class ToBitString a where
-  toBitString :: a -> String
 
 fromBitString' :: BitParse a => String -> Maybe a
 fromBitString' = either (const Nothing) Just . parse bitParse0 "" . filter (/= ' ')
@@ -74,9 +70,6 @@ instance FromBitString (DVS.Vector Word32) where
 
 instance FromBitString (DVS.Vector Word64) where
   fromBitString = fromBitString'
-
-instance BitPrint a => ToBitString a where
-  toBitString a = bitPrint a ""
 
 instance FromBitString [Bool] where
   fromBitString = sequence . fmap bitCharToBool . filter (/= ' ')

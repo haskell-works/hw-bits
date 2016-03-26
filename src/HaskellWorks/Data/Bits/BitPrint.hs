@@ -8,6 +8,7 @@
 -- Succinct operations.
 module HaskellWorks.Data.Bits.BitPrint
   ( BitPrint(..)
+  , toBitString
   ) where
 
 import qualified Data.Vector                    as DV
@@ -92,3 +93,6 @@ instance BitPrint (DVS.Vector Word32) where
 
 instance BitPrint (DVS.Vector Word64) where
   bitPrint = bitPrint . DVS.toList
+
+toBitString :: BitPrint a => a -> String
+toBitString a = bitPrint a ""

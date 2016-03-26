@@ -14,7 +14,6 @@ import qualified Data.Vector.Storable                                       as D
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitPrint
-import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens.Internal
@@ -30,7 +29,7 @@ newtype SimpleBalancedParens a = SimpleBalancedParens a
 instance Functor SimpleBalancedParens where
   fmap f (SimpleBalancedParens a) = SimpleBalancedParens (f a)
 
-instance (BitPrint a, ToBitString a) => Show (SimpleBalancedParens a) where
+instance BitPrint a => Show (SimpleBalancedParens a) where
   show = toBitString
 
 closeAt :: TestBit a => a -> Count -> Bool

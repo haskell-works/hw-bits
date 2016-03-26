@@ -13,7 +13,6 @@ import           Data.String
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitPrint
-import           HaskellWorks.Data.Bits.BitString
 import           HaskellWorks.Data.Json.Succinct.Cursor                     as C
 import           HaskellWorks.Data.Json.Token
 import qualified HaskellWorks.Data.Succinct.BalancedParens.Internal         as BP

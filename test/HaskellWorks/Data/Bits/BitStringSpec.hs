@@ -5,6 +5,7 @@ module HaskellWorks.Data.Bits.BitStringSpec (spec) where
 
 import qualified Data.Vector                      as DV
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitPrint
 import           HaskellWorks.Data.Bits.BitString
 import           Test.Hspec
 

@@ -40,7 +40,7 @@ instance P.Functor Simple where
 getSimple :: Simple a -> a
 getSimple (Simple a) = a
 
-instance forall a. ToBitString a => P.Show (Simple a) where
+instance forall a. BitPrint a => P.Show (Simple a) where
   show (Simple bs) = toBitString bs
 
 instance TestBit (Simple (DV.Vector Word8)) where
