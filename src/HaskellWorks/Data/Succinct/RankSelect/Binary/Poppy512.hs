@@ -8,6 +8,7 @@ import qualified Data.Vector.Storable                                     as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
 import           HaskellWorks.Data.Positioning
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Vector.VectorLike
 import           Prelude                                                  as P
@@ -28,3 +29,7 @@ makePoppy512 v = Poppy512
 instance Rank1 Poppy512 where
   rank1 (Poppy512 v i) p =
     Count (i !!! toPosition (p `div` 512)) + rank1 (DVS.drop (fromIntegral p `div` 512) v) (p `mod` 512)
+
+instance Rank0 Poppy512 where
+  rank0 (Poppy512 v i) p =
+    p `div` 512 * 512 - Count (i !!! toPosition (p `div` 512)) + rank0 (DVS.drop (fromIntegral p `div` 512) v) (p `mod` 512)
