@@ -4,11 +4,15 @@
 
 module HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512Spec (spec) where
 
-import qualified Data.Vector.Storable                                     as DVS
+import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitPrint
+import           HaskellWorks.Data.Bits.PopCount.PopCount0
+import           HaskellWorks.Data.Bits.PopCount.PopCount1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
 import           HaskellWorks.Data.Vector.VectorLike
 import           Test.Hspec
@@ -72,3 +76,53 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512.Rank1Spec
       forAll (choose (0, vLength v * 8)) $ \i ->
       let w = makePoppy512 v in
       rank0 v i === rank0 w i
+  describe "select0 for Vector Word64 is equivalent to select0 for Poppy512" $ do
+    it "on empty bitvector" $
+      let v = DVS.empty in
+      let w = makePoppy512 v in
+      let i = 0 in
+      select0 v i === select0 w i
+    it "on one full zero basic block" $
+      let v = DVS.fromList [0, 0, 0, 0, 0, 0, 0, 0] :: DVS.Vector Word64 in
+      let w = makePoppy512 v in
+      select0 v 0 === select0 w 0
+    it "on one basic block" $
+      forAll (vectorSizedBetween 1 8) $ \(ShowVector v) ->
+      forAll (choose (0, popCount0 v)) $ \i ->
+      let w = makePoppy512 v in
+      select0 v i === select0 w i
+    it "on two basic blocks" $
+      forAll (vectorSizedBetween 9 16) $ \(ShowVector v) ->
+      forAll (choose (0, popCount0 v)) $ \i ->
+      let w = makePoppy512 v in
+      select0 v i === select0 w i
+    it "on three basic blocks" $
+      forAll (vectorSizedBetween 17 24) $ \(ShowVector v) ->
+      forAll (choose (0, popCount0 v)) $ \i ->
+      let w = makePoppy512 v in
+      select0 v i === select0 w i
+  describe "select1 for Vector Word64 is equivalent to select1 for Poppy512" $ do
+    it "on empty bitvector" $
+      let v = DVS.empty in
+      let w = makePoppy512 v in
+      let i = 0 in
+      select1 v i === select1 w i
+    it "on one full zero basic block" $
+      let v = DVS.fromList [0, 0, 0, 0, 0, 0, 0, 0] :: DVS.Vector Word64 in
+      let w = makePoppy512 v in
+      select1 v 0 === select1 w 0
+    it "on one basic block" $
+      forAll (vectorSizedBetween 1 8) $ \(ShowVector v) ->
+      forAll (choose (0, popCount1 v)) $ \i ->
+      let w = makePoppy512 v in
+      select1 v i === select1 w i
+    it "on two basic blocks" $
+      forAll (vectorSizedBetween 9 16) $ \(ShowVector v) ->
+      forAll (choose (0, popCount1 v)) $ \i ->
+      let w = makePoppy512 v in
+      select1 v i === select1 w i
+    it "on three basic blocks" $
+      forAll (vectorSizedBetween 17 24) $ \(ShowVector v) ->
+      forAll (choose (0, popCount1 v)) $ \i ->
+      let w = makePoppy512 v in
+      select1 v i === select1 w i
