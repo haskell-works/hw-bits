@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module HaskellWorks.Data.Succinct.BalancedParens.Simple
@@ -9,6 +10,8 @@ module HaskellWorks.Data.Succinct.BalancedParens.Simple
   , openAt
   ) where
 
+import qualified Data.Vector.Storable                                       as DVS
+import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitPrint
 import           HaskellWorks.Data.Bits.BitString
@@ -57,7 +60,47 @@ findClose' c v p =
       else findClose' (c + 1) v (p + 1)
     else findClose' (c - 1) v (p + 1)
 
-instance (BitLength a, TestBit a) => BalancedParens (SimpleBalancedParens a) where
+instance BalancedParens (SimpleBalancedParens [Bool]) where
+  findOpen  v p = if v `openAt`  p then p else findOpen'  (Count 0) v (p - 1)
+  findClose v p = if v `closeAt` p then p else findClose' (Count 0) v (p + 1)
+  enclose       = findOpen' (Count 1)
+
+instance BalancedParens (SimpleBalancedParens (DVS.Vector Word8)) where
+  findOpen  v p = if v `openAt`  p then p else findOpen'  (Count 0) v (p - 1)
+  findClose v p = if v `closeAt` p then p else findClose' (Count 0) v (p + 1)
+  enclose       = findOpen' (Count 1)
+
+instance BalancedParens (SimpleBalancedParens (DVS.Vector Word16)) where
+  findOpen  v p = if v `openAt`  p then p else findOpen'  (Count 0) v (p - 1)
+  findClose v p = if v `closeAt` p then p else findClose' (Count 0) v (p + 1)
+  enclose       = findOpen' (Count 1)
+
+instance BalancedParens (SimpleBalancedParens (DVS.Vector Word32)) where
+  findOpen  v p = if v `openAt`  p then p else findOpen'  (Count 0) v (p - 1)
+  findClose v p = if v `closeAt` p then p else findClose' (Count 0) v (p + 1)
+  enclose       = findOpen' (Count 1)
+
+instance BalancedParens (SimpleBalancedParens (DVS.Vector Word64)) where
+  findOpen  v p = if v `openAt`  p then p else findOpen'  (Count 0) v (p - 1)
+  findClose v p = if v `closeAt` p then p else findClose' (Count 0) v (p + 1)
+  enclose       = findOpen' (Count 1)
+
+instance BalancedParens (SimpleBalancedParens Word8) where
+  findOpen  v p = if v `openAt`  p then p else findOpen'  (Count 0) v (p - 1)
+  findClose v p = if v `closeAt` p then p else findClose' (Count 0) v (p + 1)
+  enclose       = findOpen' (Count 1)
+
+instance BalancedParens (SimpleBalancedParens Word16) where
+  findOpen  v p = if v `openAt`  p then p else findOpen'  (Count 0) v (p - 1)
+  findClose v p = if v `closeAt` p then p else findClose' (Count 0) v (p + 1)
+  enclose       = findOpen' (Count 1)
+
+instance BalancedParens (SimpleBalancedParens Word32) where
+  findOpen  v p = if v `openAt`  p then p else findOpen'  (Count 0) v (p - 1)
+  findClose v p = if v `closeAt` p then p else findClose' (Count 0) v (p + 1)
+  enclose       = findOpen' (Count 1)
+
+instance BalancedParens (SimpleBalancedParens Word64) where
   findOpen  v p = if v `openAt`  p then p else findOpen'  (Count 0) v (p - 1)
   findClose v p = if v `closeAt` p then p else findClose' (Count 0) v (p + 1)
   enclose       = findOpen' (Count 1)

@@ -12,12 +12,12 @@ import qualified Data.ByteString                                            as B
 import           Data.String
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
-import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitPrint
 import           HaskellWorks.Data.Bits.BitString
-import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Json.Succinct.Cursor                     as C
 import           HaskellWorks.Data.Json.Token
+import qualified HaskellWorks.Data.Succinct.BalancedParens.Internal         as BP
+import           HaskellWorks.Data.Succinct.BalancedParens.Simple
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
@@ -36,65 +36,65 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
   let cd = C.depth
   describe "Cursor for [Bool]" $ do
     it "initialises to beginning of empty object" $ do
-      let cursor = "{}" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "{}" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       jsonCursorType cursor `shouldBe` JsonCursorObject
     it "initialises to beginning of empty object preceded by spaces" $ do
-      let cursor = " {}" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = " {}" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       jsonCursorType cursor `shouldBe` JsonCursorObject
     it "initialises to beginning of number" $ do
-      let cursor = "1234" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "1234" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       jsonCursorType cursor `shouldBe` JsonCursorNumber
     it "initialises to beginning of string" $ do
-      let cursor = "\"Hello\"" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "\"Hello\"" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       jsonCursorType cursor `shouldBe` JsonCursorString
     it "initialises to beginning of array" $ do
-      let cursor = "[]" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "[]" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       jsonCursorType cursor `shouldBe` JsonCursorArray
     it "initialises to beginning of boolean true" $ do
-      let cursor = "true" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "true" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       jsonCursorType cursor `shouldBe` JsonCursorBool
     it "initialises to beginning of boolean false" $ do
-      let cursor = "false" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "false" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       jsonCursorType cursor `shouldBe` JsonCursorBool
     it "initialises to beginning of null" $ do
-      let cursor = "null" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "null" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       jsonCursorType cursor `shouldBe` JsonCursorNull
     it "cursor can navigate to first child of array" $ do
-      let cursor = "[null]" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "[null]" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       jsonCursorType (fc cursor) `shouldBe` JsonCursorNull
     it "cursor can navigate to second child of array" $ do
-      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       jsonCursorType ((ns . fc) cursor) `shouldBe` JsonCursorObject
     it "cursor can navigate to first child of object at second child of array" $ do
-      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       jsonCursorType ((fc . ns . fc) cursor) `shouldBe` JsonCursorString
     it "cursor can navigate to first child of object at second child of array" $ do
-      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       jsonCursorType ((ns . fc . ns . fc) cursor)  `shouldBe` JsonCursorNumber
     it "depth at top" $ do
-      let cursor = "[null]" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "[null]" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       cd cursor `shouldBe` 1
     it "depth at first child of array" $ do
-      let cursor = "[null]" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "[null]" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       cd (fc cursor) `shouldBe` 2
     it "depth at second child of array" $ do
-      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       cd ((ns . fc) cursor) `shouldBe` 2
     it "depth at first child of object at second child of array" $ do
-      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       cd ((fc . ns . fc) cursor) `shouldBe` 3
     it "depth at first child of object at second child of array" $ do
-      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String (Simple [Bool]) [Bool]
+      let cursor = "[null, {\"field\": 1}]" :: JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
       cd ((ns . fc . ns . fc) cursor)  `shouldBe` 3
-  genSpec "DVS.Vector Word8"  (undefined :: JsonCursor BS.ByteString (Simple (DVS.Vector Word8)) (DVS.Vector Word8))
-  genSpec "DVS.Vector Word16" (undefined :: JsonCursor BS.ByteString (Simple (DVS.Vector Word16)) (DVS.Vector Word16))
-  genSpec "DVS.Vector Word32" (undefined :: JsonCursor BS.ByteString (Simple (DVS.Vector Word32)) (DVS.Vector Word32))
-  genSpec "DVS.Vector Word64" (undefined :: JsonCursor BS.ByteString (Simple (DVS.Vector Word64)) (DVS.Vector Word64))
+  genSpec "DVS.Vector Word8"  (undefined :: JsonCursor BS.ByteString (Simple (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8)))
+  genSpec "DVS.Vector Word16" (undefined :: JsonCursor BS.ByteString (Simple (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16)))
+  genSpec "DVS.Vector Word32" (undefined :: JsonCursor BS.ByteString (Simple (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32)))
+  genSpec "DVS.Vector Word64" (undefined :: JsonCursor BS.ByteString (Simple (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64)))
   it "Loads same Json consistentally from different backing vectors" $ do
-    let cursor8   = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (Simple (DVS.Vector Word8)) (DVS.Vector Word8)
-    let cursor16  = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (Simple (DVS.Vector Word16)) (DVS.Vector Word16)
-    let cursor32  = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (Simple (DVS.Vector Word32)) (DVS.Vector Word32)
-    let cursor64  = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (Simple (DVS.Vector Word64)) (DVS.Vector Word64)
+    let cursor8   = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (Simple (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))
+    let cursor16  = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (Simple (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))
+    let cursor32  = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (Simple (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))
+    let cursor64  = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (Simple (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
     cursorText cursor8 `shouldBe` cursorText cursor16
     cursorText cursor8 `shouldBe` cursorText cursor32
     cursorText cursor8 `shouldBe` cursorText cursor64
@@ -116,11 +116,10 @@ genSpec :: forall t u.
   , Show              t
   , Eq                u
   , BitPrint          u
-  , TestBit           u
-  , BitLength         u
   , Rank0             u
   , Rank1             u
   , Show              u
+  , BP.BalancedParens u
   , FromForeignRegion (JsonCursor BS.ByteString t u)
   , IsString          (JsonCursor BS.ByteString t u)
   , HasJsonCursorType (JsonCursor BS.ByteString t u))
