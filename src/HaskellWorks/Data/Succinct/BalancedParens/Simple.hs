@@ -13,7 +13,7 @@ module HaskellWorks.Data.Succinct.BalancedParens.Simple
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength
-import           HaskellWorks.Data.Bits.BitPrint
+import           HaskellWorks.Data.Bits.BitShow
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens.Internal
@@ -24,12 +24,12 @@ import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           Prelude                                                    as P
 
 newtype SimpleBalancedParens a = SimpleBalancedParens a
-  deriving (BitLength, Eq, BitPrint, TestBit, Rank0, Rank1, Select0, Select1)
+  deriving (BitLength, Eq, BitShow, TestBit, Rank0, Rank1, Select0, Select1)
 
 instance Functor SimpleBalancedParens where
   fmap f (SimpleBalancedParens a) = SimpleBalancedParens (f a)
 
-instance BitPrint a => Show (SimpleBalancedParens a) where
+instance BitShow a => Show (SimpleBalancedParens a) where
   show = toBitString
 
 closeAt :: TestBit a => a -> Count -> Bool

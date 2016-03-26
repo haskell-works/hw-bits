@@ -6,7 +6,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512Spec (spec) where
 
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
-import           HaskellWorks.Data.Bits.BitPrint
+import           HaskellWorks.Data.Bits.BitShow
 import           HaskellWorks.Data.Bits.PopCount.PopCount0
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
@@ -21,10 +21,10 @@ import           Test.QuickCheck
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
 
-newtype ShowVector a = ShowVector a deriving (Eq, BitPrint)
+newtype ShowVector a = ShowVector a deriving (Eq, BitShow)
 
-instance (BitPrint a) => Show (ShowVector a) where
-  show a = bitPrint a ""
+instance BitShow a => Show (ShowVector a) where
+  show = toBitString
 
 vectorSizedBetween :: Int -> Int -> Gen (ShowVector (DVS.Vector Word64))
 vectorSizedBetween a b = do

@@ -9,7 +9,6 @@ import qualified Data.Vector                     as DV
 import qualified Data.Vector.Storable            as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitParse
-import           HaskellWorks.Data.Bits.BitPrint
 import           Text.ParserCombinators.Parsec
 
 class FromBitString a where

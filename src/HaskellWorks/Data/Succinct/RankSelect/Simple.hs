@@ -22,8 +22,7 @@ import qualified Data.Vector                                                as D
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength
-import           HaskellWorks.Data.Bits.BitPrint
-import           HaskellWorks.Data.Bits.BitString
+import           HaskellWorks.Data.Bits.BitShow
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
@@ -32,7 +31,7 @@ import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           HaskellWorks.Data.Vector.VectorLike
 import qualified Prelude                                                    as P
 
-newtype Simple a = Simple a deriving (P.Eq, BitPrint)
+newtype Simple a = Simple a deriving (P.Eq, BitShow)
 
 instance P.Functor Simple where
   fmap f (Simple a) = Simple (f a)
@@ -40,7 +39,7 @@ instance P.Functor Simple where
 getSimple :: Simple a -> a
 getSimple (Simple a) = a
 
-instance forall a. BitPrint a => P.Show (Simple a) where
+instance BitShow a => P.Show (Simple a) where
   show (Simple bs) = toBitString bs
 
 instance TestBit (Simple (DV.Vector Word8)) where

@@ -5,7 +5,7 @@ module HaskellWorks.Data.Bits.BitStringSpec (spec) where
 
 import qualified Data.Vector                      as DV
 import           Data.Word
-import           HaskellWorks.Data.Bits.BitPrint
+import           HaskellWorks.Data.Bits.BitShow
 import           HaskellWorks.Data.Bits.BitString
 import           Test.Hspec
 
@@ -37,12 +37,12 @@ spec = describe "HaskellWorks.Data.BitStringSpec" $ do
   it "fromBitString \"\" :: Maybe (DV.Vector Word8)" $
     let v = fromBitString "" :: Maybe (DV.Vector Word8) in
     v `shouldBe` Just (DV.fromList [])
-  it "bitPrint (8 :: Word8)" $
+  it "bitShow (8 :: Word8)" $
     let bs = toBitString (8 :: Word8) in
     bs `shouldBe` "00010000"
-  it "bitPrint (8 :: Word64)" $
+  it "bitShow (8 :: Word64)" $
     let bs = toBitString (8 :: Word64) in
     bs `shouldBe` "00010000 00000000 00000000 00000000 00000000 00000000 00000000 00000000"
-  it "bitPrint [0x0102040810204080 :: Word64]" $
+  it "bitShow [0x0102040810204080 :: Word64]" $
     let bs = toBitString [0x0102040810204080 :: Word64] in
     bs `shouldBe` "00000001 00000010 00000100 00001000 00010000 00100000 01000000 10000000"

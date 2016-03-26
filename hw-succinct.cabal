@@ -36,7 +36,7 @@ library
                       , HaskellWorks.Data.Bits
                       , HaskellWorks.Data.Bits.BitLength
                       , HaskellWorks.Data.Bits.BitParse
-                      , HaskellWorks.Data.Bits.BitPrint
+                      , HaskellWorks.Data.Bits.BitShow
                       , HaskellWorks.Data.Bits.BitString
                       , HaskellWorks.Data.Bits.BitWise
                       , HaskellWorks.Data.Bits.BitWise.String

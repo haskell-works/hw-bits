@@ -12,7 +12,7 @@ import qualified Data.ByteString                                            as B
 import           Data.String
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
-import           HaskellWorks.Data.Bits.BitPrint
+import           HaskellWorks.Data.Bits.BitShow
 import           HaskellWorks.Data.Json.Succinct.Cursor                     as C
 import           HaskellWorks.Data.Json.Token
 import qualified HaskellWorks.Data.Succinct.BalancedParens.Internal         as BP
@@ -110,11 +110,11 @@ shouldBeginWith as bs = take (length bs) as `shouldBe` bs
 
 genSpec :: forall t u.
   ( Eq                t
-  , BitPrint          t
+  , BitShow          t
   , Select1           t
   , Show              t
   , Eq                u
-  , BitPrint          u
+  , BitShow          u
   , Rank0             u
   , Rank1             u
   , Show              u
