@@ -34,7 +34,7 @@ class HasJsonCursorType k where
   jsonCursorType :: k -> JsonCursorType
 
 class FromByteString a where
-  fromByteString :: ByteString -> JsonCursor BS.ByteString a
+  fromByteString :: ByteString -> a
 
 class FromForeignRegion a where
   fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> JsonCursor BS.ByteString a
@@ -139,7 +139,7 @@ depth k = BP.depth (balancedParens k) (cursorRank k)
 subtreeSize :: (BitLength v, TestBit v) => JsonCursor t v -> Count
 subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
 
-instance FromByteString (DVS.Vector Word8) where
+instance FromByteString (JsonCursor BS.ByteString (DVS.Vector Word8)) where
   fromByteString :: ByteString -> JsonCursor BS.ByteString (DVS.Vector Word8)
   fromByteString textBS = JsonCursor
     { cursorText     = textBS
@@ -152,7 +152,7 @@ instance FromByteString (DVS.Vector Word8) where
             then Nothing
             else Just (BS.head bs, BS.tail bs)
 
-instance FromByteString (DVS.Vector Word16) where
+instance FromByteString (JsonCursor BS.ByteString (DVS.Vector Word16)) where
   fromByteString :: ByteString -> JsonCursor BS.ByteString (DVS.Vector Word16)
   fromByteString textBS = JsonCursor
     { cursorText      = textBS
@@ -167,7 +167,7 @@ instance FromByteString (DVS.Vector Word16) where
             else Just (BS.head bs, BS.tail bs)
           bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
 
-instance FromByteString (DVS.Vector Word32) where
+instance FromByteString (JsonCursor BS.ByteString (DVS.Vector Word32)) where
   fromByteString :: ByteString -> JsonCursor BS.ByteString (DVS.Vector Word32)
   fromByteString textBS = JsonCursor
     { cursorText      = textBS
@@ -182,7 +182,7 @@ instance FromByteString (DVS.Vector Word32) where
             else Just (BS.head bs, BS.tail bs)
           bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
 
-instance FromByteString (DVS.Vector Word64) where
+instance FromByteString (JsonCursor BS.ByteString (DVS.Vector Word64)) where
   fromByteString :: ByteString -> JsonCursor BS.ByteString (DVS.Vector Word64)
   fromByteString textBS = JsonCursor
     { cursorText      = textBS
