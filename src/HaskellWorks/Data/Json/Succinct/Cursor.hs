@@ -18,6 +18,7 @@ import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.FromByteString
 import           HaskellWorks.Data.Json.Final.Tokenize.Internal
 import           HaskellWorks.Data.Json.Succinct.Cursor.JsonBalancedParens
+import           HaskellWorks.Data.Json.Succinct.Cursor.JsonCursorType
 import           HaskellWorks.Data.Json.Succinct.Cursor.JsonInterestBits
 import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
@@ -32,15 +33,6 @@ class HasJsonCursorType k where
 
 class FromForeignRegion a where
   fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> a
-
-data JsonCursorType
-  = JsonCursorArray
-  | JsonCursorBool
-  | JsonCursorNull
-  | JsonCursorNumber
-  | JsonCursorObject
-  | JsonCursorString
-  deriving (Eq, Show)
 
 data JsonCursor t v w = JsonCursor
   { cursorText     :: t
