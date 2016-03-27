@@ -107,19 +107,10 @@ jsonTokenAt k = case ABC.parse parseJsonToken (vDrop (toCount (jsonCursorPos k))
   ABC.Partial _   -> error "Failed to parse token in cursor"
   ABC.Done    _ r -> r
 
-instance (Rank1 i, Select1 i) => HasJsonCursorType (JsonCursor String i (SimpleBalancedParens [Bool])) where
+instance (Rank1 i, Select1 i, Rank1 b) => HasJsonCursorType (JsonCursor String i b) where
   jsonCursorType = jsonCursorType' . jsonCursorElemAt
 
-instance (Rank1 i, Select1 i) => HasJsonCursorType (JsonCursor BS.ByteString i (SimpleBalancedParens (DVS.Vector Word8))) where
-  jsonCursorType = jsonCursorType' . chr . fromIntegral . jsonCursorElemAt
-
-instance (Rank1 i, Select1 i) => HasJsonCursorType (JsonCursor BS.ByteString i (SimpleBalancedParens (DVS.Vector Word16))) where
-  jsonCursorType = jsonCursorType' . chr . fromIntegral . jsonCursorElemAt
-
-instance (Rank1 i, Select1 i) => HasJsonCursorType (JsonCursor BS.ByteString i (SimpleBalancedParens (DVS.Vector Word32))) where
-  jsonCursorType = jsonCursorType' . chr . fromIntegral . jsonCursorElemAt
-
-instance (Rank1 i, Select1 i) => HasJsonCursorType (JsonCursor BS.ByteString i (SimpleBalancedParens (DVS.Vector Word64))) where
+instance (Rank1 i, Select1 i, Rank1 b) => HasJsonCursorType (JsonCursor BS.ByteString i b) where
   jsonCursorType = jsonCursorType' . chr . fromIntegral . jsonCursorElemAt
 
 firstChild :: JsonCursor t v u -> JsonCursor t v u
