@@ -13,6 +13,7 @@ import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.BasicGen
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
 import           HaskellWorks.Data.Vector.VectorLike
 import           Test.Hspec
@@ -34,6 +35,16 @@ vectorSizedBetween a b = do
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512.Rank1Spec" $ do
+  genRank0UpTo8Spec     (undefined :: Poppy512)
+  genRank0UpTo16Spec    (undefined :: Poppy512)
+  genRank1UpTo8Spec     (undefined :: Poppy512)
+  genRank1UpTo16Spec    (undefined :: Poppy512)
+  genSelect0UpTo8Spec   (undefined :: Poppy512)
+  genSelect0UpTo16Spec  (undefined :: Poppy512)
+  genSelect0UpTo32Spec  (undefined :: Poppy512)
+  genSelect1UpTo8Spec   (undefined :: Poppy512)
+  genSelect1UpTo16Spec  (undefined :: Poppy512)
+  genSelect1UpTo32Spec  (undefined :: Poppy512)
   describe "rank1 for Vector Word64 is equivalent to rank1 for Poppy512" $ do
     it "on empty bitvector" $
       let v = DVS.empty in

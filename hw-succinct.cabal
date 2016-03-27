@@ -128,6 +128,7 @@ test-suite hw-succinct-test
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1Spec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0Spec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1Spec
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.BasicGen
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512Spec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9Spec
                       , HaskellWorks.Data.Succinct.SimpleSpec
