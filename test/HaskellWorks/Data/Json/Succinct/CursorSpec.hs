@@ -16,8 +16,6 @@ import           HaskellWorks.Data.Bits.BitShow
 import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.FromForeignRegion
 import           HaskellWorks.Data.Json.Succinct.Cursor                     as C
-import           HaskellWorks.Data.Json.Succinct.Cursor.Internal
-import           HaskellWorks.Data.Json.Succinct.Cursor.JsonCursorType
 import           HaskellWorks.Data.Json.Token
 import qualified HaskellWorks.Data.Succinct.BalancedParens.Internal         as BP
 import           HaskellWorks.Data.Succinct.BalancedParens.Simple
