@@ -6,6 +6,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
 
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitRead
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Search
@@ -29,6 +30,9 @@ makePoppy512 v = Poppy512
           if indexN == -1
             then 0
             else getCount (popCount1 (DVS.take 8 (DVS.drop (indexN * 8) v))) + DVS.last u
+
+instance BitRead Poppy512 where
+  bitRead = fmap makePoppy512 . bitRead
 
 instance Rank1 Poppy512 where
   rank1 (Poppy512 v i) p =
