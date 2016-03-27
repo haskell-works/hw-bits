@@ -15,9 +15,9 @@ import qualified Data.Vector.Storable                                       as D
 import           Data.Word
 import           Foreign.ForeignPtr
 import           HaskellWorks.Data.Bits.BitShown
-import           HaskellWorks.Data.Bits.FromBools
 import           HaskellWorks.Data.FromByteString
 import           HaskellWorks.Data.Json.Final.Tokenize.Internal
+import           HaskellWorks.Data.Json.Succinct.Cursor.JsonBalancedParens
 import           HaskellWorks.Data.Json.Succinct.Cursor.JsonInterestBits
 import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
@@ -117,23 +117,6 @@ depth k = BP.depth (balancedParens k) (cursorRank k)
 
 subtreeSize :: BalancedParens u => JsonCursor t v u -> Count
 subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
-
-newtype JsonBalancedParens a = JsonBalancedParens a
-
-getJsonBalancedParens :: JsonBalancedParens a -> a
-getJsonBalancedParens (JsonBalancedParens a) = a
-
-instance FromByteString (JsonBalancedParens (SimpleBalancedParens (DVS.Vector Word8))) where
-  fromByteString textBS = JsonBalancedParens (SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])))
-
-instance FromByteString (JsonBalancedParens (SimpleBalancedParens (DVS.Vector Word16))) where
-  fromByteString textBS = JsonBalancedParens (SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])))
-
-instance FromByteString (JsonBalancedParens (SimpleBalancedParens (DVS.Vector Word32))) where
-  fromByteString textBS = JsonBalancedParens (SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])))
-
-instance FromByteString (JsonBalancedParens (SimpleBalancedParens (DVS.Vector Word64))) where
-  fromByteString textBS = JsonBalancedParens (SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])))
 
 instance  (FromByteString (JsonInterestBits a), FromByteString (JsonBalancedParens b))
           => FromByteString (JsonCursor BS.ByteString a b) where
