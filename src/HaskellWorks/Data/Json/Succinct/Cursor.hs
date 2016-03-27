@@ -7,20 +7,16 @@ module HaskellWorks.Data.Json.Succinct.Cursor where
 
 import qualified Data.Attoparsec.ByteString.Char8                           as ABC
 import qualified Data.ByteString                                            as BS
-import qualified Data.ByteString.Char8                                      as BSC
 import           Data.ByteString.Internal                                   as BSI
 import           Data.Char
-import           Data.String
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           Foreign.ForeignPtr
 import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.FromByteString
 import           HaskellWorks.Data.Json.Final.Tokenize.Internal
-import           HaskellWorks.Data.Json.Succinct.Cursor.JsonBalancedParens
+import           HaskellWorks.Data.Json.Succinct.Cursor.Internal
 import           HaskellWorks.Data.Json.Succinct.Cursor.JsonCursorType
-import           HaskellWorks.Data.Json.Succinct.Cursor.JsonInterestBits
-import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens                  as BP
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
@@ -33,25 +29,6 @@ class HasJsonCursorType k where
 
 class FromForeignRegion a where
   fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> a
-
-data JsonCursor t v w = JsonCursor
-  { cursorText     :: t
-  , interests      :: v
-  , balancedParens :: w
-  , cursorRank     :: Count
-  }
-  deriving (Eq, Show)
-
-instance IsString (JsonCursor String (BitShown [Bool]) (SimpleBalancedParens [Bool])) where
-  fromString :: String -> JsonCursor String (BitShown [Bool]) (SimpleBalancedParens [Bool])
-  fromString s = JsonCursor
-    { cursorText      = s
-    , cursorRank      = 1
-    , balancedParens  = SimpleBalancedParens (jsonToInterestBalancedParens [bs])
-    , interests       = BitShown interests'
-    }
-    where bs          = BSC.pack s :: BS.ByteString
-          interests'  = jsonToInterestBits [bs]
 
 jsonCursorType' :: Char -> JsonCursorType
 jsonCursorType' c = case c of
@@ -110,15 +87,6 @@ depth k = BP.depth (balancedParens k) (cursorRank k)
 subtreeSize :: BalancedParens u => JsonCursor t v u -> Count
 subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
 
-instance  (FromByteString (JsonInterestBits a), FromByteString (JsonBalancedParens b))
-          => FromByteString (JsonCursor BS.ByteString a b) where
-  fromByteString textBS = JsonCursor
-    { cursorText      = textBS
-    , interests       = getJsonInterestBits (fromByteString textBS)
-    , balancedParens  = getJsonBalancedParens (fromByteString textBS)
-    , cursorRank      = 1
-    }
-
 instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
   fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
 
@@ -130,15 +98,3 @@ instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word3
 
 instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
   fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
-
-instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
-  fromString = fromByteString . BSC.pack
-
-instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))) where
-  fromString = fromByteString . BSC.pack
-
-instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))) where
-  fromString = fromByteString . BSC.pack
-
-instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
-  fromString = fromByteString . BSC.pack

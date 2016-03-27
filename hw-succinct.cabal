@@ -60,6 +60,7 @@ library
                       , HaskellWorks.Data.Json.Final.Tokenize.Internal
                       , HaskellWorks.Data.Json.Succinct
                       , HaskellWorks.Data.Json.Succinct.Cursor
+                      , HaskellWorks.Data.Json.Succinct.Cursor.Internal
                       , HaskellWorks.Data.Json.Succinct.Cursor.JsonBalancedParens
                       , HaskellWorks.Data.Json.Succinct.Cursor.JsonCursorType
                       , HaskellWorks.Data.Json.Succinct.Cursor.JsonInterestBits
