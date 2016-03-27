@@ -54,10 +54,10 @@ genSelect1UpTo32Spec _ = describe ("Generically up to 16 bits for " ++ show (typ
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
-  genSelect1UpTo8Spec (undefined :: Word8)
-  genSelect1UpTo8Spec (undefined :: Word16)
-  genSelect1UpTo8Spec (undefined :: Word32)
-  genSelect1UpTo8Spec (undefined :: Word64)
+  genSelect1UpTo8Spec  (undefined :: Word8)
+  genSelect1UpTo8Spec  (undefined :: Word16)
+  genSelect1UpTo8Spec  (undefined :: Word32)
+  genSelect1UpTo8Spec  (undefined :: Word64)
   genSelect1UpTo16Spec (undefined :: Word16)
   genSelect1UpTo16Spec (undefined :: Word32)
   genSelect1UpTo16Spec (undefined :: Word64)
