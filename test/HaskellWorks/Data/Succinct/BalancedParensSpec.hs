@@ -5,7 +5,7 @@ module HaskellWorks.Data.Succinct.BalancedParensSpec where
 import           Data.Maybe
 import qualified Data.Vector.Storable                      as DVS
 import           Data.Word
-import           HaskellWorks.Data.Bits.BitString
+import           HaskellWorks.Data.Bits.BitRead
 import           HaskellWorks.Data.Succinct.BalancedParens
 import           Test.Hspec
 
@@ -23,7 +23,7 @@ spec = describe "HaskellWorks.Data.Succinct.BalancedParensSpec" $ do
     it "Test 3a" $ enclose   bs  2 `shouldBe`  1
     it "Test 3b" $ enclose   bs  7 `shouldBe`  4
   describe "For (()(()())) 1101101000" $ do
-    let bs = SimpleBalancedParens (fromJust (fromBitString "1101101000") :: [Bool])
+    let bs = SimpleBalancedParens (fromJust (bitRead "1101101000") :: [Bool])
     it "Test 1a" $ findClose bs  1 `shouldBe` 10
     it "Test 1b" $ findClose bs  2 `shouldBe`  3
     it "Test 1b" $ findClose bs  3 `shouldBe`  3
@@ -59,7 +59,7 @@ spec = describe "HaskellWorks.Data.Succinct.BalancedParensSpec" $ do
     it "subtreeSize  9" $ subtreeSize bs  9 `shouldBe` 0
     it "subtreeSize 10" $ subtreeSize bs 10 `shouldBe` 0
   describe "For (()(()())) 11011010 00000000 :: DVS.Vector Word8" $ do
-    let bs = SimpleBalancedParens (fromJust (fromBitString "11011010 00000000") :: DVS.Vector Word8)
+    let bs = SimpleBalancedParens (fromJust (bitRead "11011010 00000000") :: DVS.Vector Word8)
     it "Test 1a" $ findClose bs  1 `shouldBe` 10
     it "Test 1b" $ findClose bs  2 `shouldBe`  3
     it "Test 1b" $ findClose bs  3 `shouldBe`  3

@@ -4,7 +4,7 @@
 module HaskellWorks.Data.Json.SuccinctSpec where
 
 import           Data.Maybe
-import           HaskellWorks.Data.Bits.BitString
+import           HaskellWorks.Data.Bits.BitRead
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Succinct
 import           Test.Hspec
@@ -27,7 +27,7 @@ spec = describe "HaskellWorks.Data.Json.SuccinctSpec" $ do
       runListConduit [0, 36] markerToByteString `shouldBe` ["\1", "\0", "\0", "\0", "\16"]
   describe "jsonToInterestBalancedParens" $ do
     it "produces the correct interest bits for {\"field\": 1}" $
-      jsonToInterestBalancedParens ["{\"field\": 1}"] `shouldBe` fromJust (fromBitString "110100")
+      jsonToInterestBalancedParens ["{\"field\": 1}"] `shouldBe` fromJust (bitRead "110100")
   describe "jsonToInterestBits" $ do
     it "produces the correct interest bits for {\"field\": 1}" $
-      jsonToInterestBits ["{\"field\": 1}"] `shouldBe` fromJust (fromBitString "1100000000100000")
+      jsonToInterestBits ["{\"field\": 1}"] `shouldBe` fromJust (bitRead "1100000000100000")

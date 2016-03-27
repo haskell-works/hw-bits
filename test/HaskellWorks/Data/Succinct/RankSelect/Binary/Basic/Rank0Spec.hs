@@ -8,7 +8,7 @@ import qualified Data.Vector                                                as D
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           HaskellWorks.Data.Arbitrary.Count
-import           HaskellWorks.Data.Bits.BitString
+import           HaskellWorks.Data.Bits.BitRead
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.PopCount.PopCount0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
@@ -23,7 +23,7 @@ spec :: Spec
 spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
   describe "For Word8" $ do
     it "rank0 10010010 over [0..8] should be 001223445" $ do
-      let bs = fromJust (fromBitString "10010010") :: Word8
+      let bs = fromJust (bitRead "10010010") :: Word8
       fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
   describe "For Word64" $ do
     it "rank0 for Word16 and Word64 should give same answer for bits 0-7" $ property $
@@ -42,101 +42,101 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
         rank0 w (select0 w i) == i && select0 w (rank0 w (fromIntegral i)) <= fromIntegral i
   describe "For [Word8]" $ do
     it "rank0 10010010 over [0..8] should be 001223445" $ do
-      let bs = fromJust $ fromBitString "10010010" :: [Word8]
+      let bs = fromJust $ bitRead "10010010" :: [Word8]
       fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
     it "rank0 11011010 00000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 00000000" :: [Word8]
+      let bs = fromJust $ bitRead "11011010 00000000" :: [Word8]
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     it "rank0 11011010 10000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 10000000" :: [Word8]
+      let bs = fromJust $ bitRead "11011010 10000000" :: [Word8]
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10]
   describe "For [Word16]" $ do
     it "rank0 10010010 over [0..8] should be 001223445" $ do
-      let bs = fromJust $ fromBitString "10010010" :: [Word16]
+      let bs = fromJust $ bitRead "10010010" :: [Word16]
       fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
     it "rank0 11011010 00000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 00000000" :: [Word16]
+      let bs = fromJust $ bitRead "11011010 00000000" :: [Word16]
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     it "rank0 11011010 10000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 10000000" :: [Word16]
+      let bs = fromJust $ bitRead "11011010 10000000" :: [Word16]
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10]
   describe "For [Word32]" $ do
     it "rank0 10010010 over [0..8] should be 001223445" $ do
-      let bs = fromJust $ fromBitString "10010010" :: [Word32]
+      let bs = fromJust $ bitRead "10010010" :: [Word32]
       fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
     it "rank0 11011010 00000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 00000000" :: [Word32]
+      let bs = fromJust $ bitRead "11011010 00000000" :: [Word32]
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     it "rank0 11011010 10000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 10000000" :: [Word32]
+      let bs = fromJust $ bitRead "11011010 10000000" :: [Word32]
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10]
   describe "For [Word64]" $ do
     it "rank0 10010010 over [0..8] should be 001223445" $ do
-      let bs = fromJust $ fromBitString "10010010" :: [Word32]
+      let bs = fromJust $ bitRead "10010010" :: [Word32]
       fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
     it "rank0 11011010 00000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 00000000" :: [Word32]
+      let bs = fromJust $ bitRead "11011010 00000000" :: [Word32]
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     it "rank0 11011010 10000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 10000000" :: [Word32]
+      let bs = fromJust $ bitRead "11011010 10000000" :: [Word32]
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10]
   describe "For (DV.Vector Word8)" $ do
     it "rank0 10010010 over [0..8] should be 001223445" $ do
-      let bs = fromJust $ fromBitString "10010010" :: DV.Vector Word8
+      let bs = fromJust $ bitRead "10010010" :: DV.Vector Word8
       fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
     it "rank0 11011010 00000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 00000000" :: DV.Vector Word8
+      let bs = fromJust $ bitRead "11011010 00000000" :: DV.Vector Word8
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     it "rank0 11011010 10000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 10000000" :: DV.Vector Word8
+      let bs = fromJust $ bitRead "11011010 10000000" :: DV.Vector Word8
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10]
   describe "For (DV.Vector Word16)" $ do
     it "rank0 10010010 over [0..8] should be 001223445" $ do
-      let bs = fromJust $ fromBitString "10010010" :: DV.Vector Word16
+      let bs = fromJust $ bitRead "10010010" :: DV.Vector Word16
       fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
     it "rank0 11011010 00000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 00000000" :: DV.Vector Word16
+      let bs = fromJust $ bitRead "11011010 00000000" :: DV.Vector Word16
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     it "rank0 11011010 10000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 10000000" :: DV.Vector Word16
+      let bs = fromJust $ bitRead "11011010 10000000" :: DV.Vector Word16
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10]
   describe "For (DV.Vector Word32)" $ do
     it "rank0 10010010 over [0..8] should be 001223445" $ do
-      let bs = fromJust $ fromBitString "10010010" :: DV.Vector Word32
+      let bs = fromJust $ bitRead "10010010" :: DV.Vector Word32
       fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
     it "rank0 11011010 00000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 00000000" :: DV.Vector Word32
+      let bs = fromJust $ bitRead "11011010 00000000" :: DV.Vector Word32
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     it "rank0 11011010 10000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 10000000" :: DV.Vector Word32
+      let bs = fromJust $ bitRead "11011010 10000000" :: DV.Vector Word32
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10]
   describe "For (DV.Vector Word64)" $ do
     it "rank0 10010010 over [0..8] should be 001223445" $ do
-      let bs = fromJust $ fromBitString "10010010" :: DV.Vector Word64
+      let bs = fromJust $ bitRead "10010010" :: DV.Vector Word64
       fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
     it "rank0 11011010 00000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 00000000" :: DV.Vector Word64
+      let bs = fromJust $ bitRead "11011010 00000000" :: DV.Vector Word64
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     it "rank0 11011010 10000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 10000000" :: DV.Vector Word64
+      let bs = fromJust $ bitRead "11011010 10000000" :: DV.Vector Word64
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10]
   describe "For (DVS.Vector Word8)" $ do
     it "rank0 10010010 over [0..8] should be 001223445" $ do
-      let bs = fromJust $ fromBitString "10010010" :: DVS.Vector Word8
+      let bs = fromJust $ bitRead "10010010" :: DVS.Vector Word8
       fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
     it "rank0 11011010 00000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 00000000" :: DVS.Vector Word8
+      let bs = fromJust $ bitRead "11011010 00000000" :: DVS.Vector Word8
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     it "rank0 11011010 10000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 10000000" :: DVS.Vector Word8
+      let bs = fromJust $ bitRead "11011010 10000000" :: DVS.Vector Word8
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10]
   describe "For (DVS.Vector Word16)" $ do
     it "rank0 10010010 over [0..8] should be 001223445" $ do
-      let bs = fromJust $ fromBitString "10010010" :: DVS.Vector Word16
+      let bs = fromJust $ bitRead "10010010" :: DVS.Vector Word16
       fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
     it "rank0 11011010 00000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 00000000" :: DVS.Vector Word16
+      let bs = fromJust $ bitRead "11011010 00000000" :: DVS.Vector Word16
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     it "rank0 11011010 10000000 over [0..16]" $ do
-      let bs = fromJust $ fromBitString "11011010 10000000" :: DVS.Vector Word16
+      let bs = fromJust $ bitRead "11011010 10000000" :: DVS.Vector Word16
       fmap (rank0 bs) [0..16] `shouldBe` [0, 0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10]

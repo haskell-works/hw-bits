@@ -36,8 +36,8 @@ library
                       , HaskellWorks.Data.Bits
                       , HaskellWorks.Data.Bits.BitLength
                       , HaskellWorks.Data.Bits.BitParse
+                      , HaskellWorks.Data.Bits.BitRead
                       , HaskellWorks.Data.Bits.BitShow
-                      , HaskellWorks.Data.Bits.BitString
                       , HaskellWorks.Data.Bits.BitWise
                       , HaskellWorks.Data.Bits.BitWise.String
                       , HaskellWorks.Data.Bits.Conversion
@@ -113,7 +113,7 @@ test-suite hw-succinct-test
   hs-source-dirs:       test
   main-is:              Spec.hs
   other-modules:        HaskellWorks.Data.Arbitrary.Count
-                      , HaskellWorks.Data.Bits.BitStringSpec
+                      , HaskellWorks.Data.Bits.BitReadSpec
                       , HaskellWorks.Data.Bits.BitWiseSpec
                       , HaskellWorks.Data.Bits.FromBoolsSpec
                       , HaskellWorks.Data.Conduit.JsonSpec
