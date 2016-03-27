@@ -8,6 +8,7 @@ import qualified Data.Vector.Storable                                       as D
 import           Data.Word
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
 import           HaskellWorks.Data.Positioning
+import           HaskellWorks.Data.Search
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
@@ -36,14 +37,6 @@ instance Rank1 Poppy512 where
 instance Rank0 Poppy512 where
   rank0 (Poppy512 v i) p =
     p `div` 512 * 512 - Count (i !!! toPosition (p `div` 512)) + rank0 (DVS.drop (fromIntegral p `div` 512) v) (p `mod` 512)
-
-binarySearch :: Word64 -> (Position -> Word64) -> Position -> Position -> Position
-binarySearch w f p q = if p + 1 >= q
-  then p
-  else let m = p + q `div` 2 in
-    if w <= f m
-      then binarySearch w f p m
-      else binarySearch w f m q
 
 instance Select1 Poppy512 where
   select1 (Poppy512 v i) p = toCount q * 512 + select1 (DVS.drop (fromIntegral q * 8) v) (p - s)
