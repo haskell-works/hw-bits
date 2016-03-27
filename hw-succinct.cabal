@@ -38,6 +38,7 @@ library
                       , HaskellWorks.Data.Bits.BitParse
                       , HaskellWorks.Data.Bits.BitRead
                       , HaskellWorks.Data.Bits.BitShow
+                      , HaskellWorks.Data.Bits.BitShown
                       , HaskellWorks.Data.Bits.BitWise
                       , HaskellWorks.Data.Bits.BitWise.String
                       , HaskellWorks.Data.Bits.Conversion
