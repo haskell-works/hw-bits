@@ -1,7 +1,10 @@
 {-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0Spec (spec) where
+module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0Spec
+  ( genSpec
+  , spec
+  ) where
 
 import           Data.Maybe
 import qualified Data.Vector                                                as DV
@@ -19,12 +22,15 @@ import           Test.QuickCheck
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 {-# ANN module ("HLint: ignore Reduce duplication"  :: String) #-}
 
+genSpec :: forall s. (BitRead s, Rank0 s) => s -> Spec
+genSpec _ = describe "For Word8" $ do
+  it "rank0 10010010 over [0..8] should be 001223445" $ do
+    let bs = fromJust (bitRead "10010010") :: s
+    fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
+
 spec :: Spec
 spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
-  describe "For Word8" $ do
-    it "rank0 10010010 over [0..8] should be 001223445" $ do
-      let bs = fromJust (bitRead "10010010") :: Word8
-      fmap (rank0 bs) [0..8] `shouldBe` [0, 0, 1, 2, 2, 3, 4, 4, 5]
+  genSpec (undefined :: Word8)
   describe "For Word64" $ do
     it "rank0 for Word16 and Word64 should give same answer for bits 0-7" $ property $
       \(Count_0_8  i) (w :: Word8 ) -> rank0 w i == rank0 (fromIntegral w :: Word64) i
