@@ -55,10 +55,12 @@ library
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumn
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Offset
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec
+                      , HaskellWorks.Data.FromByteString
                       , HaskellWorks.Data.Json.Final.Tokenize
                       , HaskellWorks.Data.Json.Final.Tokenize.Internal
                       , HaskellWorks.Data.Json.Succinct
                       , HaskellWorks.Data.Json.Succinct.Cursor
+                      , HaskellWorks.Data.Json.Succinct.Cursor.JsonInterestBits
                       , HaskellWorks.Data.Json.Succinct.Transform
                       , HaskellWorks.Data.Json.Token
                       , HaskellWorks.Data.Json.Tokenize.Parsec
@@ -75,8 +77,8 @@ library
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
+                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Native
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Positioning
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Storable

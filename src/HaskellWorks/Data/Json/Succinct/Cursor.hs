@@ -10,15 +10,15 @@ import qualified Data.ByteString                                            as B
 import qualified Data.ByteString.Char8                                      as BSC
 import           Data.ByteString.Internal                                   as BSI
 import           Data.Char
-import           Data.Conduit
 import           Data.String
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           Foreign.ForeignPtr
 import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.Bits.FromBools
-import           HaskellWorks.Data.Conduit.Json
+import           HaskellWorks.Data.FromByteString
 import           HaskellWorks.Data.Json.Final.Tokenize.Internal
+import           HaskellWorks.Data.Json.Succinct.Cursor.JsonInterestBits
 import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens                  as BP
@@ -26,13 +26,9 @@ import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           HaskellWorks.Data.Vector.VectorLike
-import           HaskellWorks.Function
 
 class HasJsonCursorType k where
   jsonCursorType :: k -> JsonCursorType
-
-class FromByteString a where
-  fromByteString :: ByteString -> a
 
 class FromForeignRegion a where
   fromForeignRegion :: (ForeignPtr Word8, Int, Int) -> a
@@ -64,12 +60,6 @@ instance IsString (JsonCursor String (BitShown [Bool]) (SimpleBalancedParens [Bo
     }
     where bs          = BSC.pack s :: BS.ByteString
           interests'  = jsonToInterestBits [bs]
-
-applyToMultipleOf :: (BS.ByteString -> BS.ByteString) -> BS.ByteString -> Count -> BS.ByteString
-applyToMultipleOf f bs n = (f `applyN` fromIntegral ((n - (fromIntegral (BS.length bs) `mod` n)) `mod` n)) bs
-
-jsonBsToInterestBs :: ByteString -> ByteString
-jsonBsToInterestBs textBS = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
 
 jsonCursorType' :: Char -> JsonCursorType
 jsonCursorType' c = case c of
@@ -128,35 +118,10 @@ depth k = BP.depth (balancedParens k) (cursorRank k)
 subtreeSize :: BalancedParens u => JsonCursor t v u -> Count
 subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
 
-genInterest :: ByteString -> Maybe (Word8, ByteString)
-genInterest bs  = if BS.null bs
-  then Nothing
-  else Just (BS.head bs, BS.tail bs)
-
-newtype JsonInterestBits a = JsonInterestBits a
-
-getJsonInterestBits :: JsonInterestBits a -> a
-getJsonInterestBits (JsonInterestBits a) = a
-
 newtype JsonBalancedParens a = JsonBalancedParens a
 
 getJsonBalancedParens :: JsonBalancedParens a -> a
 getJsonBalancedParens (JsonBalancedParens a) = a
-
-instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word8))) where
-  fromByteString textBS = JsonInterestBits (BitShown (DVS.unfoldr genInterest (jsonBsToInterestBs textBS)))
-
-instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word16))) where
-  fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldr genInterest interestBS')))
-    where interestBS' = applyToMultipleOf (`BS.snoc` 0) (jsonBsToInterestBs textBS) 2
-
-instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word32))) where
-  fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldr genInterest interestBS')))
-    where interestBS' = applyToMultipleOf (`BS.snoc` 0) (jsonBsToInterestBs textBS) 4
-
-instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word64))) where
-  fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldr genInterest interestBS')))
-    where interestBS' = applyToMultipleOf (`BS.snoc` 0) (jsonBsToInterestBs textBS) 8
 
 instance FromByteString (JsonBalancedParens (SimpleBalancedParens (DVS.Vector Word8))) where
   fromByteString textBS = JsonBalancedParens (SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])))
