@@ -40,7 +40,7 @@ getSimple :: Simple a -> a
 getSimple (Simple a) = a
 
 instance BitShow a => P.Show (Simple a) where
-  show (Simple bs) = toBitString bs
+  show (Simple bs) = bitShow bs
 
 instance TestBit (Simple (DV.Vector Word8)) where
   Simple v .?. n = case n `P.quotRem` endPosition (v !!! 0) of

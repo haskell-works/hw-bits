@@ -30,7 +30,7 @@ instance Functor SimpleBalancedParens where
   fmap f (SimpleBalancedParens a) = SimpleBalancedParens (f a)
 
 instance BitShow a => Show (SimpleBalancedParens a) where
-  show = toBitString
+  show = bitShow
 
 closeAt :: TestBit a => a -> Count -> Bool
 closeAt v c = not (v .?. lastPositionOf c)

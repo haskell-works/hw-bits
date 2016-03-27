@@ -24,7 +24,7 @@ import           Test.QuickCheck
 newtype ShowVector a = ShowVector a deriving (Eq, BitShow)
 
 instance BitShow a => Show (ShowVector a) where
-  show = toBitString
+  show = bitShow
 
 vectorSizedBetween :: Int -> Int -> Gen (ShowVector (DVS.Vector Word64))
 vectorSizedBetween a b = do

@@ -8,7 +8,7 @@
 -- Succinct operations.
 module HaskellWorks.Data.Bits.BitShow
   ( BitShow(..)
-  , toBitString
+  , bitShow
   ) where
 
 import qualified Data.Vector                    as DV
@@ -94,5 +94,5 @@ instance BitShow (DVS.Vector Word32) where
 instance BitShow (DVS.Vector Word64) where
   bitShows = bitShows . DVS.toList
 
-toBitString :: BitShow a => a -> String
-toBitString a = bitShows a ""
+bitShow :: BitShow a => a -> String
+bitShow a = bitShows a ""

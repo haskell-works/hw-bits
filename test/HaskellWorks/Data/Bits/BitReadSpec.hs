@@ -38,11 +38,11 @@ spec = describe "HaskellWorks.Data.BitReadSpec" $ do
     let v = bitRead "" :: Maybe (DV.Vector Word8) in
     v `shouldBe` Just (DV.fromList [])
   it "bitShow (8 :: Word8)" $
-    let bs = toBitString (8 :: Word8) in
+    let bs = bitShow (8 :: Word8) in
     bs `shouldBe` "00010000"
   it "bitShow (8 :: Word64)" $
-    let bs = toBitString (8 :: Word64) in
+    let bs = bitShow (8 :: Word64) in
     bs `shouldBe` "00010000 00000000 00000000 00000000 00000000 00000000 00000000 00000000"
   it "bitShow [0x0102040810204080 :: Word64]" $
-    let bs = toBitString [0x0102040810204080 :: Word64] in
+    let bs = bitShow [0x0102040810204080 :: Word64] in
     bs `shouldBe` "00000001 00000010 00000100 00001000 00010000 00100000 01000000 10000000"

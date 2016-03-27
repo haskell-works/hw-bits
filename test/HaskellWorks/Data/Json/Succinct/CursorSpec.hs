@@ -97,10 +97,10 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
     cursorText cursor8 `shouldBe` cursorText cursor16
     cursorText cursor8 `shouldBe` cursorText cursor32
     cursorText cursor8 `shouldBe` cursorText cursor64
-    let ic8   = toBitString $ interests cursor8
-    let ic16  = toBitString $ interests cursor16
-    let ic32  = toBitString $ interests cursor32
-    let ic64  = toBitString $ interests cursor64
+    let ic8   = bitShow $ interests cursor8
+    let ic16  = bitShow $ interests cursor16
+    let ic32  = bitShow $ interests cursor32
+    let ic64  = bitShow $ interests cursor64
     ic16 `shouldBeginWith` ic8
     ic32 `shouldBeginWith` ic16
     ic64 `shouldBeginWith` ic32
