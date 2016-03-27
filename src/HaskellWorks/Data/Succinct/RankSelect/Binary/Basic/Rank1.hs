@@ -1,4 +1,6 @@
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE StandaloneDeriving         #-}
 
 module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
     ( Rank1(..)
@@ -7,6 +9,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import qualified Data.Vector                               as DV
 import qualified Data.Vector.Storable                      as DVS
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.ElemFixedBitSize
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
@@ -18,6 +21,8 @@ import           Prelude                                   as P
 
 class Rank1 v where
   rank1 :: v -> Count -> Count
+
+deriving instance Rank1 a => Rank1 (BitShown a)
 
 instance Rank1 Word8 where
   rank1 _ 0  = 0

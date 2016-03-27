@@ -1,4 +1,6 @@
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE StandaloneDeriving         #-}
 
 module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
     ( Select1(..)
@@ -7,6 +9,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import qualified Data.Vector                               as DV
 import qualified Data.Vector.Storable                      as DVS
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.ElemFixedBitSize
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
@@ -18,6 +21,8 @@ import           Prelude                                   as P
 
 class Select1 v where
   select1 :: v -> Count -> Count
+
+deriving instance Select1 a => Select1 (BitShown a)
 
 -- TODO: Implement NOT interms of select for word-16
 instance Select1 Word8 where

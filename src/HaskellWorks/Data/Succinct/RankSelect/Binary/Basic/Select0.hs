@@ -1,4 +1,6 @@
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE StandaloneDeriving         #-}
 
 module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
     ( Select0(..)
@@ -7,6 +9,7 @@ module HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
 import qualified Data.Vector                                                as DV
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
+import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.ElemFixedBitSize
 import           HaskellWorks.Data.Bits.PopCount.PopCount0
@@ -18,6 +21,8 @@ import           HaskellWorks.Data.Vector.VectorLike
 
 class Select0 v where
   select0 :: v -> Count -> Count
+
+deriving instance Select0 a => Select0 (BitShown a)
 
 -- TODO: Implement NOT in terms of select for word-16
 instance Select0 Word8 where

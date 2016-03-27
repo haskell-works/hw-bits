@@ -81,7 +81,6 @@ library
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Positioning
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Storable
                       , HaskellWorks.Data.Succinct.RankSelect.Internal
-                      , HaskellWorks.Data.Succinct.RankSelect.Simple
                       , HaskellWorks.Data.Vector.BoxedVectorLike
                       , HaskellWorks.Data.Vector.Storable.ByteString
                       , HaskellWorks.Data.Vector.StorableVectorLike

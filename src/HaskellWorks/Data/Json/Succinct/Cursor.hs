@@ -15,6 +15,7 @@ import           Data.String
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
 import           Foreign.ForeignPtr
+import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.Bits.FromBools
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Json.Final.Tokenize.Internal
@@ -24,7 +25,6 @@ import           HaskellWorks.Data.Succinct.BalancedParens                  as B
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
-import           HaskellWorks.Data.Succinct.RankSelect.Simple
 import           HaskellWorks.Data.Vector.VectorLike
 import           HaskellWorks.Function
 
@@ -54,13 +54,13 @@ data JsonCursor t v w = JsonCursor
   }
   deriving (Eq, Show)
 
-instance IsString (JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])) where
-  fromString :: String -> JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])
+instance IsString (JsonCursor String (BitShown [Bool]) (SimpleBalancedParens [Bool])) where
+  fromString :: String -> JsonCursor String (BitShown [Bool]) (SimpleBalancedParens [Bool])
   fromString s = JsonCursor
     { cursorText      = s
     , cursorRank      = 1
     , balancedParens  = SimpleBalancedParens (jsonToInterestBalancedParens [bs])
-    , interests       = Simple interests'
+    , interests       = BitShown interests'
     }
     where bs          = BSC.pack s :: BS.ByteString
           interests'  = jsonToInterestBits [bs]
@@ -107,19 +107,19 @@ jsonTokenAt k = case ABC.parse parseJsonToken (vDrop (toCount (jsonCursorPos k))
   ABC.Partial _   -> error "Failed to parse token in cursor"
   ABC.Done    _ r -> r
 
-instance HasJsonCursorType (JsonCursor String (Simple [Bool]) (SimpleBalancedParens [Bool])) where
+instance HasJsonCursorType (JsonCursor String (BitShown [Bool]) (SimpleBalancedParens [Bool])) where
   jsonCursorType = jsonCursorType' . jsonCursorElemAt
 
-instance HasJsonCursorType (JsonCursor BS.ByteString (Simple (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
+instance HasJsonCursorType (JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
   jsonCursorType = jsonCursorType' . chr . fromIntegral . jsonCursorElemAt
 
-instance HasJsonCursorType (JsonCursor BS.ByteString (Simple (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))) where
+instance HasJsonCursorType (JsonCursor BS.ByteString (BitShown (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))) where
   jsonCursorType = jsonCursorType' . chr . fromIntegral . jsonCursorElemAt
 
-instance HasJsonCursorType (JsonCursor BS.ByteString (Simple (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))) where
+instance HasJsonCursorType (JsonCursor BS.ByteString (BitShown (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))) where
   jsonCursorType = jsonCursorType' . chr . fromIntegral . jsonCursorElemAt
 
-instance HasJsonCursorType (JsonCursor BS.ByteString (Simple (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
+instance HasJsonCursorType (JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
   jsonCursorType = jsonCursorType' . chr . fromIntegral . jsonCursorElemAt
 
 firstChild :: JsonCursor t v u -> JsonCursor t v u
@@ -137,11 +137,11 @@ depth k = BP.depth (balancedParens k) (cursorRank k)
 subtreeSize :: BalancedParens u => JsonCursor t v u -> Count
 subtreeSize k = BP.subtreeSize (balancedParens k) (cursorRank k)
 
-instance FromByteString (JsonCursor BS.ByteString (Simple (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
-  fromByteString :: ByteString -> JsonCursor BS.ByteString (Simple (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))
+instance FromByteString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
+  fromByteString :: ByteString -> JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))
   fromByteString textBS = JsonCursor
     { cursorText     = textBS
-    , interests      = Simple interestsV
+    , interests      = BitShown interestsV
     , balancedParens = SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS]))
     , cursorRank     = 1
     }
@@ -150,13 +150,13 @@ instance FromByteString (JsonCursor BS.ByteString (Simple (DVS.Vector Word8)) (S
             then Nothing
             else Just (BS.head bs, BS.tail bs)
 
-instance FromByteString (JsonCursor BS.ByteString (Simple (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))) where
-  fromByteString :: ByteString -> JsonCursor BS.ByteString (Simple (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))
+instance FromByteString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))) where
+  fromByteString :: ByteString -> JsonCursor BS.ByteString (BitShown (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))
   fromByteString textBS = JsonCursor
     { cursorText      = textBS
     , cursorRank      = 1
     , balancedParens  = SimpleBalancedParens bpV
-    , interests       = Simple interestsV
+    , interests       = BitShown interestsV
     }
     where interestBS'      = applyToMultipleOf (`BS.snoc` 0) (jsonBsToInterestBs textBS) 2
           interestsV       = DVS.unsafeCast (DVS.unfoldr genInterest interestBS') :: DVS.Vector Word16
@@ -165,13 +165,13 @@ instance FromByteString (JsonCursor BS.ByteString (Simple (DVS.Vector Word16)) (
             else Just (BS.head bs, BS.tail bs)
           bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
 
-instance FromByteString (JsonCursor BS.ByteString (Simple (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))) where
-  fromByteString :: ByteString -> JsonCursor BS.ByteString (Simple (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))
+instance FromByteString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))) where
+  fromByteString :: ByteString -> JsonCursor BS.ByteString (BitShown (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))
   fromByteString textBS = JsonCursor
     { cursorText      = textBS
     , cursorRank      = 1
     , balancedParens  = SimpleBalancedParens bpV
-    , interests       = Simple interestsV
+    , interests       = BitShown interestsV
     }
     where interestBS'      = applyToMultipleOf (`BS.snoc` 0) (jsonBsToInterestBs textBS) 4
           interestsV       = DVS.unsafeCast (DVS.unfoldr genInterest interestBS') :: DVS.Vector Word32
@@ -180,13 +180,13 @@ instance FromByteString (JsonCursor BS.ByteString (Simple (DVS.Vector Word32)) (
             else Just (BS.head bs, BS.tail bs)
           bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
 
-instance FromByteString (JsonCursor BS.ByteString (Simple (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
-  fromByteString :: ByteString -> JsonCursor BS.ByteString (Simple (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
+instance FromByteString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
+  fromByteString :: ByteString -> JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
   fromByteString textBS = JsonCursor
     { cursorText      = textBS
     , cursorRank      = 1
     , balancedParens  = SimpleBalancedParens bpV
-    , interests       = Simple interestsV
+    , interests       = BitShown interestsV
     }
     where interestBS'      = applyToMultipleOf (`BS.snoc` 0) (jsonBsToInterestBs textBS) 8
           interestsV       = DVS.unsafeCast (DVS.unfoldr genInterest interestBS') :: DVS.Vector Word64
@@ -195,26 +195,26 @@ instance FromByteString (JsonCursor BS.ByteString (Simple (DVS.Vector Word64)) (
             else Just (BS.head bs, BS.tail bs)
           bpV             = DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])
 
-instance FromForeignRegion (JsonCursor BS.ByteString (Simple (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
+instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
   fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
 
-instance FromForeignRegion (JsonCursor BS.ByteString (Simple (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))) where
+instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))) where
   fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
 
-instance FromForeignRegion (JsonCursor BS.ByteString (Simple (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))) where
+instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))) where
   fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
 
-instance FromForeignRegion (JsonCursor BS.ByteString (Simple (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
+instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
   fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
 
-instance IsString (JsonCursor BS.ByteString (Simple (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
+instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
   fromString = fromByteString . BSC.pack
 
-instance IsString (JsonCursor BS.ByteString (Simple (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))) where
+instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))) where
   fromString = fromByteString . BSC.pack
 
-instance IsString (JsonCursor BS.ByteString (Simple (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))) where
+instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))) where
   fromString = fromByteString . BSC.pack
 
-instance IsString (JsonCursor BS.ByteString (Simple (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
+instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
   fromString = fromByteString . BSC.pack
