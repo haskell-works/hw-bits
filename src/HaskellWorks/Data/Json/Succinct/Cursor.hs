@@ -133,44 +133,51 @@ genInterest bs  = if BS.null bs
   then Nothing
   else Just (BS.head bs, BS.tail bs)
 
-instance FromByteString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
-  fromByteString :: ByteString -> JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))
-  fromByteString textBS = JsonCursor
-    { cursorText      = textBS
-    , interests       = BitShown (DVS.unfoldr genInterest (jsonBsToInterestBs textBS))
-    , balancedParens  = SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS]))
-    , cursorRank      = 1
-    }
+newtype JsonInterestBits a = JsonInterestBits a
 
-instance FromByteString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))) where
-  fromByteString :: ByteString -> JsonCursor BS.ByteString (BitShown (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))
-  fromByteString textBS = JsonCursor
-    { cursorText      = textBS
-    , cursorRank      = 1
-    , balancedParens  = SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS]))
-    , interests       = BitShown (DVS.unsafeCast (DVS.unfoldr genInterest interestBS'))
-    }
+getJsonInterestBits :: JsonInterestBits a -> a
+getJsonInterestBits (JsonInterestBits a) = a
+
+newtype JsonBalancedParens a = JsonBalancedParens a
+
+getJsonBalancedParens :: JsonBalancedParens a -> a
+getJsonBalancedParens (JsonBalancedParens a) = a
+
+instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word8))) where
+  fromByteString textBS = JsonInterestBits (BitShown (DVS.unfoldr genInterest (jsonBsToInterestBs textBS)))
+
+instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word16))) where
+  fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldr genInterest interestBS')))
     where interestBS' = applyToMultipleOf (`BS.snoc` 0) (jsonBsToInterestBs textBS) 2
 
-instance FromByteString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))) where
-  fromByteString :: ByteString -> JsonCursor BS.ByteString (BitShown (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))
-  fromByteString textBS = JsonCursor
-    { cursorText      = textBS
-    , cursorRank      = 1
-    , balancedParens  = SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS]))
-    , interests       = BitShown (DVS.unsafeCast (DVS.unfoldr genInterest interestBS'))
-    }
+instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word32))) where
+  fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldr genInterest interestBS')))
     where interestBS' = applyToMultipleOf (`BS.snoc` 0) (jsonBsToInterestBs textBS) 4
 
-instance FromByteString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
-  fromByteString :: ByteString -> JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
+instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word64))) where
+  fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldr genInterest interestBS')))
+    where interestBS' = applyToMultipleOf (`BS.snoc` 0) (jsonBsToInterestBs textBS) 8
+
+instance FromByteString (JsonBalancedParens (SimpleBalancedParens (DVS.Vector Word8))) where
+  fromByteString textBS = JsonBalancedParens (SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])))
+
+instance FromByteString (JsonBalancedParens (SimpleBalancedParens (DVS.Vector Word16))) where
+  fromByteString textBS = JsonBalancedParens (SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])))
+
+instance FromByteString (JsonBalancedParens (SimpleBalancedParens (DVS.Vector Word32))) where
+  fromByteString textBS = JsonBalancedParens (SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])))
+
+instance FromByteString (JsonBalancedParens (SimpleBalancedParens (DVS.Vector Word64))) where
+  fromByteString textBS = JsonBalancedParens (SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS])))
+
+instance  (FromByteString (JsonInterestBits a), FromByteString (JsonBalancedParens b))
+          => FromByteString (JsonCursor BS.ByteString a b) where
   fromByteString textBS = JsonCursor
     { cursorText      = textBS
+    , interests       = getJsonInterestBits (fromByteString textBS)
+    , balancedParens  = getJsonBalancedParens (fromByteString textBS)
     , cursorRank      = 1
-    , balancedParens  = SimpleBalancedParens (DVS.unfoldr fromBools (jsonToInterestBalancedParens [textBS]))
-    , interests       = BitShown (DVS.unsafeCast (DVS.unfoldr genInterest interestBS'))
     }
-    where interestBS' = applyToMultipleOf (`BS.snoc` 0) (jsonBsToInterestBs textBS) 8
 
 instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
   fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
