@@ -14,6 +14,7 @@ import qualified Data.Vector.Storable                                       as D
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitShow
 import           HaskellWorks.Data.Bits.BitShown
+import           HaskellWorks.Data.FromForeignRegion
 import           HaskellWorks.Data.Json.Succinct.Cursor                     as C
 import           HaskellWorks.Data.Json.Succinct.Cursor.Internal
 import           HaskellWorks.Data.Json.Succinct.Cursor.JsonCursorType

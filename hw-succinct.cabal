@@ -56,6 +56,7 @@ library
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Offset
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec
                       , HaskellWorks.Data.FromByteString
+                      , HaskellWorks.Data.FromForeignRegion
                       , HaskellWorks.Data.Json.Final.Tokenize
                       , HaskellWorks.Data.Json.Final.Tokenize.Internal
                       , HaskellWorks.Data.Json.Succinct

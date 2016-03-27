@@ -1,8 +1,3 @@
-{-# LANGUAGE FlexibleContexts      #-}
-{-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE InstanceSigs          #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-
 module HaskellWorks.Data.FromByteString
   ( FromByteString(..)
   ) where

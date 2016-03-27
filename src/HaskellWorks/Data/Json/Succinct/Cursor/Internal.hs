@@ -9,11 +9,14 @@ module HaskellWorks.Data.Json.Succinct.Cursor.Internal
 
 import qualified Data.ByteString                                           as BS
 import qualified Data.ByteString.Char8                                     as BSC
+import           Data.ByteString.Internal                                  as BSI
 import           Data.String
 import qualified Data.Vector.Storable                                      as DVS
 import           Data.Word
+import           Foreign.ForeignPtr
 import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.FromByteString
+import           HaskellWorks.Data.FromForeignRegion
 import           HaskellWorks.Data.Json.Succinct.Cursor.JsonBalancedParens
 import           HaskellWorks.Data.Json.Succinct.Cursor.JsonInterestBits
 import           HaskellWorks.Data.Json.Succinct.Transform
@@ -59,3 +62,16 @@ instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word32)) (Simp
 
 instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
   fromString = fromByteString . BSC.pack
+
+instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
+  fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
+
+instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))) where
+  fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
+
+instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32))) where
+  fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
+
+instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
+  fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
+
