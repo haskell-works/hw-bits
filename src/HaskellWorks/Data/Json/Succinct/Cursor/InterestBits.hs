@@ -8,15 +8,16 @@ module HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
   , getJsonInterestBits
   ) where
 
-import qualified Data.ByteString                  as BS
+import qualified Data.ByteString                                       as BS
 import           Data.ByteString.Internal
 import           Data.Conduit
-import qualified Data.Vector.Storable             as DVS
+import qualified Data.Vector.Storable                                  as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.FromByteString
 import           HaskellWorks.Data.Positioning
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
 import           HaskellWorks.Function
 
 newtype JsonInterestBits a = JsonInterestBits a
@@ -49,3 +50,6 @@ instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word32))) where
 instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word64))) where
   fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldr genInterest interestBS')))
     where interestBS' = applyToMultipleOf (`BS.snoc` 0) (jsonBsToInterestBs textBS) 8
+
+instance FromByteString (JsonInterestBits Poppy512) where
+  fromByteString = JsonInterestBits . makePoppy512 . bitShown . getJsonInterestBits . fromByteString
