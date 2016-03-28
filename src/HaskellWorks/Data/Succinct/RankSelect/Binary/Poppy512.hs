@@ -19,7 +19,7 @@ import           HaskellWorks.Data.Vector.VectorLike
 data Poppy512 = Poppy512
   { poppy512Bits  :: DVS.Vector Word64
   , poppy512Index :: DVS.Vector Word64
-  } deriving Show
+  } deriving (Eq, Show)
 
 makePoppy512 :: DVS.Vector Word64 -> Poppy512
 makePoppy512 v = Poppy512

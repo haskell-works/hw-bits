@@ -22,6 +22,7 @@ import           HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
 import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens             as BP
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
 
 data JsonCursor t v w = JsonCursor
   { cursorText     :: t
@@ -63,6 +64,9 @@ instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word32)) (Simp
 instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
   fromString = fromByteString . BSC.pack
 
+instance IsString (JsonCursor BS.ByteString Poppy512 (SimpleBalancedParens (DVS.Vector Word64))) where
+  fromString = fromByteString . BSC.pack
+
 instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
   fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
 
@@ -73,5 +77,8 @@ instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word3
   fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
 
 instance FromForeignRegion (JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))) where
+  fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
+
+instance FromForeignRegion (JsonCursor BS.ByteString Poppy512 (SimpleBalancedParens (DVS.Vector Word64))) where
   fromForeignRegion (fptr, offset, size) = fromByteString (BSI.fromForeignPtr (castForeignPtr fptr) offset size)
 

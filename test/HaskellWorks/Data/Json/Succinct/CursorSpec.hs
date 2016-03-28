@@ -22,6 +22,7 @@ import           HaskellWorks.Data.Succinct.BalancedParens.Simple
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
+import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
 import           System.IO.MMap
 import           Test.Hspec
 
@@ -90,6 +91,7 @@ spec = describe "HaskellWorks.Data.Json.Succinct.CursorSpec" $ do
   genSpec "DVS.Vector Word16" (undefined :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16)))
   genSpec "DVS.Vector Word32" (undefined :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word32)) (SimpleBalancedParens (DVS.Vector Word32)))
   genSpec "DVS.Vector Word64" (undefined :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64)))
+  genSpec "Poppy512"          (undefined :: JsonCursor BS.ByteString Poppy512 (SimpleBalancedParens (DVS.Vector Word64)))
   it "Loads same Json consistentally from different backing vectors" $ do
     let cursor8   = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))
     let cursor16  = "{\n    \"widget\": {\n        \"debug\": \"on\"  } }" :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word16)) (SimpleBalancedParens (DVS.Vector Word16))
@@ -111,14 +113,12 @@ shouldBeginWith as bs = take (length bs) as `shouldBe` bs
 
 genSpec :: forall t u.
   ( Eq                t
-  , BitShow          t
-  , Select1           t
   , Show              t
+  , Select1           t
   , Eq                u
-  , BitShow          u
+  , Show              u
   , Rank0             u
   , Rank1             u
-  , Show              u
   , BP.BalancedParens u
   , FromForeignRegion (JsonCursor BS.ByteString t u)
   , IsString          (JsonCursor BS.ByteString t u)
