@@ -63,6 +63,16 @@ Run the following in the shell:
          296 (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/78mbs.json" ReadOnly Nothing
          306 let !cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString Poppy512 (SimpleBalancedParens (DVS.Vector Word64))
 
+## Examples
+
+    import Foreign
+    import qualified Data.Vector.Storable as DVS
+    import qualified Data.ByteString as BS
+    import System.IO.MMap
+    import Data.Word
+    (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/78mbs.json" ReadOnly Nothing
+    let !cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
+
 ## References
 * [Original Pull Request](https://github.com/snoyberg/conduit/pull/244)
 * [Typed Tagless Final Interpreters](http://okmij.org/ftp/tagless-final/course/lecture.pdf)
