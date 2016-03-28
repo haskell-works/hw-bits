@@ -13,10 +13,10 @@ import           Data.Typeable
 import qualified Data.Vector                                                as DV
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
-import           HaskellWorks.Data.Arbitrary.Count
 import           HaskellWorks.Data.Bits.BitRead
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
+import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
 import           Test.Hspec
@@ -104,16 +104,19 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
   genSelect1UpTo32Spec (undefined :: DVS.Vector Word64)
   describe "For Word64" $ do
     it "rank1 for Word16 and Word64 should give same answer for bits 0-7" $ property $
-      \(Count_0_8  i) (w :: Word8 ) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
+      forAll (choose (0, 8)) $ \(i :: Count) (w :: Word8) ->
+        rank1 w i == rank1 (fromIntegral w :: Word64) i
     it "rank1 for Word16 and Word64 should give same answer for bits 0-15" $ property $
-      \(Count_0_16 i) (w :: Word16) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
+      forAll (choose (0, 16)) $ \(i :: Count) (w :: Word16) ->
+        rank1 w i == rank1 (fromIntegral w :: Word64) i
     it "rank1 for Word32 and Word64 should give same answer for bits 0-31" $ property $
-      \(Count_0_32 i) (w :: Word32) -> rank1 w i == rank1 (fromIntegral w :: Word64) i
+      forAll (choose (0, 32)) $ \(i :: Count) (w :: Word32) ->
+        rank1 w i == rank1 (fromIntegral w :: Word64) i
     it "rank1 for Word32 and Word64 should give same answer for bits 32-64" $ property $
-      \(Count_0_32 i) (v :: Word32) (w :: Word32) ->
+      forAll (choose (0, 32)) $ \(i :: Count) (v :: Word32) (w :: Word32) ->
         let v64 = fromIntegral v :: Word64 in
         let w64 = fromIntegral w :: Word64 in
         rank1 v i + popCount1 w == rank1 ((v64 .<. 32) .|. w64) (i + 32)
     it "rank1 and select1 for Word64 form a galois connection" $ property $
-      \(Count_0_32 i) (w :: Word32) -> 1 <= i && i <= popCount1 w ==>
+      forAll (choose (0, 32)) $ \(i :: Count) (w :: Word32) -> 1 <= i && i <= popCount1 w ==>
         rank1 w (select1 w i) == i && select1 w (rank1 w (fromIntegral i)) <= fromIntegral i
