@@ -13,10 +13,10 @@ import           Data.Typeable
 import qualified Data.Vector                                                as DV
 import qualified Data.Vector.Storable                                       as DVS
 import           Data.Word
-import           HaskellWorks.Data.Arbitrary.Count
 import           HaskellWorks.Data.Bits.BitRead
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.PopCount.PopCount0
+import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
 import           Test.Hspec
@@ -97,17 +97,20 @@ spec = describe "HaskellWorks.Data.Succinct.RankSelect.InternalSpec" $ do
   genSelect0UpTo16Spec (undefined :: DVS.Vector Word64)
   genSelect0UpTo32Spec (undefined :: DVS.Vector Word64)
   describe "For Word8-Word64" $ do
-    it "rank0 for Word16 and Word64 should give same answer for bits 0-7" $ property $
-      \(Count_0_8  i) (w :: Word8 ) -> rank0 w i == rank0 (fromIntegral w :: Word64) i
-    it "rank0 for Word16 and Word64 should give same answer for bits 0-15" $ property $
-      \(Count_0_16 i) (w :: Word16) -> rank0 w i == rank0 (fromIntegral w :: Word64) i
-    it "rank0 for Word32 and Word64 should give same answer for bits 0-31" $ property $
-      \(Count_0_32 i) (w :: Word32) -> rank0 w i == rank0 (fromIntegral w :: Word64) i
-    it "rank0 for Word32 and Word64 should give same answer for bits 32-64" $ property $
-      \(Count_0_32 i) (v :: Word32) (w :: Word32) ->
+    it "rank0 for Word16 and Word64 should give same answer for bits 0-7" $
+      forAll (choose (0, 8)) $ \(i :: Count) (w :: Word8) ->
+        rank0 w i == rank0 (fromIntegral w :: Word64) i
+    it "rank0 for Word16 and Word64 should give same answer for bits 0-15" $
+      forAll (choose (0, 16)) $ \(i :: Count) (w :: Word16) ->
+        rank0 w i == rank0 (fromIntegral w :: Word64) i
+    it "rank0 for Word32 and Word64 should give same answer for bits 0-31" $
+      forAll (choose (0, 32)) $ \(i :: Count) (w :: Word32) ->
+        rank0 w i == rank0 (fromIntegral w :: Word64) i
+    it "rank0 for Word32 and Word64 should give same answer for bits 32-64" $
+      forAll (choose (0, 32)) $ \(i :: Count) (v :: Word32) (w :: Word32) ->
         let v64 = fromIntegral v :: Word64 in
         let w64 = fromIntegral w :: Word64 in
         rank0 v i + popCount0 w == rank0 ((v64 .<. 32) .|. w64) (i + 32)
     it "rank0 and select0 for Word64 form a galois connection" $ property $
-      \(Count_0_32 i) (w :: Word32) -> 1 <= i && i <= popCount0 w ==>
+      forAll (choose (0, 32)) $ \(i :: Count) (w :: Word32) -> 1 <= i && i <= popCount0 w ==>
         rank0 w (select0 w i) == i && select0 w (rank0 w (fromIntegral i)) <= fromIntegral i
