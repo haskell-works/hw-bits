@@ -6,6 +6,8 @@ module HaskellWorks.Data.Json.Final.Tokenize.Internal
     , JsonToken(..)
     , AFP.Parser(..)
     , parseJsonToken
+    , parseJsonTokenString
+    , escapedChar
     ) where
 
 import           Control.Applicative
@@ -38,25 +40,37 @@ hexDigitAlphaUpper = do
 hexDigit :: AFP.Parser t => T.Parser t Int
 hexDigit = hexDigitNumeric <|> hexDigitAlphaLower <|> hexDigitAlphaUpper
 
+verbatimChar :: AFP.Parser t => T.Parser t Char
+verbatimChar  = satisfyChar (BC.notInClass "\"\\") <?> "invalid string character"
+
+escapedChar :: (IsString t, AFP.Parser t) => T.Parser t Char
+escapedChar   = do
+  _ <- string "\\"
+  (   char '"'  >> return '"'  ) <|>
+    ( char 'b'  >> return '\b' ) <|>
+    ( char 'n'  >> return '\n' ) <|>
+    ( char 'f'  >> return '\f' ) <|>
+    ( char 'r'  >> return '\r' ) <|>
+    ( char 't'  >> return '\t' ) <|>
+    ( char '\\' >> return '\\' ) <|>
+    ( char '\'' >> return '\'' ) <|>
+    ( char '/'  >> return '/'  )
+
+escapedCode :: (IsString t, AFP.Parser t) => T.Parser t Char
+escapedCode   = do
+  _ <- string "\\u"
+  a <- hexDigit
+  b <- hexDigit
+  c <- hexDigit
+  d <- hexDigit
+  return $ chr $ a `shift` 24 .|. b `shift` 16 .|. c `shift` 8 .|. d
+
 parseJsonTokenString :: (JsonTokenLike j, AFP.Parser t, Alternative (T.Parser t), IsString t) => T.Parser t j
 parseJsonTokenString = do
   _ <- string "\""
   value <- many (verbatimChar <|> escapedChar <|> escapedCode)
   _ <- string "\""
   return $ jsonTokenString value
-  where
-    verbatimChar  = satisfyChar (BC.notInClass "\"\\") <?> "invalid string character"
-    escapedChar   = string "\\" >> BC.choice (zipWith escapee chars replacements)
-    escapedCode   = do
-      _ <- string "\\u"
-      a <- hexDigit
-      b <- hexDigit
-      c <- hexDigit
-      d <- hexDigit
-      return $ chr $ a `shift` 24 .|. b `shift` 16 .|. c `shift` 8 .|. d
-    escapee c r   = try $ char '\\' >> char c >> return r
-    chars         = [ 'b',  'n',  'f',  'r',  't', '\\', '\'', '/']
-    replacements  = ['\b', '\n', '\f', '\r', '\t', '\\', '\'', '/']
 
 parseJsonTokenBraceL :: (JsonTokenLike j, AFP.Parser t, IsString t) => T.Parser t j
 parseJsonTokenBraceL = string "{" >> return jsonTokenBraceL

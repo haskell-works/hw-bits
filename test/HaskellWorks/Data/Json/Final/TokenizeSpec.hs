@@ -34,6 +34,8 @@ spec = describe "Data.Conduit.Succinct.JsonSpec" $ do
       parseJsonToken' "true " `shouldBe` Right (JsonTokenBoolean True)
     it "string at beginning should produce one bit" $
       parseJsonToken' "\"hello\" " `shouldBe` Right (JsonTokenString "hello")
+    it "quoted string should parse" $
+      parseJsonToken' "\"\\\"\" " `shouldBe` Right (JsonTokenString "\"")
     it "left brace at beginning should produce one bit" $
       parseJsonToken' "{ " `shouldBe` Right JsonTokenBraceL
     it "right brace at beginning should produce one bit" $

@@ -79,6 +79,8 @@ spec = describe "Data.Conduit.Succinct.JsonSpec" $ do
       jsonToBits ["true "] `shouldBe` stringToBits "10000000"
     it "string at beginning should produce one bit" $
       jsonToBits ["\"hello\" "] `shouldBe` stringToBits "10000000"
+    it "string at beginning should produce one bit" $
+      jsonToBits ["\"\\\"\" "] `shouldBe` stringToBits "10000000"
     it "left brace at beginning should produce one bit" $
       jsonToBits ["{ "] `shouldBe` stringToBits "10000000"
     it "right brace at beginning should produce one bit" $
