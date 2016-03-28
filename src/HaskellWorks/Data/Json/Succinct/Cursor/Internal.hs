@@ -25,10 +25,10 @@ import           HaskellWorks.Data.Succinct.BalancedParens             as BP
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
 
 data JsonCursor t v w = JsonCursor
-  { cursorText     :: t
-  , interests      :: v
-  , balancedParens :: w
-  , cursorRank     :: Count
+  { cursorText     :: !t
+  , interests      :: !v
+  , balancedParens :: !w
+  , cursorRank     :: !Count
   }
   deriving (Eq, Show)
 
