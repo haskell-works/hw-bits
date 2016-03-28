@@ -61,7 +61,7 @@ Run the following in the shell:
          296 import System.IO.MMap
          296 import Data.Word
          296 (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/78mbs.json" ReadOnly Nothing
-         306 let !cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (DVS.Vector Word8)
+         306 let !cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString Poppy512 (SimpleBalancedParens (DVS.Vector Word64))
 
 ## References
 * [Original Pull Request](https://github.com/snoyberg/conduit/pull/244)
