@@ -3,7 +3,7 @@
 {-# LANGUAGE InstanceSigs          #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module HaskellWorks.Data.Json.Succinct.Cursor.JsonCursorType
+module HaskellWorks.Data.Json.Succinct.Cursor.CursorType
   ( HasJsonCursorType(..)
   , JsonCursorType(..)
   , jsonCursorPos

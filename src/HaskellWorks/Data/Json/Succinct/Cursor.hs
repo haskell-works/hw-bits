@@ -16,8 +16,8 @@ module HaskellWorks.Data.Json.Succinct.Cursor
 import qualified Data.Attoparsec.ByteString.Char8                           as ABC
 import           Data.ByteString.Internal                                   as BSI
 import           HaskellWorks.Data.Json.Final.Tokenize.Internal
+import           HaskellWorks.Data.Json.Succinct.Cursor.CursorType          as X
 import           HaskellWorks.Data.Json.Succinct.Cursor.Internal            as X
-import           HaskellWorks.Data.Json.Succinct.Cursor.JsonCursorType      as X
 import           HaskellWorks.Data.Positioning
 import qualified HaskellWorks.Data.Succinct.BalancedParens                  as BP
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0

@@ -3,7 +3,7 @@
 {-# LANGUAGE InstanceSigs          #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module HaskellWorks.Data.Json.Succinct.Cursor.JsonInterestBits
+module HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
   ( JsonInterestBits(..)
   , getJsonInterestBits
   ) where

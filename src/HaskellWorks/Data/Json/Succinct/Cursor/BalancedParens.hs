@@ -3,7 +3,7 @@
 {-# LANGUAGE InstanceSigs          #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module HaskellWorks.Data.Json.Succinct.Cursor.JsonBalancedParens
+module HaskellWorks.Data.Json.Succinct.Cursor.BalancedParens
   ( JsonBalancedParens(..)
   , getJsonBalancedParens
   ) where

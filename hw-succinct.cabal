@@ -61,10 +61,10 @@ library
                       , HaskellWorks.Data.Json.Final.Tokenize.Internal
                       , HaskellWorks.Data.Json.Succinct
                       , HaskellWorks.Data.Json.Succinct.Cursor
+                      , HaskellWorks.Data.Json.Succinct.Cursor.BalancedParens
+                      , HaskellWorks.Data.Json.Succinct.Cursor.CursorType
+                      , HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
                       , HaskellWorks.Data.Json.Succinct.Cursor.Internal
-                      , HaskellWorks.Data.Json.Succinct.Cursor.JsonBalancedParens
-                      , HaskellWorks.Data.Json.Succinct.Cursor.JsonCursorType
-                      , HaskellWorks.Data.Json.Succinct.Cursor.JsonInterestBits
                       , HaskellWorks.Data.Json.Succinct.Transform
                       , HaskellWorks.Data.Json.Token
                       , HaskellWorks.Data.Positioning
