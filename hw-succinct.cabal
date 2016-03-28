@@ -82,10 +82,6 @@ library
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Native
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Positioning
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9.Storable
                       , HaskellWorks.Data.Succinct.RankSelect.Internal
                       , HaskellWorks.Data.Vector.BoxedVectorLike
                       , HaskellWorks.Data.Vector.Storable.ByteString
@@ -136,7 +132,6 @@ test-suite hw-succinct-test
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1Spec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.BasicGen
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512Spec
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Rank9Spec
                       , HaskellWorks.Data.Succinct.SimpleSpec
   build-depends:        base
                       , attoparsec                      >= 0.10
