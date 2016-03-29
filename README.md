@@ -68,10 +68,17 @@ Run the following in the shell:
     import Foreign
     import qualified Data.Vector.Storable as DVS
     import qualified Data.ByteString as BS
+    import qualified Data.ByteString.Internal as BSI
     import System.IO.MMap
     import Data.Word
-    (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/78mbs.json" ReadOnly Nothing
+    import System.CPUTime
+    (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/part80.json" ReadOnly Nothing
+    start <- getCPUTime
     let !cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
+    end   <- getCPUTime
+    let !bs = BSI.fromForeignPtr (castForeignPtr fptr) offset size
+    let !x = jsonBsToInterestBs bs
+    
 
 ## References
 * [Original Pull Request](https://github.com/snoyberg/conduit/pull/244)

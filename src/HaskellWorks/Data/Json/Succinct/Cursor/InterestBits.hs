@@ -6,6 +6,8 @@
 module HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
   ( JsonInterestBits(..)
   , getJsonInterestBits
+  , jsonBsToInterestBs
+  , chunkup
   ) where
 
 import qualified Data.ByteString                                       as BS
@@ -28,8 +30,14 @@ getJsonInterestBits (JsonInterestBits a) = a
 applyToMultipleOf :: (ByteString -> ByteString) -> ByteString -> Count -> ByteString
 applyToMultipleOf f bs n = (f `applyN` fromIntegral ((n - (fromIntegral (BS.length bs) `mod` n)) `mod` n)) bs
 
+chunkup :: ByteString -> [ByteString]
+chunkup bs = if BS.length bs == 0
+  then []
+  else case BS.splitAt 1024 bs of
+    (as, zs) -> as : chunkup zs
+
 jsonBsToInterestBs :: ByteString -> ByteString
-jsonBsToInterestBs textBS = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
+jsonBsToInterestBs textBS = BS.concat $ runListConduit (chunkup textBS) (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
 
 genInterest :: ByteString -> Maybe (Word8, ByteString)
 genInterest bs  = if BS.null bs
