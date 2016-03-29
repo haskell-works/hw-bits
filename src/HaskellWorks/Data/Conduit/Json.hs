@@ -7,6 +7,7 @@ import           Control.Monad.Trans.Resource                         (MonadThro
 import           Data.Bits
 import           Data.ByteString                                      as BS
 import           Data.ByteString.Internal                             as BS
+import           Data.Char
 import           Data.Conduit
 import           Data.Conduit.List                                    as CL
 import           Data.Int
@@ -36,6 +37,39 @@ markerToByteString = markerToByteString' 0 0
 
 textToJsonToken :: MonadThrow m => Conduit BS.ByteString m (ParseDelta Offset, JsonToken)
 textToJsonToken = conduitParser (Offset 0) parseJsonToken
+
+unescape' :: MonadThrow m => BS.ByteString -> Conduit BS.ByteString m BS.ByteString
+unescape' rs = do
+  mbs <- await
+  case mbs of
+    Just bs -> do
+      let cs = BS.concat [rs, bs]
+      let ds = fst (unfoldrN (BS.length cs) unescapeByteString cs)
+      yield ds
+      unescape' (BS.drop (BS.length ds) cs)
+    Nothing -> return ()
+
+wBackslash :: Word8
+wBackslash = 92
+
+wUnderscore :: Word8
+wUnderscore = 95
+
+unescapeByteString :: ByteString -> Maybe (Word8, ByteString)
+unescapeByteString bs = case BS.uncons bs of
+  Just (c, cs) -> case BS.uncons cs of
+    Just (d, ds) -> if c /= wBackslash
+      then Just (c, cs)
+      else Just (c, BS.cons wUnderscore ds)
+    Nothing -> if c /= wBackslash
+      then Just (c, cs)
+      else Nothing
+  Nothing -> Nothing
+
+  -- | bslen == 0 = Nothing
+  -- | bslen == 1 = if BS.head bs == wBackslash then Nothing else Just (BS.head bs, BS.tail bs)
+  -- | otherwise  = Nothing
+  -- where bslen = BS.length bs
 
 jsonToken2Markers :: Monad m => Conduit (ParseDelta Offset, JsonToken) m Int64
 jsonToken2Markers = do
