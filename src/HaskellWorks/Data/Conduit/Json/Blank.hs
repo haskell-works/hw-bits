@@ -7,54 +7,12 @@ module HaskellWorks.Data.Conduit.Json.Blank
   ) where
 
 import           Control.Monad
-import           Control.Monad.Trans.Resource (MonadThrow)
-import           Data.ByteString              as BS
-import           Data.Char
+import           Control.Monad.Trans.Resource         (MonadThrow)
+import           Data.ByteString                      as BS
 import           Data.Conduit
 import           Data.Word
-import           Prelude                      as P
-
-wBackslash :: Word8
-wBackslash = 92
-
-wDoubleQuote :: Word8
-wDoubleQuote = 34
-
-wUnderscore :: Word8
-wUnderscore = 95
-
-wSpace :: Word8
-wSpace = 32
-
-wOpenParen :: Word8
-wOpenParen = 40
-
-wCloseParen :: Word8
-wCloseParen = 41
-
-wPlus :: Word8
-wPlus = fromIntegral (ord '+')
-
-we :: Word8
-we = fromIntegral (ord 'e')
-
-wE :: Word8
-wE = fromIntegral (ord 'E')
-
-wDot :: Word8
-wDot = fromIntegral (ord '.')
-
-wMinus :: Word8
-wMinus = fromIntegral (ord '-')
-
-w0 :: Word8
-w0 = fromIntegral (ord '0')
-
-w1 :: Word8
-w1 = fromIntegral (ord '1')
-
-w9 :: Word8
-w9 = fromIntegral (ord '9')
+import           HaskellWorks.Data.Conduit.Json.Words
+import           Prelude                              as P
 
 blankEscapedChars :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 blankEscapedChars = blankEscapedChars' ""
@@ -100,12 +58,6 @@ blankStrings' wasInString = do
         then Just (if isInString then wSpace      else c          , (isInString     , cs))
         else Just (if isInString then wCloseParen else wOpenParen , (not isInString , cs))
       Nothing -> Nothing
-
-isLeadingDigit :: Word8 -> Bool
-isLeadingDigit w = w == wMinus || (w >= w0 && w <= w9)
-
-isTrailingDigit :: Word8 -> Bool
-isTrailingDigit w = w == wPlus || w == wMinus || (w >= w0 && w <= w9) || w == wDot || w == wE || w == we
 
 blankNumbers :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 blankNumbers = blankNumbers' False

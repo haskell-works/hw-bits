@@ -52,6 +52,7 @@ library
                       , HaskellWorks.Data.Bits.PopCount.PopCount1.GHC
                       , HaskellWorks.Data.Conduit.Json
                       , HaskellWorks.Data.Conduit.Json.Blank
+                      , HaskellWorks.Data.Conduit.Json.Words
                       , HaskellWorks.Data.Conduit.List
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Internal
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumn
