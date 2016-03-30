@@ -21,6 +21,12 @@ wOpenParen = fromIntegral (ord '(')
 wCloseParen :: Word8
 wCloseParen = fromIntegral (ord ')')
 
+wOpenBracket :: Word8
+wOpenBracket = fromIntegral (ord '[')
+
+wOpenBrace :: Word8
+wOpenBrace = fromIntegral (ord '{')
+
 wPlus :: Word8
 wPlus = fromIntegral (ord '+')
 
@@ -29,6 +35,15 @@ we = fromIntegral (ord 'e')
 
 wE :: Word8
 wE = fromIntegral (ord 'E')
+
+wf :: Word8
+wf = fromIntegral (ord 'f')
+
+wt :: Word8
+wt = fromIntegral (ord 't')
+
+wn :: Word8
+wn = fromIntegral (ord 'n')
 
 wDot :: Word8
 wDot = fromIntegral (ord '.')

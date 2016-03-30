@@ -4,7 +4,7 @@ module HaskellWorks.Data.Conduit.Json where
 
 import           Control.Monad
 import           Control.Monad.Trans.Resource                         (MonadThrow)
-import           Data.Bits
+import qualified Data.Bits                                            as BITS
 import           Data.ByteString                                      as BS
 import           Data.ByteString.Internal                             as BS
 import           Data.Char
@@ -14,18 +14,64 @@ import           Data.Int
 import           Data.Word
 import           Foreign.Ptr                                          (plusPtr)
 import           Foreign.Storable                                     (Storable (..))
+import           HaskellWorks.Data.Bits.BitWise
+import           HaskellWorks.Data.Conduit.Json.Blank
+import           HaskellWorks.Data.Conduit.Json.Words
 import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec
 import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Offset
 import           HaskellWorks.Data.Json.Final.Tokenize
 import           HaskellWorks.Data.Json.Token
 import           Prelude                                              as P
 
+blankedJsonToInterestBits :: Monad m => BS.ByteString -> Conduit BS.ByteString m BS.ByteString
+blankedJsonToInterestBits rs = do
+  mbs <- await
+  case mbs of
+    Just bs -> do
+      let cs = if BS.length rs /= 0 then BS.concat [rs, bs] else bs
+      let lencs = BS.length cs
+      let (ds, es) = BS.splitAt (lencs `mod` 8) cs
+      let bits = BS.unfoldrN (lencs `div` 8) gen ds
+      blankedJsonToInterestBits es
+    Nothing -> return ()
+  where gen :: ByteString -> Maybe (Word8, ByteString)
+        gen xs = case BS.uncons xs of
+          Just (a, as) -> case BS.uncons as of
+            Just (b, bs) -> case BS.uncons bs of
+              Just (c, cs) -> case BS.uncons cs of
+                Just (d, ds) -> case BS.uncons ds of
+                  Just (e, es) -> case BS.uncons es of
+                    Just (f, fs) -> case BS.uncons fs of
+                      Just (g, gs) -> case BS.uncons gs of
+                        Just (h, hs) -> Just
+                          ( (interesting a .<. 0) .|.
+                            (interesting b .<. 1) .|.
+                            (interesting c .<. 2) .|.
+                            (interesting d .<. 3) .|.
+                            (interesting e .<. 4) .|.
+                            (interesting f .<. 5) .|.
+                            (interesting g .<. 6) .|.
+                            (interesting h .<. 7)
+                          , hs)
+                        Nothing -> error "Shouldn't happen"
+                      Nothing -> error "Shouldn't happen"
+                    Nothing -> error "Shouldn't happen"
+                  Nothing -> error "Shouldn't happen"
+                Nothing -> error "Shouldn't happen"
+              Nothing -> error "Shouldn't happen"
+            Nothing -> error "Shouldn't happen"
+          Nothing -> error "Shouldn't happen"
+        interesting :: Word8 -> Word8
+        interesting w = if w == wOpenBracket || w == wOpenBrace || w == wOpenParen || w == wt || w == wf || w == wn
+          then 1
+          else 0
+
 markerToByteString' :: Monad m => Int64 -> Word8 -> Conduit Int64 m BS.ByteString
 markerToByteString' a v = do
   mo <- await
   case mo of
     Just o -> if o < (a + 8)
-      then markerToByteString' a (bit (fromIntegral (o - a)) .|. v)
+      then markerToByteString' a (BITS.bit (fromIntegral (o - a)) .|. v)
       else do
         yield $ BS.singleton v
         leftover o
@@ -48,12 +94,6 @@ unescape' rs = do
       yield ds
       unescape' (BS.drop (BS.length ds) cs)
     Nothing -> return ()
-
-wBackslash :: Word8
-wBackslash = 92
-
-wUnderscore :: Word8
-wUnderscore = 95
 
 unescapeByteString :: ByteString -> Maybe (Word8, ByteString)
 unescapeByteString bs = case BS.uncons bs of
@@ -118,21 +158,21 @@ bitsToByteString n w = do
   mb <- await
   case mb of
     Just b -> do
-      let v = if b then w .|. bit (fromIntegral (n `mod` 8)) else w
+      let v = if b then w .|. BITS.bit (fromIntegral (n `mod` 8)) else w
       when (n `mod` 8 == 7) (yield $ BS.singleton v)
       bitsToByteString (n + 1) v
     Nothing -> when (w /= 0) (yield $ BS.singleton w)
 
 yieldBitsOfWord8 :: Monad m => Word8 -> Conduit BS.ByteString m Bool
 yieldBitsOfWord8 w = do
-  yield ((w .&. bit 0) /= 0)
-  yield ((w .&. bit 1) /= 0)
-  yield ((w .&. bit 2) /= 0)
-  yield ((w .&. bit 3) /= 0)
-  yield ((w .&. bit 4) /= 0)
-  yield ((w .&. bit 5) /= 0)
-  yield ((w .&. bit 6) /= 0)
-  yield ((w .&. bit 7) /= 0)
+  yield ((w .&. BITS.bit 0) /= 0)
+  yield ((w .&. BITS.bit 1) /= 0)
+  yield ((w .&. BITS.bit 2) /= 0)
+  yield ((w .&. BITS.bit 3) /= 0)
+  yield ((w .&. BITS.bit 4) /= 0)
+  yield ((w .&. BITS.bit 5) /= 0)
+  yield ((w .&. BITS.bit 6) /= 0)
+  yield ((w .&. BITS.bit 7) /= 0)
 
 yieldBitsofWord8s :: Monad m => [Word8] -> Conduit BS.ByteString m Bool
 yieldBitsofWord8s = P.foldr ((>>) . yieldBitsOfWord8) (return ())
@@ -177,14 +217,14 @@ whenM p a = ifM p a (return ())
 packW64 :: Word64 -> ByteString
 packW64 w64 =
     unsafeCreate 8 $ \p -> do
-      poke  p               (fromIntegral ( w64                 .|. 0xff) :: Word8)
-      poke (p `plusPtr` 1)  (fromIntegral ((w64 `shift` (-8 ))  .|. 0xff) :: Word8)
-      poke (p `plusPtr` 2)  (fromIntegral ((w64 `shift` (-16))  .|. 0xff) :: Word8)
-      poke (p `plusPtr` 3)  (fromIntegral ((w64 `shift` (-24))  .|. 0xff) :: Word8)
-      poke (p `plusPtr` 4)  (fromIntegral ((w64 `shift` (-32))  .|. 0xff) :: Word8)
-      poke (p `plusPtr` 5)  (fromIntegral ((w64 `shift` (-40))  .|. 0xff) :: Word8)
-      poke (p `plusPtr` 6)  (fromIntegral ((w64 `shift` (-48))  .|. 0xff) :: Word8)
-      poke (p `plusPtr` 7)  (fromIntegral ((w64 `shift` (-56))  .|. 0xff) :: Word8)
+      poke  p               (fromIntegral ( w64                      .|. 0xff) :: Word8)
+      poke (p `plusPtr` 1)  (fromIntegral ((w64 `BITS.shift` (-8 ))  .|. 0xff) :: Word8)
+      poke (p `plusPtr` 2)  (fromIntegral ((w64 `BITS.shift` (-16))  .|. 0xff) :: Word8)
+      poke (p `plusPtr` 3)  (fromIntegral ((w64 `BITS.shift` (-24))  .|. 0xff) :: Word8)
+      poke (p `plusPtr` 4)  (fromIntegral ((w64 `BITS.shift` (-32))  .|. 0xff) :: Word8)
+      poke (p `plusPtr` 5)  (fromIntegral ((w64 `BITS.shift` (-40))  .|. 0xff) :: Word8)
+      poke (p `plusPtr` 6)  (fromIntegral ((w64 `BITS.shift` (-48))  .|. 0xff) :: Word8)
+      poke (p `plusPtr` 7)  (fromIntegral ((w64 `BITS.shift` (-56))  .|. 0xff) :: Word8)
 
 bsToRank9BS :: Monad m => Word64 -> Conduit BS.ByteString m BS.ByteString
 bsToRank9BS rank = whenM unfinished $ do
@@ -196,14 +236,14 @@ bsToRank9BS rank = whenM unfinished $ do
   v5 <- awaitWord8Or 0
   v6 <- awaitWord8Or 0
   v7 <- awaitWord8Or 0
-  let p0 =       fromIntegral (popCount v0)             :: Word64
-  let p1 = p0 + (fromIntegral (popCount v1) `shift` 9 ) :: Word64
-  let p2 = p1 + (fromIntegral (popCount v2) `shift` 18) :: Word64
-  let p3 = p2 + (fromIntegral (popCount v3) `shift` 27) :: Word64
-  let p4 = p3 + (fromIntegral (popCount v4) `shift` 36) :: Word64
-  let p5 = p4 + (fromIntegral (popCount v5) `shift` 45) :: Word64
-  let p6 = p5 + (fromIntegral (popCount v6) `shift` 54) :: Word64
-  let p7 = p6 + (fromIntegral (popCount v7) `shift` 54) :: Word64
+  let p0 =       fromIntegral (BITS.popCount v0)                  :: Word64
+  let p1 = p0 + (fromIntegral (BITS.popCount v1) `BITS.shift` 9 ) :: Word64
+  let p2 = p1 + (fromIntegral (BITS.popCount v2) `BITS.shift` 18) :: Word64
+  let p3 = p2 + (fromIntegral (BITS.popCount v3) `BITS.shift` 27) :: Word64
+  let p4 = p3 + (fromIntegral (BITS.popCount v4) `BITS.shift` 36) :: Word64
+  let p5 = p4 + (fromIntegral (BITS.popCount v5) `BITS.shift` 45) :: Word64
+  let p6 = p5 + (fromIntegral (BITS.popCount v6) `BITS.shift` 54) :: Word64
+  let p7 = p6 + (fromIntegral (BITS.popCount v7) `BITS.shift` 54) :: Word64
   let newRank = rank + p7
   yield $ packW64 (p0 .|. p1 .|. p2 .|. p3 .|. p4 .|. p5 .|. p6)
   yield $ packW64 newRank
