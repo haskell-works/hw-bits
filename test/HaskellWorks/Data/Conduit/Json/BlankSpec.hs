@@ -24,6 +24,11 @@ whenBlankedNumbersShouldBe original expected = do
   it (show original ++ " when blanked numbers should be " ++ show expected) $ do
     BS.concat (runListConduit [original] blankNumbers) `shouldBe` expected
 
+whenBlankedIdentifiersShouldBe :: BS.ByteString -> BS.ByteString -> Spec
+whenBlankedIdentifiersShouldBe original expected = do
+  it (show original ++ " when blanked identifiers should be " ++ show expected) $ do
+    BS.concat (runListConduit [original] blankIdentifiers) `shouldBe` expected
+
 whenBlankedJsonShouldBe :: BS.ByteString -> BS.ByteString -> Spec
 whenBlankedJsonShouldBe original expected = do
   it (show original ++ " when blanked json should be " ++ show expected) $ do
@@ -31,20 +36,20 @@ whenBlankedJsonShouldBe original expected = do
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Conduit.Json.BlankSpec" $ do
-  describe "Can blank escapes of various strings" $ do
+  describe "Can blank escapes" $ do
     ""          `whenBlankedEscapedShouldBe` ""
     "\\\\"      `whenBlankedEscapedShouldBe` "\\_"
     "\\\\\\"    `whenBlankedEscapedShouldBe` "\\_\\"
     " \\\\\\"   `whenBlankedEscapedShouldBe` " \\_\\"
     " \\n\\\\"  `whenBlankedEscapedShouldBe` " \\_\\_"
-  describe "Can blank strings of various strings" $ do
+  describe "Can blank strings" $ do
     ""              `whenBlankedStringsShouldBe` ""
     "\"\""          `whenBlankedStringsShouldBe` "()"
     "\" \""         `whenBlankedStringsShouldBe` "( )"
     "\" a \""       `whenBlankedStringsShouldBe` "(   )"
     " \"a \" x"     `whenBlankedStringsShouldBe` " (  ) x"
     " \"a\"b\"c\"d" `whenBlankedStringsShouldBe` " ( )b( )d"
-  describe "Can blank numbers of various strings" $ do
+  describe "Can blank numbers" $ do
     ""              `whenBlankedNumbersShouldBe` ""
     "1"             `whenBlankedNumbersShouldBe` "1"
     "11"            `whenBlankedNumbersShouldBe` "10"
@@ -54,6 +59,12 @@ spec = describe "HaskellWorks.Data.Conduit.Json.BlankSpec" $ do
     "10.12E-34 "    `whenBlankedNumbersShouldBe` "100000000 "
     "10.12E-34 12"  `whenBlankedNumbersShouldBe` "100000000 10"
     " 10.12E-34 -1" `whenBlankedNumbersShouldBe` " 100000000 10"
-  describe "Can blank json of various strings" $ do
+  describe "Can blank identifiers" $ do
+    ""              `whenBlankedIdentifiersShouldBe` ""
+    "a"             `whenBlankedIdentifiersShouldBe` "a"
+    "z"             `whenBlankedIdentifiersShouldBe` "z"
+    " Aaa "         `whenBlankedIdentifiersShouldBe` " A__ "
+    " Za def "      `whenBlankedIdentifiersShouldBe` " Z_ d__ "
+  describe "Can blank json" $ do
     ""                                    `whenBlankedJsonShouldBe` ""
     " { \"ff\": 1.0, [\"\", true], null}" `whenBlankedJsonShouldBe` " { (  ): 100, [(), true], null}"

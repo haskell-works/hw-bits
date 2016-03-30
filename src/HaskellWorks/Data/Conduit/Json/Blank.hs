@@ -2,6 +2,7 @@
 
 module HaskellWorks.Data.Conduit.Json.Blank
   ( blankEscapedChars
+  , blankIdentifiers
   , blankNumbers
   , blankStrings
   , blankJson
@@ -81,5 +82,26 @@ blankNumbers' wasInNumber = do
       Just (c, cs)                                    -> Just (c,  (False , cs))
       Nothing                                         -> Nothing
 
+blankIdentifiers :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
+blankIdentifiers = blankIdentifiers' False
+
+blankIdentifiers' :: MonadThrow m => Bool -> Conduit BS.ByteString m BS.ByteString
+blankIdentifiers' wasIdentifier = do
+  mbs <- await
+  case mbs of
+    Just bs -> case unfoldrN (BS.length bs) blankByteString (wasIdentifier, bs) of
+      (cs, Just (nextInIdentifier, _)) -> do
+        yield cs
+        blankStrings' nextInIdentifier
+      (cs, _) -> yield cs
+    Nothing -> return ()
+  where
+    blankByteString :: (Bool, ByteString) -> Maybe (Word8, (Bool, ByteString))
+    blankByteString (isInIdentifier, bs) = case BS.uncons bs of
+      Just (c, cs) | isInIdentifier && isAlphabetic c -> Just (wUnderscore, (True  , cs))
+      Just (c, cs) | isAlphabetic c                   -> Just (c          , (True  , cs))
+      Just (c, cs)                                    -> Just (c          , (False , cs))
+      Nothing                                         -> Nothing
+
 blankJson :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankJson = blankEscapedChars =$= blankStrings =$= blankNumbers
+blankJson = blankEscapedChars =$= blankStrings =$= blankNumbers =$= blankIdentifiers
