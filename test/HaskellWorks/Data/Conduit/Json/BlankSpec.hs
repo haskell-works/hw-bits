@@ -24,6 +24,11 @@ whenBlankedNumbersShouldBe original expected = do
   it (show original ++ " when blanked numbers should be " ++ show expected) $ do
     BS.concat (runListConduit [original] blankNumbers) `shouldBe` expected
 
+whenBlankedJsonShouldBe :: BS.ByteString -> BS.ByteString -> Spec
+whenBlankedJsonShouldBe original expected = do
+  it (show original ++ " when blanked json should be " ++ show expected) $ do
+    BS.concat (runListConduit [original] blankJson) `shouldBe` expected
+
 spec :: Spec
 spec = describe "HaskellWorks.Data.Conduit.Json.BlankSpec" $ do
   describe "Can blank escapes of various strings" $ do
@@ -49,3 +54,6 @@ spec = describe "HaskellWorks.Data.Conduit.Json.BlankSpec" $ do
     "10.12E-34 "    `whenBlankedNumbersShouldBe` "100000000 "
     "10.12E-34 12"  `whenBlankedNumbersShouldBe` "100000000 10"
     " 10.12E-34 -1" `whenBlankedNumbersShouldBe` " 100000000 10"
+  describe "Can blank json of various strings" $ do
+    ""                                    `whenBlankedJsonShouldBe` ""
+    " { \"ff\": 1.0, [\"\", true], null}" `whenBlankedJsonShouldBe` " { (  ): 100, [(), true], null}"

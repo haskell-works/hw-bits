@@ -4,6 +4,7 @@ module HaskellWorks.Data.Conduit.Json.Blank
   ( blankEscapedChars
   , blankNumbers
   , blankStrings
+  , blankJson
   ) where
 
 import           Control.Monad
@@ -79,3 +80,6 @@ blankNumbers' wasInNumber = do
       Just (c, cs) | isLeadingDigit c                 -> Just (w1, (True  , cs))
       Just (c, cs)                                    -> Just (c,  (False , cs))
       Nothing                                         -> Nothing
+
+blankJson :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
+blankJson = blankEscapedChars =$= blankStrings =$= blankNumbers
