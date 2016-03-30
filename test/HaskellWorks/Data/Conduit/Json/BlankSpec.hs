@@ -67,4 +67,4 @@ spec = describe "HaskellWorks.Data.Conduit.Json.BlankSpec" $ do
     " Za def "      `whenBlankedIdentifiersShouldBe` " Z_ d__ "
   describe "Can blank json" $ do
     ""                                    `whenBlankedJsonShouldBe` ""
-    " { \"ff\": 1.0, [\"\", true], null}" `whenBlankedJsonShouldBe` " { (  ): 100, [(), true], null}"
+    " { \"ff\": 1.0, [\"\", true], null}" `whenBlankedJsonShouldBe` " { (  ): 100, [(), t___], n___}"
