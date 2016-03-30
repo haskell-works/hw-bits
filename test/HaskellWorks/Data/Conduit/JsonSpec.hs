@@ -7,6 +7,7 @@ import           Data.Conduit
 import           Data.Int
 import           HaskellWorks.Data.Bits.Conversion
 import           HaskellWorks.Data.Conduit.Json
+import           HaskellWorks.Data.Conduit.List
 import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec
 import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Offset
 import           HaskellWorks.Data.Json.Token

@@ -17,6 +17,7 @@ import qualified Data.Vector.Storable                                  as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.Conduit.Json
+import           HaskellWorks.Data.Conduit.List
 import           HaskellWorks.Data.FromByteString
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512

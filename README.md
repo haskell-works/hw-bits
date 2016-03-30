@@ -78,6 +78,7 @@ Run the following in the shell:
     end   <- getCPUTime
     let !bs = BSI.fromForeignPtr (castForeignPtr fptr) offset size
     let !x = jsonBsToInterestBs bs
+    let !y = runListConduit [bs] (unescape' "")
     
 
 ## References

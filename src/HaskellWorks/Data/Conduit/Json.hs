@@ -144,9 +144,6 @@ byteStringToBits = do
     Just bs -> yieldBitsofWord8s (BS.unpack bs) >> byteStringToBits
     Nothing -> return ()
 
-runListConduit :: [i] -> Conduit i [] o -> [o]
-runListConduit is c = P.concat $ sourceList is =$ c $$ consume
-
 mcons :: Maybe a -> [a] -> [a]
 mcons (Just a) = (a:)
 mcons Nothing = id

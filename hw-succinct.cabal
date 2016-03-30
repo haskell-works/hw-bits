@@ -51,6 +51,8 @@ library
                       , HaskellWorks.Data.Bits.PopCount.PopCount1.Broadword
                       , HaskellWorks.Data.Bits.PopCount.PopCount1.GHC
                       , HaskellWorks.Data.Conduit.Json
+                      , HaskellWorks.Data.Conduit.Json.Blank
+                      , HaskellWorks.Data.Conduit.List
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Internal
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumn
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Offset
@@ -116,6 +118,7 @@ test-suite hw-succinct-test
   other-modules:        HaskellWorks.Data.Bits.BitReadSpec
                       , HaskellWorks.Data.Bits.BitWiseSpec
                       , HaskellWorks.Data.Bits.FromBoolsSpec
+                      , HaskellWorks.Data.Conduit.Json.BlankSpec
                       , HaskellWorks.Data.Conduit.JsonSpec
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumnSpec
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.OffsetSpec

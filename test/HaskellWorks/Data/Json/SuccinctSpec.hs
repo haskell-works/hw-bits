@@ -6,6 +6,7 @@ module HaskellWorks.Data.Json.SuccinctSpec where
 import           Data.Maybe
 import           HaskellWorks.Data.Bits.BitRead
 import           HaskellWorks.Data.Conduit.Json
+import           HaskellWorks.Data.Conduit.List
 import           HaskellWorks.Data.Json.Succinct
 import           Test.Hspec
 
