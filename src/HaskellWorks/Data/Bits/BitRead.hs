@@ -5,6 +5,7 @@ module HaskellWorks.Data.Bits.BitRead
   ( BitRead(..)
   ) where
 
+import qualified Data.ByteString                 as BS
 import qualified Data.Vector                     as DV
 import qualified Data.Vector.Storable            as DVS
 import           Data.Word
@@ -32,6 +33,9 @@ instance BitRead Word32 where
   bitRead = bitRead'
 
 instance BitRead Word64 where
+  bitRead = bitRead'
+
+instance BitRead BS.ByteString where
   bitRead = bitRead'
 
 instance BitRead [Word8] where

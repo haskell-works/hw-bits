@@ -1,4 +1,5 @@
-{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RankNTypes        #-}
 
 module HaskellWorks.Data.Conduit.Json where
 
@@ -7,15 +8,12 @@ import           Control.Monad.Trans.Resource                         (MonadThro
 import qualified Data.Bits                                            as BITS
 import           Data.ByteString                                      as BS
 import           Data.ByteString.Internal                             as BS
-import           Data.Char
 import           Data.Conduit
-import           Data.Conduit.List                                    as CL
 import           Data.Int
 import           Data.Word
 import           Foreign.Ptr                                          (plusPtr)
 import           Foreign.Storable                                     (Storable (..))
 import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.Conduit.Json.Blank
 import           HaskellWorks.Data.Conduit.Json.Words
 import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec
 import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Offset
@@ -23,46 +21,37 @@ import           HaskellWorks.Data.Json.Final.Tokenize
 import           HaskellWorks.Data.Json.Token
 import           Prelude                                              as P
 
-blankedJsonToInterestBits :: Monad m => BS.ByteString -> Conduit BS.ByteString m BS.ByteString
-blankedJsonToInterestBits rs = do
+blankedJsonToInterestBits :: Monad m => Conduit BS.ByteString m BS.ByteString
+blankedJsonToInterestBits = blankedJsonToInterestBits' ""
+
+padRight :: Word8 -> Int -> BS.ByteString -> BS.ByteString
+padRight w n bs = fst (BS.unfoldrN n gen bs)
+  where gen :: ByteString -> Maybe (Word8, ByteString)
+        gen cs = case BS.uncons cs of
+          Just (c, ds) -> Just (c, ds)
+          Nothing      -> Just (w, BS.empty)
+
+blankedJsonToInterestBits' :: Monad m => BS.ByteString -> Conduit BS.ByteString m BS.ByteString
+blankedJsonToInterestBits' rs = do
   mbs <- await
   case mbs of
     Just bs -> do
       let cs = if BS.length rs /= 0 then BS.concat [rs, bs] else bs
       let lencs = BS.length cs
-      let (ds, es) = BS.splitAt (lencs `mod` 8) cs
-      let bits = BS.unfoldrN (lencs `div` 8) gen ds
-      blankedJsonToInterestBits es
+      let q = lencs + 7 `quot` 8
+      let (ds, es) = BS.splitAt (q * 8) cs
+      let (fs, _) = BS.unfoldrN q gen ds
+      yield fs
+      blankedJsonToInterestBits' es
     Nothing -> return ()
   where gen :: ByteString -> Maybe (Word8, ByteString)
-        gen xs = case BS.uncons xs of
-          Just (a, as) -> case BS.uncons as of
-            Just (b, bs) -> case BS.uncons bs of
-              Just (c, cs) -> case BS.uncons cs of
-                Just (d, ds) -> case BS.uncons ds of
-                  Just (e, es) -> case BS.uncons es of
-                    Just (f, fs) -> case BS.uncons fs of
-                      Just (g, gs) -> case BS.uncons gs of
-                        Just (h, hs) -> Just
-                          ( (interesting a .<. 0) .|.
-                            (interesting b .<. 1) .|.
-                            (interesting c .<. 2) .|.
-                            (interesting d .<. 3) .|.
-                            (interesting e .<. 4) .|.
-                            (interesting f .<. 5) .|.
-                            (interesting g .<. 6) .|.
-                            (interesting h .<. 7)
-                          , hs)
-                        Nothing -> error "Shouldn't happen"
-                      Nothing -> error "Shouldn't happen"
-                    Nothing -> error "Shouldn't happen"
-                  Nothing -> error "Shouldn't happen"
-                Nothing -> error "Shouldn't happen"
-              Nothing -> error "Shouldn't happen"
-            Nothing -> error "Shouldn't happen"
-          Nothing -> error "Shouldn't happen"
+        gen as = if BS.length as == 0
+          then Nothing
+          else Just ( BS.foldr (\b m -> interesting b .|. (m .<. 1)) 0 (padRight 0 8 (BS.take 8 as))
+                    , BS.drop 8 as
+                    )
         interesting :: Word8 -> Word8
-        interesting w = if w == wOpenBracket || w == wOpenBrace || w == wOpenParen || w == wt || w == wf || w == wn
+        interesting w = if w == wOpenBracket || w == wOpenBrace || w == wOpenParen || w == wt || w == wf || w == wn || w == w1
           then 1
           else 0
 
@@ -98,18 +87,13 @@ unescape' rs = do
 unescapeByteString :: ByteString -> Maybe (Word8, ByteString)
 unescapeByteString bs = case BS.uncons bs of
   Just (c, cs) -> case BS.uncons cs of
-    Just (d, ds) -> if c /= wBackslash
+    Just (_, ds) -> if c /= wBackslash
       then Just (c, cs)
       else Just (c, BS.cons wUnderscore ds)
     Nothing -> if c /= wBackslash
       then Just (c, cs)
       else Nothing
   Nothing -> Nothing
-
-  -- | bslen == 0 = Nothing
-  -- | bslen == 1 = if BS.head bs == wBackslash then Nothing else Just (BS.head bs, BS.tail bs)
-  -- | otherwise  = Nothing
-  -- where bslen = BS.length bs
 
 jsonToken2Markers :: Monad m => Conduit (ParseDelta Offset, JsonToken) m Int64
 jsonToken2Markers = do

@@ -11,6 +11,7 @@ module HaskellWorks.Data.Bits.BitShow
   , bitShow
   ) where
 
+import qualified Data.ByteString                as BS
 import qualified Data.Vector                    as DV
 import qualified Data.Vector.Storable           as DVS
 import           Data.Word
@@ -49,6 +50,11 @@ instance BitShow [Bool] where
           go _ [u]    = bitShows u
           go n (u:us) = bitShows u . maybePrependSeperatorat n . go (n + 1) us
           maybePrependSeperatorat n = if n `mod` 8 == 7 then (' ':) else id
+
+instance BitShow BS.ByteString where
+  bitShows bs | BS.length bs == 0 = id
+  bitShows bs | BS.length bs == 1 = bitShows (BS.head bs)
+  bitShows bs                     = bitShows (BS.head bs) . (' ':) . bitShows (BS.tail bs)
 
 instance BitShow [Word8] where
   bitShows []     = id

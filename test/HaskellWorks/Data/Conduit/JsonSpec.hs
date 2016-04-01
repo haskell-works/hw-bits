@@ -2,9 +2,10 @@
 
 module HaskellWorks.Data.Conduit.JsonSpec (spec) where
 
-import           Data.ByteString
+import           Data.ByteString                                      as BS
 import           Data.Conduit
 import           Data.Int
+import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.Bits.Conversion
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Conduit.List
@@ -12,6 +13,8 @@ import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec
 import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Offset
 import           HaskellWorks.Data.Json.Token
 import           Test.Hspec
+
+{-# ANN module ("HLint: ignore Redundant do"        :: String) #-}
 
 markerToBits :: [Int64] -> [Bool]
 markerToBits ms = runListConduit ms (markerToByteString =$= byteStringToBits)
@@ -22,6 +25,9 @@ jsonToBits json = runListConduit json $
 
 jsonToken2Markers2 :: [(ParseDelta Offset, JsonToken)] -> [Int64]
 jsonToken2Markers2 json = runListConduit json jsonToken2Markers
+
+blankedJsonToInterestBits2 :: ByteString -> BitShown ByteString
+blankedJsonToInterestBits2 bs = BitShown (BS.concat (runListConduit [bs] blankedJsonToInterestBits))
 
 spec :: Spec
 spec = describe "Data.Conduit.Succinct.JsonSpec" $ do
@@ -98,3 +104,6 @@ spec = describe "Data.Conduit.Succinct.JsonSpec" $ do
       jsonToBits ["{{}}"] `shouldBe` stringToBits "11000000"
     it "Four spread out braces should produce four spread out bits" $
       jsonToBits [" { { } } "] `shouldBe` stringToBits "01010000"
+  describe "Can convert blanked json to Json interest bits" $ do
+    it "where blanked json is \" { (  ): 100, [(), t___], n___}\"" $ do
+      blankedJsonToInterestBits2 " { (  ): 100, [(), t___], n___}" `shouldBe` "01010000 01000011 00010000 00100000"

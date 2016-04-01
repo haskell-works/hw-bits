@@ -10,6 +10,7 @@ module HaskellWorks.Data.Bits.BitParse
   ( BitParse(..)
   ) where
 
+import qualified Data.ByteString                  as BS
 import qualified Data.Vector                      as DV
 import qualified Data.Vector.Storable             as DVS
 import           Data.Word
@@ -72,6 +73,10 @@ instance BitParse Word64 where
     (a :: Word32) <- bitParse1
     (b :: Word32) <- bitParse0
     return $ (fromIntegral b .<. bitLength a) .|. fromIntegral a
+
+instance BitParse BS.ByteString where
+  bitParse0 = fmap BS.pack bitParse0
+  bitParse1 = fmap BS.pack bitParse1
 
 instance BitParse [Word8] where
   bitParse0 = option [] bitParse1
