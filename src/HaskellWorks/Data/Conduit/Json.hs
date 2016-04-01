@@ -1,7 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes        #-}
 
-module HaskellWorks.Data.Conduit.Json where
+module HaskellWorks.Data.Conduit.Json
+  ( blankedJsonToInterestBits
+  , byteStringToBits
+  , markerToByteString
+  , jsonToken2Markers
+  , textToJsonToken
+  , jsonToken2BalancedParens
+  ) where
 
 import           Control.Monad
 import           Control.Monad.Trans.Resource                         (MonadThrow)
@@ -137,16 +144,6 @@ jsonToken2BalancedParens = do
 
 ------------------------
 
-bitsToByteString :: Monad m => Int64 -> Word8 -> Conduit Bool m BS.ByteString
-bitsToByteString n w = do
-  mb <- await
-  case mb of
-    Just b -> do
-      let v = if b then w .|. BITS.bit (fromIntegral (n `mod` 8)) else w
-      when (n `mod` 8 == 7) (yield $ BS.singleton v)
-      bitsToByteString (n + 1) v
-    Nothing -> when (w /= 0) (yield $ BS.singleton w)
-
 yieldBitsOfWord8 :: Monad m => Word8 -> Conduit BS.ByteString m Bool
 yieldBitsOfWord8 w = do
   yield ((w .&. BITS.bit 0) /= 0)
@@ -167,68 +164,3 @@ byteStringToBits = do
   case mbs of
     Just bs -> yieldBitsofWord8s (BS.unpack bs) >> byteStringToBits
     Nothing -> return ()
-
-mcons :: Maybe a -> [a] -> [a]
-mcons (Just a) = (a:)
-mcons Nothing = id
-
-awaitWord8Or :: Monad m => Word8 -> Consumer ByteString m Word8
-awaitWord8Or d = do
-  mbs <- await
-  case mbs of
-    Just bs -> if BS.null bs
-      then do
-        leftover $ BS.tail bs
-        return   $ BS.head bs
-      else return d
-    Nothing -> return d
-
-unfinished :: Monad m => Consumer i m Bool
-unfinished = do
-  mi <- await
-  case mi of
-    Just i  -> leftover i >> return True
-    Nothing -> return False
-
-ifM :: Monad m => m Bool -> m a -> m a -> m a
-ifM p a b = do
-  t <- p
-  if t then a else b
-
-whenM :: Monad m => m Bool -> m () -> m ()
-whenM p a = ifM p a (return ())
-
-packW64 :: Word64 -> ByteString
-packW64 w64 =
-    unsafeCreate 8 $ \p -> do
-      poke  p               (fromIntegral ( w64                      .|. 0xff) :: Word8)
-      poke (p `plusPtr` 1)  (fromIntegral ((w64 `BITS.shift` (-8 ))  .|. 0xff) :: Word8)
-      poke (p `plusPtr` 2)  (fromIntegral ((w64 `BITS.shift` (-16))  .|. 0xff) :: Word8)
-      poke (p `plusPtr` 3)  (fromIntegral ((w64 `BITS.shift` (-24))  .|. 0xff) :: Word8)
-      poke (p `plusPtr` 4)  (fromIntegral ((w64 `BITS.shift` (-32))  .|. 0xff) :: Word8)
-      poke (p `plusPtr` 5)  (fromIntegral ((w64 `BITS.shift` (-40))  .|. 0xff) :: Word8)
-      poke (p `plusPtr` 6)  (fromIntegral ((w64 `BITS.shift` (-48))  .|. 0xff) :: Word8)
-      poke (p `plusPtr` 7)  (fromIntegral ((w64 `BITS.shift` (-56))  .|. 0xff) :: Word8)
-
-bsToRank9BS :: Monad m => Word64 -> Conduit BS.ByteString m BS.ByteString
-bsToRank9BS rank = whenM unfinished $ do
-  v0 <- awaitWord8Or 0
-  v1 <- awaitWord8Or 0
-  v2 <- awaitWord8Or 0
-  v3 <- awaitWord8Or 0
-  v4 <- awaitWord8Or 0
-  v5 <- awaitWord8Or 0
-  v6 <- awaitWord8Or 0
-  v7 <- awaitWord8Or 0
-  let p0 =       fromIntegral (BITS.popCount v0)                  :: Word64
-  let p1 = p0 + (fromIntegral (BITS.popCount v1) `BITS.shift` 9 ) :: Word64
-  let p2 = p1 + (fromIntegral (BITS.popCount v2) `BITS.shift` 18) :: Word64
-  let p3 = p2 + (fromIntegral (BITS.popCount v3) `BITS.shift` 27) :: Word64
-  let p4 = p3 + (fromIntegral (BITS.popCount v4) `BITS.shift` 36) :: Word64
-  let p5 = p4 + (fromIntegral (BITS.popCount v5) `BITS.shift` 45) :: Word64
-  let p6 = p5 + (fromIntegral (BITS.popCount v6) `BITS.shift` 54) :: Word64
-  let p7 = p6 + (fromIntegral (BITS.popCount v7) `BITS.shift` 54) :: Word64
-  let newRank = rank + p7
-  yield $ packW64 (p0 .|. p1 .|. p2 .|. p3 .|. p4 .|. p5 .|. p6)
-  yield $ packW64 newRank
-  bsToRank9BS newRank
