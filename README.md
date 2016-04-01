@@ -73,11 +73,9 @@ Run the following in the shell:
     import Data.Word
     import System.CPUTime
     (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/part80.json" ReadOnly Nothing
-    start <- getCPUTime
-    let !cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
-    end   <- getCPUTime
+    cursor <- measure $ fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
     let !bs = BSI.fromForeignPtr (castForeignPtr fptr) offset size
-    let !x = jsonBsToInterestBs bs
+    x <- measure $ jsonBsToInterestBs bs
     let !y = runListConduit [bs] (unescape' "")
     
 

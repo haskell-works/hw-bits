@@ -85,6 +85,7 @@ library
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
                       , HaskellWorks.Data.Succinct.RankSelect.Internal
+                      , HaskellWorks.Data.Time
                       , HaskellWorks.Data.Vector.BoxedVectorLike
                       , HaskellWorks.Data.Vector.Storable.ByteString
                       , HaskellWorks.Data.Vector.StorableVectorLike
