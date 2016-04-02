@@ -22,6 +22,7 @@ import           HaskellWorks.Data.Conduit.List
 import           HaskellWorks.Data.FromByteString
 import           HaskellWorks.Data.FromForeignRegion
 import           HaskellWorks.Data.Json.Succinct.Cursor
+import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens.Simple
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic
@@ -53,6 +54,8 @@ runCon con bs = BS.concat $ runListConduit [bs] con
 
 jsonToInterestBits3 = blankEscapedChars =$= blankStrings =$= blankNumbers =$= blankIdentifiers =$= blankedJsonToInterestBits
 
+jsonToInterestBitsOld = textToJsonToken =$= jsonToken2Markers =$= markerToByteString
+
 runBlankedJsonToInterestBits :: BS.ByteString -> BS.ByteString
 runBlankedJsonToInterestBits bs = BS.concat $ runListConduit [bs] blankedJsonToInterestBits
 
@@ -73,5 +76,6 @@ main = defaultMain
     , bench "Run blankIdentifiers             "  (whnf (runCon blankIdentifiers           ) bs)
     , bench "Run blankedJsonToInterestBits    "  (whnf (runCon blankedJsonToInterestBits  ) bs)
     , bench "Run jsonToInterestBits3          "  (whnf (runCon jsonToInterestBits3        ) bs)
+    , bench "Run jsonToInterestBitsOld        "  (whnf (runCon jsonToInterestBitsOld      ) bs)
     ]
   ]
