@@ -46,6 +46,9 @@ genInterest bs  = if BS.null bs
   then Nothing
   else Just (BS.head bs, BS.tail bs)
 
+instance FromByteString (JsonInterestBits (BitShown BS.ByteString)) where
+  fromByteString textBS = JsonInterestBits (BitShown (BS.unfoldr genInterest (jsonBsToInterestBs textBS)))
+
 instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word8))) where
   fromByteString textBS = JsonInterestBits (BitShown (DVS.unfoldr genInterest (jsonBsToInterestBs textBS)))
 
