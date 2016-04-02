@@ -160,7 +160,7 @@ benchmark bench
     Type: exitcode-stdio-1.0
     HS-Source-Dirs: bench
     Main-Is: Main.hs
-    GHC-Options: -O2 -Wall
+    GHC-Options: -O2 -Wall -msse4.2
     Default-Language: Haskell2010
     Build-Depends:
         base            >= 4       && < 5   ,
