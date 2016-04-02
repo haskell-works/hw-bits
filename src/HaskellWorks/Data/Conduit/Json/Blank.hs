@@ -25,19 +25,18 @@ blankEscapedChars' rs = do
   case mbs of
     Just bs -> do
       let cs = if BS.length rs /= 0 then BS.concat [rs, bs] else bs
-      let ds = fst (unfoldrN (BS.length cs) unescapeByteString cs)
+      let ds = fst (unfoldrN (BS.length cs) unescapeByteString (False, cs))
       yield ds
       blankEscapedChars' (BS.drop (BS.length ds) cs)
     Nothing -> when (BS.length rs > 0) (yield rs)
   where
-    unescapeByteString bs = case BS.uncons bs of
-      Just (c, cs) -> case BS.uncons cs of
-        Just (_, ds) -> if c /= wBackslash
-          then Just (c, cs)
-          else Just (c, BS.cons wUnderscore ds)
-        Nothing -> if c /= wBackslash
-          then Just (c, cs)
-          else Nothing
+    unescapeByteString :: (Bool, ByteString) -> Maybe (Word8, (Bool, ByteString))
+    unescapeByteString (wasEscaped, bs) = case BS.uncons bs of
+      Just (c, cs) -> if wasEscaped
+        then Just (wUnderscore, (False, cs))
+        else if c /= wBackslash
+          then Just (c, (False, cs))
+          else Just (c, (True, cs))
       Nothing -> Nothing
 
 blankStrings :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
