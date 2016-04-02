@@ -24,7 +24,7 @@ blankEscapedChars' rs = do
   mbs <- await
   case mbs of
     Just bs -> do
-      let cs = BS.concat [rs, bs]
+      let cs = if BS.length rs /= 0 then BS.concat [rs, bs] else bs
       let ds = fst (unfoldrN (BS.length cs) unescapeByteString cs)
       yield ds
       blankEscapedChars' (BS.drop (BS.length ds) cs)

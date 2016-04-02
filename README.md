@@ -76,7 +76,20 @@ Run the following in the shell:
     cursor <- measure $ fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
     let !bs = BSI.fromForeignPtr (castForeignPtr fptr) offset size
     x <- measure $ jsonBsToInterestBs bs
+    x <- measure $ jsonBsToInterestBs2 bs
     let !y = runListConduit [bs] (unescape' "")
+
+    import Foreign
+    import qualified Data.Vector.Storable as DVS
+    import qualified Data.ByteString as BS
+    import qualified Data.ByteString.Internal as BSI
+    import System.IO.MMap
+    import Data.Word
+    import System.CPUTime
+    (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/part40.json" ReadOnly Nothing
+    let !bs = BSI.fromForeignPtr (castForeignPtr fptr) offset size
+    x <- measure $ BS.concat $ runListConduit [bs] (blankJson =$= blankedJsonToInterestBits)
+    x <- measure $ jsonBsToInterestBs bs
     
 
 ## References
