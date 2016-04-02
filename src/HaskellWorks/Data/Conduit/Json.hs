@@ -7,19 +7,18 @@ module HaskellWorks.Data.Conduit.Json
   , markerToByteString
   , jsonToken2Markers
   , textToJsonToken
+  , interestingWord8s
   , jsonToken2BalancedParens
   ) where
 
 import           Control.Monad
 import           Control.Monad.Trans.Resource                         (MonadThrow)
+import           Data.Array.Unboxed                                   as A
 import qualified Data.Bits                                            as BITS
 import           Data.ByteString                                      as BS
-import           Data.ByteString.Internal                             as BS
 import           Data.Conduit
 import           Data.Int
 import           Data.Word
-import           Foreign.Ptr                                          (plusPtr)
-import           Foreign.Storable                                     (Storable (..))
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Conduit.Json.Words
 import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec
@@ -27,6 +26,13 @@ import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Offset
 import           HaskellWorks.Data.Json.Final.Tokenize
 import           HaskellWorks.Data.Json.Token
 import           Prelude                                              as P
+
+interestingWord8s :: A.Array Word8 Word8
+interestingWord8s = A.array (0, 255) [
+  (w, if w == wOpenBracket || w == wOpenBrace || w == wOpenParen || w == wt || w == wf || w == wn || w == w1
+    then 1
+    else 0)
+  | w <- [0 .. 255]]
 
 blankedJsonToInterestBits :: Monad m => Conduit BS.ByteString m BS.ByteString
 blankedJsonToInterestBits = blankedJsonToInterestBits' ""
@@ -54,13 +60,9 @@ blankedJsonToInterestBits' rs = do
   where gen :: ByteString -> Maybe (Word8, ByteString)
         gen as = if BS.length as == 0
           then Nothing
-          else Just ( BS.foldr (\b m -> interesting b .|. (m .<. 1)) 0 (padRight 0 8 (BS.take 8 as))
+          else Just ( BS.foldr (\b m -> (interestingWord8s ! b) .|. (m .<. 1)) 0 (padRight 0 8 (BS.take 8 as))
                     , BS.drop 8 as
                     )
-        interesting :: Word8 -> Word8
-        interesting w = if w == wOpenBracket || w == wOpenBrace || w == wOpenParen || w == wt || w == wf || w == wn || w == w1
-          then 1
-          else 0
 
 markerToByteString' :: Monad m => Int64 -> Word8 -> Conduit Int64 m BS.ByteString
 markerToByteString' a v = do

@@ -93,6 +93,7 @@ library
                       , HaskellWorks.Function
                       , HaskellWorks.Data.Word
   build-depends:        base                            >= 4.7  && < 5
+                      , array
                       , attoparsec                      >= 0.10
                       , bytestring
                       , conduit                         >= 1.1  && < 1.3
