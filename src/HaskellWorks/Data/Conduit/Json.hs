@@ -5,6 +5,7 @@ module HaskellWorks.Data.Conduit.Json
   ( blankedJsonToInterestBits
   , byteStringToBits
   , markerToByteString
+  , blankedJsonToBalancedParens
   , jsonToken2Markers
   , textToJsonToken
   , interestingWord8s
@@ -121,6 +122,31 @@ jsonToken2BalancedParens = do
         JsonTokenNull       -> yield True >> yield False
       jsonToken2BalancedParens
     Nothing -> return ()
+
+blankedJsonToBalancedParens :: Monad m => Conduit BS.ByteString m Bool
+blankedJsonToBalancedParens = do
+  mbs <- await
+  case mbs of
+    Just bs -> blankedJsonToBalancedParens' bs
+    Nothing -> return ()
+
+blankedJsonToBalancedParens' :: Monad m => BS.ByteString -> Conduit BS.ByteString m Bool
+blankedJsonToBalancedParens' bs = case BS.uncons bs of
+  Just (c, cs) -> do
+    case c of
+      d | d == wOpenBrace     -> yield True
+      d | d == wCloseBrace    -> yield False
+      d | d == wOpenBracket   -> yield True
+      d | d == wCloseBracket  -> yield False
+      d | d == wOpenParen     -> yield True
+      d | d == wCloseParen    -> yield False
+      d | d == wt             -> yield True >> yield False
+      d | d == wf             -> yield True >> yield False
+      d | d == w1             -> yield True >> yield False
+      d | d == wn             -> yield True >> yield False
+      _                       -> return ()
+    blankedJsonToBalancedParens' cs
+  Nothing -> return ()
 
 ------------------------
 
