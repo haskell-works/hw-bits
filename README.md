@@ -55,13 +55,13 @@ Run the following in the shell:
 
     Mem (MB) CMD
     -------- ---------------------------------------------------------
-         296 import Foreign
-         296 import qualified Data.Vector.Storable as DVS
-         296 import qualified Data.ByteString as BS
-         296 import System.IO.MMap
-         296 import Data.Word
-         296 (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/78mbs.json" ReadOnly Nothing
-         638 cursor <- measure (fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64)))
+         274 import Foreign
+         274 import qualified Data.Vector.Storable as DVS
+         274 import qualified Data.ByteString as BS
+         274 import System.IO.MMap
+         274 import Data.Word
+         274 (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/78mbs.json" ReadOnly Nothing
+         601 cursor <- measure (fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64)))
 
 ## Examples
 
