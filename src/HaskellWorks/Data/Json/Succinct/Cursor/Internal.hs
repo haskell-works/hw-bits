@@ -18,6 +18,7 @@ import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.FromByteString
 import           HaskellWorks.Data.FromForeignRegion
 import           HaskellWorks.Data.Json.Succinct.Cursor.BalancedParens
+import           HaskellWorks.Data.Json.Succinct.Cursor.BlankedJson
 import           HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
 import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
@@ -32,14 +33,16 @@ data JsonCursor t v w = JsonCursor
   }
   deriving (Eq, Show)
 
-instance  (FromByteString (JsonInterestBits a), FromByteString (JsonBalancedParens b))
+instance  (FromBlankedJson (JsonInterestBits a), FromBlankedJson (JsonBalancedParens b))
           => FromByteString (JsonCursor BS.ByteString a b) where
-  fromByteString textBS = JsonCursor
-    { cursorText      = textBS
-    , interests       = getJsonInterestBits (fromByteString textBS)
-    , balancedParens  = getJsonBalancedParens (fromByteString textBS)
+  fromByteString bs   = JsonCursor
+    { cursorText      = bs
+    , interests       = getJsonInterestBits (fromBlankedJson blankedJson)
+    , balancedParens  = getJsonBalancedParens (fromBlankedJson blankedJson)
     , cursorRank      = 1
     }
+    where blankedJson :: BlankedJson
+          blankedJson = fromByteString bs
 
 instance IsString (JsonCursor String (BitShown [Bool]) (SimpleBalancedParens [Bool])) where
   fromString :: String -> JsonCursor String (BitShown [Bool]) (SimpleBalancedParens [Bool])
