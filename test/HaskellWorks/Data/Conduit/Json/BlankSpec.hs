@@ -12,27 +12,27 @@ import           Test.Hspec
 whenBlankedEscapedShouldBe :: BS.ByteString -> BS.ByteString -> Spec
 whenBlankedEscapedShouldBe original expected = do
   it (show original ++ " when blanked escaped should be " ++ show expected) $ do
-    BS.concat (runListConduit [original] blankEscapedChars) `shouldBe` expected
+    BS.concat (runListConduit blankEscapedChars [original]) `shouldBe` expected
 
 whenBlankedStringsShouldBe :: BS.ByteString -> BS.ByteString -> Spec
 whenBlankedStringsShouldBe original expected = do
   it (show original ++ " when blanked strings should be " ++ show expected) $ do
-    BS.concat (runListConduit [original] blankStrings) `shouldBe` expected
+    BS.concat (runListConduit blankStrings [original]) `shouldBe` expected
 
 whenBlankedNumbersShouldBe :: BS.ByteString -> BS.ByteString -> Spec
 whenBlankedNumbersShouldBe original expected = do
   it (show original ++ " when blanked numbers should be " ++ show expected) $ do
-    BS.concat (runListConduit [original] blankNumbers) `shouldBe` expected
+    BS.concat (runListConduit blankNumbers [original]) `shouldBe` expected
 
 whenBlankedIdentifiersShouldBe :: BS.ByteString -> BS.ByteString -> Spec
 whenBlankedIdentifiersShouldBe original expected = do
   it (show original ++ " when blanked identifiers should be " ++ show expected) $ do
-    BS.concat (runListConduit [original] blankIdentifiers) `shouldBe` expected
+    BS.concat (runListConduit blankIdentifiers [original]) `shouldBe` expected
 
 whenBlankedJsonShouldBe :: BS.ByteString -> BS.ByteString -> Spec
 whenBlankedJsonShouldBe original expected = do
   it (show original ++ " when blanked json should be " ++ show expected) $ do
-    BS.concat (runListConduit [original] blankJson) `shouldBe` expected
+    BS.concat (runListConduit blankJson [original]) `shouldBe` expected
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Conduit.Json.BlankSpec" $ do

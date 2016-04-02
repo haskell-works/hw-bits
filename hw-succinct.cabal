@@ -65,6 +65,7 @@ library
                       , HaskellWorks.Data.Json.Succinct
                       , HaskellWorks.Data.Json.Succinct.Cursor
                       , HaskellWorks.Data.Json.Succinct.Cursor.BalancedParens
+                      , HaskellWorks.Data.Json.Succinct.Cursor.BlankedJson
                       , HaskellWorks.Data.Json.Succinct.Cursor.CursorType
                       , HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
                       , HaskellWorks.Data.Json.Succinct.Cursor.Internal

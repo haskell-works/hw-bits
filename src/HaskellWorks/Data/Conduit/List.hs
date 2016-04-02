@@ -7,5 +7,5 @@ import           Data.Conduit
 import           Data.Conduit.List as CL
 import           Prelude           as P
 
-runListConduit :: [i] -> Conduit i [] o -> [o]
-runListConduit is c = P.concat $ sourceList is =$ c $$ consume
+runListConduit :: Conduit i [] o -> [i] -> [o]
+runListConduit c is = P.concat $ sourceList is =$ c $$ consume

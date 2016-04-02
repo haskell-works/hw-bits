@@ -28,7 +28,7 @@ getJsonInterestBits :: JsonInterestBits a -> a
 getJsonInterestBits (JsonInterestBits a) = a
 
 jsonBsToInterestBs :: ByteString -> ByteString
-jsonBsToInterestBs textBS = BS.concat $ runListConduit [textBS] (blankJson =$= blankedJsonToInterestBits)
+jsonBsToInterestBs textBS = BS.concat $ runListConduit (blankJson =$= blankedJsonToInterestBits) [textBS]
 
 genInterest :: ByteString -> Maybe (Word8, ByteString)
 genInterest = BS.uncons

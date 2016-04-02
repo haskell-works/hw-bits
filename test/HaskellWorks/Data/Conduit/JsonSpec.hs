@@ -17,17 +17,16 @@ import           Test.Hspec
 {-# ANN module ("HLint: ignore Redundant do"        :: String) #-}
 
 markerToBits :: [Int64] -> [Bool]
-markerToBits ms = runListConduit ms (markerToByteString =$= byteStringToBits)
+markerToBits = runListConduit (markerToByteString =$= byteStringToBits)
 
 jsonToBits :: [ByteString] -> [Bool]
-jsonToBits json = runListConduit json $
-  textToJsonToken =$= jsonToken2Markers =$= markerToByteString =$= byteStringToBits
+jsonToBits = runListConduit (textToJsonToken =$= jsonToken2Markers =$= markerToByteString =$= byteStringToBits)
 
 jsonToken2Markers2 :: [(ParseDelta Offset, JsonToken)] -> [Int64]
-jsonToken2Markers2 json = runListConduit json jsonToken2Markers
+jsonToken2Markers2 = runListConduit jsonToken2Markers
 
 blankedJsonToInterestBits2 :: ByteString -> BitShown ByteString
-blankedJsonToInterestBits2 bs = BitShown (BS.concat (runListConduit [bs] blankedJsonToInterestBits))
+blankedJsonToInterestBits2 bs = BitShown (BS.concat (runListConduit blankedJsonToInterestBits [bs]))
 
 spec :: Spec
 spec = describe "Data.Conduit.Succinct.JsonSpec" $ do
@@ -65,7 +64,7 @@ spec = describe "Data.Conduit.Succinct.JsonSpec" $ do
   it "All markers 0 .. 8 should produce one almost full byte and one near empty byte" $
     markerToBits [0, 1, 2, 3, 4, 5, 6, 7, 8] `shouldBe` stringToBits "11111111 10000000"
   it "Matching bits for bytes" $
-    runListConduit [pack [0x80], pack [0xff], pack [0x01]] byteStringToBits `shouldBe`
+    runListConduit byteStringToBits [pack [0x80], pack [0xff], pack [0x01]] `shouldBe`
       stringToBits "00000001 11111111 10000000"
   it "Every interesting token should produce a marker" $
     jsonToken2Markers2 [

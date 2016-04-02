@@ -41,10 +41,10 @@ loadJson :: BS.ByteString -> JsonCursor BS.ByteString (BitShown (DVS.Vector Word
 loadJson bs = fromByteString bs :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
 
 runBlankIdentifiers :: BS.ByteString -> BS.ByteString
-runBlankIdentifiers bs = BS.concat $ runListConduit [bs] blankIdentifiers
+runBlankIdentifiers bs = BS.concat $ runListConduit blankIdentifiers [bs]
 
 runCon :: Conduit i [] BS.ByteString -> i -> BS.ByteString
-runCon con bs = BS.concat $ runListConduit [bs] con
+runCon con bs = BS.concat $ runListConduit con [bs]
 
 jsonToInterestBits3 :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 jsonToInterestBits3 = blankEscapedChars =$= blankStrings =$= blankNumbers =$= blankIdentifiers =$= blankedJsonToInterestBits
@@ -53,18 +53,18 @@ jsonToInterestBitsOld :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 jsonToInterestBitsOld = textToJsonToken =$= jsonToken2Markers =$= markerToByteString
 
 runBlankedJsonToInterestBits :: BS.ByteString -> BS.ByteString
-runBlankedJsonToInterestBits bs = BS.concat $ runListConduit [bs] blankedJsonToInterestBits
+runBlankedJsonToInterestBits bs = BS.concat $ runListConduit blankedJsonToInterestBits [bs]
 
 main :: IO ()
 main = defaultMain
   [ env setupEnv $ \bv -> bgroup "Nothing" []
-  -- , env setupEnv $ \bv -> bgroup "Rank"
-  --   [ bench "Rank - Once"   (whnf (rank1    bv) 1)
-  --   , bench "Select - Once" (whnf (select1  bv) 1)
-  --   , bench "Rank - Many"   (nf   (map (getCount . rank1  bv)) [0, 1000..10000000])
-  --   , bench "PopCnt1 Broadword - Once" (nf   (map (\n -> getCount (PC1BW.popCount1  (DVS.take n bv)))) [0, 1000..10000000])
-  --   , bench "PopCnt1 GHC       - Once" (nf   (map (\n -> getCount (PC1GHC.popCount1 (DVS.take n bv)))) [0, 1000..10000000])
-  --   ]
+  , env setupEnv $ \bv -> bgroup "Rank"
+    [ bench "Rank - Once"   (whnf (rank1    bv) 1)
+    , bench "Select - Once" (whnf (select1  bv) 1)
+    , bench "Rank - Many"   (nf   (map (getCount . rank1  bv)) [0, 1000..10000000])
+    , bench "PopCnt1 Broadword - Once" (nf   (map (\n -> getCount (PC1BW.popCount1  (DVS.take n bv)))) [0, 1000..10000000])
+    , bench "PopCnt1 GHC       - Once" (nf   (map (\n -> getCount (PC1GHC.popCount1 (DVS.take n bv)))) [0, 1000..10000000])
+    ]
   , env (setupEnvJson40 "/Users/jky/Downloads/part40.json") $ \bs -> bgroup "Json40"
     [ bench "Run blankEscapedChars            "  (whnf (runCon blankEscapedChars          ) bs)
     , bench "Run blankStrings                 "  (whnf (runCon blankStrings               ) bs)

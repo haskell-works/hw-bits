@@ -12,8 +12,7 @@ import           HaskellWorks.Data.Conduit.List
 import           HaskellWorks.Data.FromByteString
 
 jsonToInterestBits :: [BS.ByteString] -> [Bool]
-jsonToInterestBits json = bitShown (fromByteString x)
-  where x = BS.concat $ runListConduit json $ blankJson =$= blankedJsonToInterestBits
+jsonToInterestBits json = bitShown (fromByteString (BS.concat $ runListConduit (blankJson =$= blankedJsonToInterestBits) json))
 
 jsonToInterestBalancedParens :: [BS.ByteString] -> [Bool]
-jsonToInterestBalancedParens json = runListConduit json $ blankJson =$= blankedJsonToBalancedParens
+jsonToInterestBalancedParens = runListConduit (blankJson =$= blankedJsonToBalancedParens)
