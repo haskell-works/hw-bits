@@ -31,8 +31,8 @@ v = DVS.fromList (take 1000000 (cycle [maxBound, 0]))
 setupEnv :: IO (DVS.Vector Word64)
 setupEnv = return v
 
-setupEnvJson40 :: FilePath -> IO BS.ByteString
-setupEnvJson40 filepath = do
+setupEnvJson :: FilePath -> IO BS.ByteString
+setupEnvJson filepath = do
   (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr filepath ReadOnly Nothing
   let !bs = BSI.fromForeignPtr (castForeignPtr fptr) offset size
   return bs
@@ -66,9 +66,9 @@ benchRankSelect =
     ]
   ]
 
-benchRankJsonConduits :: [Benchmark]
-benchRankJsonConduits =
-  [ env (setupEnvJson40 "/Users/jky/Downloads/part40.json") $ \bs -> bgroup "Json40"
+benchRankJson40Conduits :: [Benchmark]
+benchRankJson40Conduits =
+  [ env (setupEnvJson "/Users/jky/Downloads/part40.json") $ \bs -> bgroup "Json40"
     [ bench "Run blankEscapedChars            "  (whnf (runCon blankEscapedChars          ) bs)
     , bench "Run blankStrings                 "  (whnf (runCon blankStrings               ) bs)
     , bench "Run blankNumbers                 "  (whnf (runCon blankNumbers               ) bs)
@@ -80,5 +80,12 @@ benchRankJsonConduits =
     ]
   ]
 
+benchRankJsonBigConduits :: [Benchmark]
+benchRankJsonBigConduits =
+  [ env (setupEnvJson "/Users/jky/Downloads/78mb.json") $ \bs -> bgroup "JsonBig"
+    [ bench "loadJson" (whnf loadJson bs)
+    ]
+  ]
+
 main :: IO ()
-main = defaultMain benchRankJsonConduits
+main = defaultMain benchRankJsonBigConduits
