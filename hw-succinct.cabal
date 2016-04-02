@@ -71,6 +71,7 @@ library
                       , HaskellWorks.Data.Json.Succinct.Transform
                       , HaskellWorks.Data.Json.Token
                       , HaskellWorks.Data.Positioning
+                      , HaskellWorks.Data.Search
                       , HaskellWorks.Data.Succinct
                       , HaskellWorks.Data.Succinct.BalancedParens
                       , HaskellWorks.Data.Succinct.BalancedParens.Internal
@@ -169,5 +170,6 @@ benchmark bench
         criterion       >= 1.1.0.0 && < 1.2 ,
         hw-succinct                         ,
         mmap                                ,
+        resourcet                           ,
         vector          >= 0.6     && < 0.12
 

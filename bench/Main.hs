@@ -3,14 +3,13 @@
 
 module Main where
 
+import           Control.Monad.Trans.Resource                        (MonadThrow)
 import           Criterion.Main
 import qualified Data.ByteString                                     as BS
 import qualified Data.ByteString.Internal                            as BSI
 import           Data.Conduit                                        (Conduit,
                                                                       (=$=))
 import qualified Data.Vector.Storable                                as DVS
-import qualified Data.Vector.Storable                                as DVS
-import           Data.Word                                           (Word64)
 import           Data.Word
 import           Foreign
 import           HaskellWorks.Data.Bits.BitShown
@@ -20,9 +19,7 @@ import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Conduit.Json.Blank
 import           HaskellWorks.Data.Conduit.List
 import           HaskellWorks.Data.FromByteString
-import           HaskellWorks.Data.FromForeignRegion
 import           HaskellWorks.Data.Json.Succinct.Cursor
-import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens.Simple
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic
@@ -49,8 +46,10 @@ runBlankIdentifiers bs = BS.concat $ runListConduit [bs] blankIdentifiers
 runCon :: Conduit i [] BS.ByteString -> i -> BS.ByteString
 runCon con bs = BS.concat $ runListConduit [bs] con
 
+jsonToInterestBits3 :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 jsonToInterestBits3 = blankEscapedChars =$= blankStrings =$= blankNumbers =$= blankIdentifiers =$= blankedJsonToInterestBits
 
+jsonToInterestBitsOld :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 jsonToInterestBitsOld = textToJsonToken =$= jsonToken2Markers =$= markerToByteString
 
 runBlankedJsonToInterestBits :: BS.ByteString -> BS.ByteString
@@ -59,13 +58,13 @@ runBlankedJsonToInterestBits bs = BS.concat $ runListConduit [bs] blankedJsonToI
 main :: IO ()
 main = defaultMain
   [ env setupEnv $ \bv -> bgroup "Nothing" []
-  -- , env setupEnv $ \bv -> bgroup "Rank"
-  --   [ bench "Rank - Once"   (whnf (rank1    bv) 1)
-  --   , bench "Select - Once" (whnf (select1  bv) 1)
-  --   , bench "Rank - Many"   (nf   (map (getCount . rank1  bv)) [0, 1000..10000000])
-  --   , bench "PopCnt1 Broadword - Once" (nf   (map (\n -> getCount (PC1BW.popCount1  (DVS.take n bv)))) [0, 1000..10000000])
-  --   , bench "PopCnt1 GHC       - Once" (nf   (map (\n -> getCount (PC1GHC.popCount1 (DVS.take n bv)))) [0, 1000..10000000])
-  --   ]
+  , env setupEnv $ \bv -> bgroup "Rank"
+    [ bench "Rank - Once"   (whnf (rank1    bv) 1)
+    , bench "Select - Once" (whnf (select1  bv) 1)
+    , bench "Rank - Many"   (nf   (map (getCount . rank1  bv)) [0, 1000..10000000])
+    , bench "PopCnt1 Broadword - Once" (nf   (map (\n -> getCount (PC1BW.popCount1  (DVS.take n bv)))) [0, 1000..10000000])
+    , bench "PopCnt1 GHC       - Once" (nf   (map (\n -> getCount (PC1GHC.popCount1 (DVS.take n bv)))) [0, 1000..10000000])
+    ]
   , env (setupEnvJson40 "/Users/jky/Downloads/part40.json") $ \bs -> bgroup "Json40"
     [ bench "Run blankEscapedChars            "  (whnf (runCon blankEscapedChars          ) bs)
     , bench "Run blankStrings                 "  (whnf (runCon blankStrings               ) bs)
