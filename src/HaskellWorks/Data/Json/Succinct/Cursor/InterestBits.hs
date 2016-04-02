@@ -30,11 +30,20 @@ getJsonInterestBits (JsonInterestBits a) = a
 jsonBsToInterestBs :: ByteString -> ByteString
 jsonBsToInterestBs textBS = BS.concat $ runListConduit (blankJson =$= blankedJsonToInterestBits) [textBS]
 
+jsonBsToInterestBss :: ByteString -> [ByteString]
+jsonBsToInterestBss textBS = runListConduit (blankJson =$= blankedJsonToInterestBits) [textBS]
+
 genInterest :: ByteString -> Maybe (Word8, ByteString)
 genInterest = BS.uncons
 
 genInterestForever :: ByteString -> Maybe (Word8, ByteString)
 genInterestForever bs = BS.uncons bs <|> Just (0, bs)
+
+genFromBssForever :: [ByteString] -> Maybe (Word8, [ByteString])
+genFromBssForever (bs:bss) = case BS.uncons bs of
+  Just (c, cs)  -> Just (c, cs:bss)
+  Nothing       -> Just (0,    bss)
+genFromBssForever [] = Just (0, [])
 
 instance FromByteString (JsonInterestBits (BitShown BS.ByteString)) where
   fromByteString textBS = JsonInterestBits (BitShown (BS.unfoldr genInterest (jsonBsToInterestBs textBS)))
@@ -44,18 +53,18 @@ instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word8))) where
 
 instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word16))) where
   fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldrN newLen genInterestForever interestBS)))
-    where interestBS  = jsonBsToInterestBs textBS
-          newLen      = (BS.length interestBS + 1) `div` 2 * 2
+    where interestBS    = jsonBsToInterestBs textBS
+          newLen        = (BS.length interestBS + 1) `div` 2 * 2
 
 instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word32))) where
   fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldrN newLen genInterestForever interestBS)))
-    where interestBS  = jsonBsToInterestBs textBS
-          newLen      = (BS.length interestBS + 3) `div` 4 * 4
+    where interestBS    = jsonBsToInterestBs textBS
+          newLen        = (BS.length interestBS + 3) `div` 4 * 4
 
 instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word64))) where
   fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldrN newLen genInterestForever interestBS)))
-    where interestBS  = jsonBsToInterestBs textBS
-          newLen      = (BS.length interestBS + 7) `div` 8 * 8
+    where interestBS    = jsonBsToInterestBs textBS
+          newLen        = (BS.length interestBS + 7) `div` 8 * 8
 
 instance FromByteString (JsonInterestBits Poppy512) where
   fromByteString = JsonInterestBits . makePoppy512 . bitShown . getJsonInterestBits . fromByteString

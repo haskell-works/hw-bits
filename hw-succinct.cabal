@@ -50,6 +50,7 @@ library
                       , HaskellWorks.Data.Bits.PopCount.PopCount1
                       , HaskellWorks.Data.Bits.PopCount.PopCount1.Broadword
                       , HaskellWorks.Data.Bits.PopCount.PopCount1.GHC
+                      , HaskellWorks.Data.ByteString
                       , HaskellWorks.Data.Conduit.Json
                       , HaskellWorks.Data.Conduit.Json.Blank
                       , HaskellWorks.Data.Conduit.Json.Words
