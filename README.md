@@ -61,7 +61,7 @@ Run the following in the shell:
          296 import System.IO.MMap
          296 import Data.Word
          296 (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/78mbs.json" ReadOnly Nothing
-         306 let !cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString Poppy512 (SimpleBalancedParens (DVS.Vector Word64))
+         638 cursor <- measure (fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64)))
 
 ## Examples
 
@@ -72,8 +72,8 @@ Run the following in the shell:
     import System.IO.MMap
     import Data.Word
     import System.CPUTime
-    (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/part80.json" ReadOnly Nothing
-    cursor <- measure $ fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
+    (fptr :: ForeignPtr Word8, offset, size) <- mmapFileForeignPtr "/Users/jky/Downloads/78mbs.json" ReadOnly Nothing
+    cursor <- measure (fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64)))
     let !bs = BSI.fromForeignPtr (castForeignPtr fptr) offset size
     x <- measure $ jsonBsToInterestBs bs
     let !y = runListConduit [bs] (unescape' "")
