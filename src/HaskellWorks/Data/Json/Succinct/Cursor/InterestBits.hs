@@ -6,7 +6,7 @@
 module HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
   ( JsonInterestBits(..)
   , getJsonInterestBits
-  , jsonBsToInterestBs
+  , jsonBssToInterestBitsBs
   ) where
 
 import           Control.Applicative
@@ -27,11 +27,8 @@ newtype JsonInterestBits a = JsonInterestBits a
 getJsonInterestBits :: JsonInterestBits a -> a
 getJsonInterestBits (JsonInterestBits a) = a
 
-jsonBsToInterestBs :: ByteString -> ByteString
-jsonBsToInterestBs textBS = BS.concat $ runListConduit (blankJson =$= blankedJsonToInterestBits) [textBS]
-
-jsonBsToInterestBss :: ByteString -> [ByteString]
-jsonBsToInterestBss textBS = runListConduit (blankJson =$= blankedJsonToInterestBits) [textBS]
+jsonBssToInterestBitsBs :: [ByteString] -> ByteString
+jsonBssToInterestBitsBs bss = BS.concat $ runListConduit (blankJson =$= blankedJsonToInterestBits) bss
 
 genInterest :: ByteString -> Maybe (Word8, ByteString)
 genInterest = BS.uncons
@@ -39,31 +36,25 @@ genInterest = BS.uncons
 genInterestForever :: ByteString -> Maybe (Word8, ByteString)
 genInterestForever bs = BS.uncons bs <|> Just (0, bs)
 
-genFromBssForever :: [ByteString] -> Maybe (Word8, [ByteString])
-genFromBssForever (bs:bss) = case BS.uncons bs of
-  Just (c, cs)  -> Just (c, cs:bss)
-  Nothing       -> Just (0,    bss)
-genFromBssForever [] = Just (0, [])
-
 instance FromByteString (JsonInterestBits (BitShown BS.ByteString)) where
-  fromByteString textBS = JsonInterestBits (BitShown (BS.unfoldr genInterest (jsonBsToInterestBs textBS)))
+  fromByteString bs = JsonInterestBits (BitShown (BS.unfoldr genInterest (jsonBssToInterestBitsBs [bs])))
 
 instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word8))) where
-  fromByteString textBS = JsonInterestBits (BitShown (DVS.unfoldr genInterest (jsonBsToInterestBs textBS)))
+  fromByteString bs = JsonInterestBits (BitShown (DVS.unfoldr genInterest (jsonBssToInterestBitsBs [bs])))
 
 instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word16))) where
-  fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldrN newLen genInterestForever interestBS)))
-    where interestBS    = jsonBsToInterestBs textBS
+  fromByteString bs = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldrN newLen genInterestForever interestBS)))
+    where interestBS    = jsonBssToInterestBitsBs [bs]
           newLen        = (BS.length interestBS + 1) `div` 2 * 2
 
 instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word32))) where
-  fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldrN newLen genInterestForever interestBS)))
-    where interestBS    = jsonBsToInterestBs textBS
+  fromByteString bs = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldrN newLen genInterestForever interestBS)))
+    where interestBS    = jsonBssToInterestBitsBs [bs]
           newLen        = (BS.length interestBS + 3) `div` 4 * 4
 
 instance FromByteString (JsonInterestBits (BitShown (DVS.Vector Word64))) where
-  fromByteString textBS = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldrN newLen genInterestForever interestBS)))
-    where interestBS    = jsonBsToInterestBs textBS
+  fromByteString bs = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldrN newLen genInterestForever interestBS)))
+    where interestBS    = jsonBssToInterestBitsBs [bs]
           newLen        = (BS.length interestBS + 7) `div` 8 * 8
 
 instance FromByteString (JsonInterestBits Poppy512) where
