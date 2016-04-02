@@ -32,12 +32,10 @@ blankEscapedChars' rs = do
   where
     unescapeByteString :: (Bool, ByteString) -> Maybe (Word8, (Bool, ByteString))
     unescapeByteString (wasEscaped, bs) = case BS.uncons bs of
-      Just (c, cs) -> if wasEscaped
-        then Just (wUnderscore, (False, cs))
-        else if c /= wBackslash
-          then Just (c, (False, cs))
-          else Just (c, (True, cs))
-      Nothing -> Nothing
+      Just (_, cs) | wasEscaped       -> Just (wUnderscore, (False, cs))
+      Just (c, cs) | c /= wBackslash  -> Just (c, (False, cs))
+      Just (c, cs)                    -> Just (c, (True, cs))
+      Nothing                         -> Nothing
 
 blankStrings :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 blankStrings = blankStrings' False
