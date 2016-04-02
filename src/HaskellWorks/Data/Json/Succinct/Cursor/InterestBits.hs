@@ -7,7 +7,6 @@ module HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
   ( JsonInterestBits(..)
   , getJsonInterestBits
   , jsonBsToInterestBs
-  , chunkup
   ) where
 
 import           Control.Applicative
@@ -27,12 +26,6 @@ newtype JsonInterestBits a = JsonInterestBits a
 
 getJsonInterestBits :: JsonInterestBits a -> a
 getJsonInterestBits (JsonInterestBits a) = a
-
-chunkup :: ByteString -> [ByteString]
-chunkup bs = if BS.length bs == 0
-  then []
-  else case BS.splitAt 1024 bs of
-    (as, zs) -> as : chunkup zs
 
 jsonBsToInterestBs :: ByteString -> ByteString
 jsonBsToInterestBs textBS = BS.concat $ runListConduit [textBS] (blankJson =$= blankedJsonToInterestBits)
