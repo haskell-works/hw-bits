@@ -32,7 +32,7 @@ blankedJsonToInterestBits :: Monad m => Conduit BS.ByteString m BS.ByteString
 blankedJsonToInterestBits = blankedJsonToInterestBits' ""
 
 padRight :: Word8 -> Int -> BS.ByteString -> BS.ByteString
-padRight w n bs = fst (BS.unfoldrN n gen bs)
+padRight w n bs = if BS.length bs >= n then bs else fst (BS.unfoldrN n gen bs)
   where gen :: ByteString -> Maybe (Word8, ByteString)
         gen cs = case BS.uncons cs of
           Just (c, ds) -> Just (c, ds)
@@ -79,28 +79,6 @@ markerToByteString = markerToByteString' 0 0
 
 textToJsonToken :: MonadThrow m => Conduit BS.ByteString m (ParseDelta Offset, JsonToken)
 textToJsonToken = conduitParser (Offset 0) parseJsonToken
-
-unescape' :: MonadThrow m => BS.ByteString -> Conduit BS.ByteString m BS.ByteString
-unescape' rs = do
-  mbs <- await
-  case mbs of
-    Just bs -> do
-      let cs = BS.concat [rs, bs]
-      let ds = fst (unfoldrN (BS.length cs) unescapeByteString cs)
-      yield ds
-      unescape' (BS.drop (BS.length ds) cs)
-    Nothing -> return ()
-
-unescapeByteString :: ByteString -> Maybe (Word8, ByteString)
-unescapeByteString bs = case BS.uncons bs of
-  Just (c, cs) -> case BS.uncons cs of
-    Just (_, ds) -> if c /= wBackslash
-      then Just (c, cs)
-      else Just (c, BS.cons wUnderscore ds)
-    Nothing -> if c /= wBackslash
-      then Just (c, cs)
-      else Nothing
-  Nothing -> Nothing
 
 jsonToken2Markers :: Monad m => Conduit (ParseDelta Offset, JsonToken) m Int64
 jsonToken2Markers = do
