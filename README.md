@@ -76,7 +76,6 @@ Run the following in the shell:
     cursor <- measure $ fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
     let !bs = BSI.fromForeignPtr (castForeignPtr fptr) offset size
     x <- measure $ jsonBsToInterestBs bs
-    x <- measure $ jsonBsToInterestBs2 bs
     let !y = runListConduit [bs] (unescape' "")
 
     import Foreign

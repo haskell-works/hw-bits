@@ -40,11 +40,8 @@ setupEnvJson40 filepath = do
   let !bs = BSI.fromForeignPtr (castForeignPtr fptr) offset size
   return bs
 
-run1 :: BS.ByteString -> JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
-run1 bs = fromByteString bs :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
-
-runJ2IB :: BS.ByteString -> BS.ByteString
-runJ2IB bs = BS.concat $ runListConduit [bs] (blankEscapedChars =$= blankStrings =$= blankNumbers =$= blankIdentifiers =$= blankedJsonToInterestBits)
+loadJson :: BS.ByteString -> JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
+loadJson bs = fromByteString bs :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
 
 runBlankIdentifiers :: BS.ByteString -> BS.ByteString
 runBlankIdentifiers bs = BS.concat $ runListConduit [bs] blankIdentifiers
@@ -77,5 +74,6 @@ main = defaultMain
     , bench "Run blankedJsonToInterestBits    "  (whnf (runCon blankedJsonToInterestBits  ) bs)
     , bench "Run jsonToInterestBits3          "  (whnf (runCon jsonToInterestBits3        ) bs)
     , bench "Run jsonToInterestBitsOld        "  (whnf (runCon jsonToInterestBitsOld      ) bs)
+    , bench "loadJson                         "  (whnf  loadJson                            bs)
     ]
   ]

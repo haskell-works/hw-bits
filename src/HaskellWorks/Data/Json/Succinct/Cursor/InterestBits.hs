@@ -7,7 +7,6 @@ module HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
   ( JsonInterestBits(..)
   , getJsonInterestBits
   , jsonBsToInterestBs
-  , jsonBsToInterestBs2
   , chunkup
   ) where
 
@@ -40,10 +39,7 @@ chunkup bs = if BS.length bs == 0
     (as, zs) -> as : chunkup zs
 
 jsonBsToInterestBs :: ByteString -> ByteString
-jsonBsToInterestBs textBS = BS.concat $ runListConduit [textBS] (textToJsonToken =$= jsonToken2Markers =$= markerToByteString)
-
-jsonBsToInterestBs2 :: ByteString -> ByteString
-jsonBsToInterestBs2 textBS = BS.concat $ runListConduit [textBS] (blankJson =$= blankedJsonToInterestBits)
+jsonBsToInterestBs textBS = BS.concat $ runListConduit [textBS] (blankJson =$= blankedJsonToInterestBits)
 
 genInterest :: ByteString -> Maybe (Word8, ByteString)
 genInterest bs  = if BS.null bs
