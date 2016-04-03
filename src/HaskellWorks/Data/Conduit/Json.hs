@@ -28,7 +28,7 @@ import           HaskellWorks.Data.Json.Final.Tokenize
 import           HaskellWorks.Data.Json.Token
 import           Prelude                                              as P
 
-interestingWord8s :: A.Array Word8 Word8
+interestingWord8s :: A.UArray Word8 Word8
 interestingWord8s = A.array (0, 255) [
   (w, if w == wOpenBracket || w == wOpenBrace || w == wOpenParen || w == wt || w == wf || w == wn || w == w1
     then 1
