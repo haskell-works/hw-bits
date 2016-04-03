@@ -9,14 +9,9 @@ import           Test.Hspec
 
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 
-whenBlankedEscapedShouldBe :: BS.ByteString -> BS.ByteString -> Spec
-whenBlankedEscapedShouldBe original expected = do
-  it (show original ++ " when blanked escaped should be " ++ show expected) $ do
-    BS.concat (runListConduit blankEscapedChars [original]) `shouldBe` expected
-
 whenBlankedStringsShouldBe :: BS.ByteString -> BS.ByteString -> Spec
 whenBlankedStringsShouldBe original expected = do
-  it (show original ++ " when blanked strings should be " ++ show expected) $ do
+  it (show original ++ " when blanked escaped should be " ++ show expected) $ do
     BS.concat (runListConduit blankStrings [original]) `shouldBe` expected
 
 whenBlankedNumbersShouldBe :: BS.ByteString -> BS.ByteString -> Spec
@@ -36,13 +31,12 @@ whenBlankedJsonShouldBe original expected = do
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Conduit.Json.BlankSpec" $ do
-  describe "Can blank escapes" $ do
-    ""          `whenBlankedEscapedShouldBe` ""
-    "\\\\"      `whenBlankedEscapedShouldBe` "\\_"
-    "\\\\\\"    `whenBlankedEscapedShouldBe` "\\_\\"
-    " \\\\\\"   `whenBlankedEscapedShouldBe` " \\_\\"
-    " \\n\\\\"  `whenBlankedEscapedShouldBe` " \\_\\_"
   describe "Can blank strings" $ do
+    "\"\""          `whenBlankedStringsShouldBe` "()"
+    "\"\\\\\""      `whenBlankedStringsShouldBe` "(  )"
+    "\"\\\\\\\""    `whenBlankedStringsShouldBe` "(    "
+    "\" \\\\\\\""   `whenBlankedStringsShouldBe` "(     "
+    "\" \\n\\\\\""  `whenBlankedStringsShouldBe` "(     )"
     ""              `whenBlankedStringsShouldBe` ""
     "\"\""          `whenBlankedStringsShouldBe` "()"
     "\" \""         `whenBlankedStringsShouldBe` "( )"

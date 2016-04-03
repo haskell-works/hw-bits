@@ -2,8 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module HaskellWorks.Data.Conduit.Json.Blank
-  ( blankEscapedChars
-  , blankIdentifiers
+  ( blankIdentifiers
   , blankNumbers
   , blankStrings
   , blankJson
@@ -18,32 +17,9 @@ import           HaskellWorks.Data.Conduit.Json.Words
 import           Prelude                              as P
 
 data FastState
-  = NotEscaped
-  | Escaped
+  = Escaped
   | InJson
   | InString
-
-blankEscapedChars :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankEscapedChars = blankEscapedChars' NotEscaped
-
-blankEscapedChars' :: MonadThrow m => FastState -> Conduit BS.ByteString m BS.ByteString
-blankEscapedChars' lastState = do
-  !mbs <- await
-  case mbs of
-    Just bs -> do
-      let (!cs, Just (!nextState, _)) = unfoldrN (BS.length bs) unescapeByteString (lastState, bs)
-      yield cs
-      blankEscapedChars' nextState
-    Nothing -> return ()
-  where
-    unescapeByteString :: (FastState, ByteString) -> Maybe (Word8, (FastState, ByteString))
-    unescapeByteString (Escaped, bs) = case BS.uncons bs of
-      Just (_, !cs) -> Just (wUnderscore, (NotEscaped, cs))
-      Nothing       -> Nothing
-    unescapeByteString (NotEscaped, bs) = case BS.uncons bs of
-      Just (!c, !cs) | c /= wBackslash  -> Just (c, (NotEscaped, cs))
-      Just (!c, !cs)                    -> Just (c, (Escaped   , cs))
-      Nothing                           -> Nothing
 
 blankStrings :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 blankStrings = blankStrings' InJson
@@ -60,15 +36,19 @@ blankStrings' lastState = do
   where
     blankByteString :: (FastState, ByteString) -> Maybe (Word8, (FastState, ByteString))
     blankByteString (InString, bs) = case BS.uncons bs of
-      Just (!c, !cs) -> if c /= wDoubleQuote
-        then Just (wSpace     , (InString   , cs))
-        else Just (wCloseParen, (InJson     , cs))
-      Nothing -> Nothing
+      Just (!c, !cs) | c == wBackslash    -> Just (wSpace     , (Escaped  , cs))
+      Just (!c, !cs) | c == wDoubleQuote  -> Just (wCloseParen, (InJson   , cs))
+      Just (!c, !cs)                      -> Just (wSpace     , (InString , cs))
+      Nothing                             -> Nothing
     blankByteString (InJson, bs) = case BS.uncons bs of
       Just (!c, !cs) -> if c /= wDoubleQuote
         then Just (c          , (InJson     , cs))
         else Just (wOpenParen , (InString   , cs))
       Nothing -> Nothing
+    blankByteString (Escaped, bs) = case BS.uncons bs of
+      Just (_, !cs) -> Just (wSpace, (InString, cs))
+      Nothing       -> Nothing
+
 
 blankNumbers :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 blankNumbers = blankNumbers' False
@@ -113,4 +93,4 @@ blankIdentifiers' wasIdentifier = do
       Nothing                                         -> Nothing
 
 blankJson :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankJson = blankEscapedChars =$= blankStrings =$= blankNumbers =$= blankIdentifiers
+blankJson = blankStrings =$= blankNumbers =$= blankIdentifiers

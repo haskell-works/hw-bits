@@ -69,8 +69,7 @@ benchRankSelect =
 benchRankJson40Conduits :: [Benchmark]
 benchRankJson40Conduits =
   [ env (setupEnvJson "/Users/jky/Downloads/part40.json") $ \bs -> bgroup "Json40"
-    [ bench "Run blankEscapedChars            "  (whnf (runCon blankEscapedChars          ) bs)
-    , bench "Run blankStrings                 "  (whnf (runCon blankStrings               ) bs)
+    [ bench "Run blankStrings                 "  (whnf (runCon blankStrings               ) bs)
     , bench "Run blankNumbers                 "  (whnf (runCon blankNumbers               ) bs)
     , bench "Run blankIdentifiers             "  (whnf (runCon blankIdentifiers           ) bs)
     , bench "Run blankedJsonToInterestBits    "  (whnf (runCon blankedJsonToInterestBits  ) bs)
