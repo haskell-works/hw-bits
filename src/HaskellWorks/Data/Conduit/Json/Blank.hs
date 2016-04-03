@@ -20,6 +20,8 @@ import           Prelude                              as P
 data FastState
   = NotEscaped
   | Escaped
+  | NotInString
+  | InString
 
 blankEscapedChars :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 blankEscapedChars = blankEscapedChars' NotEscaped
@@ -44,23 +46,28 @@ blankEscapedChars' lastState = do
       Nothing                           -> Nothing
 
 blankStrings :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankStrings = blankStrings' False
+blankStrings = blankStrings' NotInString
 
-blankStrings' :: MonadThrow m => Bool -> Conduit BS.ByteString m BS.ByteString
-blankStrings' wasInString = do
+blankStrings' :: MonadThrow m => FastState -> Conduit BS.ByteString m BS.ByteString
+blankStrings' lastState = do
   mbs <- await
   case mbs of
     Just bs -> do
-      let (!cs, Just (!nextInString, _)) = unfoldrN (BS.length bs) blankByteString (wasInString, bs)
+      let (!cs, Just (!nextState, _)) = unfoldrN (BS.length bs) blankByteString (lastState, bs)
       yield cs
-      blankStrings' nextInString
+      blankStrings' nextState
     Nothing -> return ()
   where
-    blankByteString :: (Bool, ByteString) -> Maybe (Word8, (Bool, ByteString))
-    blankByteString (isInString, bs) = case BS.uncons bs of
-      Just (c, cs) -> if c /= wDoubleQuote
-        then Just (if isInString then wSpace      else c          , (isInString     , cs))
-        else Just (if isInString then wCloseParen else wOpenParen , (not isInString , cs))
+    blankByteString :: (FastState, ByteString) -> Maybe (Word8, (FastState, ByteString))
+    blankByteString (InString, bs) = case BS.uncons bs of
+      Just (!c, !cs) -> if c /= wDoubleQuote
+        then Just (wSpace     , (InString   , cs))
+        else Just (wCloseParen, (NotInString, cs))
+      Nothing -> Nothing
+    blankByteString (NotInString, bs) = case BS.uncons bs of
+      Just (!c, !cs) -> if c /= wDoubleQuote
+        then Just (c          , (NotInString, cs))
+        else Just (wOpenParen , (InString   , cs))
       Nothing -> Nothing
 
 blankNumbers :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
