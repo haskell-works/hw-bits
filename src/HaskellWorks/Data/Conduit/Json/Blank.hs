@@ -73,7 +73,7 @@ blankNumbers' wasInNumber = do
     Just bs -> case unfoldrN (BS.length bs) blankByteString (wasInNumber, bs) of
       (cs, Just (nextInNumber, _)) -> do
         yield cs
-        blankStrings' nextInNumber
+        blankNumbers' nextInNumber
       (cs, _) -> yield cs
     Nothing -> return ()
   where
