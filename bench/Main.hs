@@ -80,6 +80,13 @@ benchRankJson40Conduits =
     ]
   ]
 
+benchRankJson80Conduits :: [Benchmark]
+benchRankJson80Conduits =
+  [ env (setupEnvJson "/Users/jky/Downloads/part80.json") $ \bs -> bgroup "Json40"
+    [ bench "loadJson" (whnf loadJson bs)
+    ]
+  ]
+
 benchRankJsonBigConduits :: [Benchmark]
 benchRankJsonBigConduits =
   [ env (setupEnvJson "/Users/jky/Downloads/78mb.json") $ \bs -> bgroup "JsonBig"
@@ -88,4 +95,4 @@ benchRankJsonBigConduits =
   ]
 
 main :: IO ()
-main = defaultMain benchRankJsonBigConduits
+main = defaultMain benchRankJson80Conduits
