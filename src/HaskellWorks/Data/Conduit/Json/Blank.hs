@@ -94,7 +94,7 @@ blankIdentifiers' wasIdentifier = do
     Just bs -> case unfoldrN (BS.length bs) blankByteString (wasIdentifier, bs) of
       (cs, Just (nextInIdentifier, _)) -> do
         yield cs
-        blankStrings' nextInIdentifier
+        blankIdentifiers' nextInIdentifier
       (cs, _) -> yield cs
     Nothing -> return ()
   where
