@@ -90,6 +90,7 @@ Run the following in the shell:
     x <- measure $ BS.concat $ runListConduit [bs] (blankJson =$= blankedJsonToInterestBits)
     x <- measure $ jsonBsToInterestBs bs
     
+    jsonTokenAt $ J.nextSibling $ J.firstChild $ J.nextSibling $ J.firstChild $ J.firstChild  cursor
 
 ## References
 * [Original Pull Request](https://github.com/snoyberg/conduit/pull/244)

@@ -5,11 +5,11 @@ machine:
 dependencies:
   cache_directories:
     - "~/.stack"
-    - "~/conduit-tokenize-attoparsec/.stack-work"
+    - "~/.ghc"
+    - "~/.cabal"
+    - "~/stack-1.0.4-linux-x86_64/stack"
   pre:
-    - wget https://github.com/commercialhaskell/stack/releases/download/v0.1.8.0/stack-0.1.8.0-linux-x86_64.tar.gz -O /tmp/stack.tar.gz
-    - tar -C /tmp -xf /tmp/stack.tar.gz && chmod +x /tmp/stack-*/stack
-    - sudo mv /tmp/stack-*/stack /usr/bin/stack
+    - ./install-stack.sh 1.0.4
   override:
     - stack setup
     - stack clean
