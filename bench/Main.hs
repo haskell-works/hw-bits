@@ -47,7 +47,7 @@ runCon :: Conduit i [] BS.ByteString -> i -> BS.ByteString
 runCon con bs = BS.concat $ runListConduit con [bs]
 
 jsonToInterestBits3 :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-jsonToInterestBits3 = blankEscapedChars =$= blankStrings =$= blankNumbers =$= blankIdentifiers =$= blankedJsonToInterestBits
+jsonToInterestBits3 = blankJson =$= blankedJsonToInterestBits
 
 jsonToInterestBitsOld :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 jsonToInterestBitsOld = textToJsonToken =$= jsonToken2Markers =$= markerToByteString
@@ -95,4 +95,4 @@ benchRankJsonBigConduits =
   ]
 
 main :: IO ()
-main = defaultMain benchRankJson80Conduits
+main = defaultMain benchRankJson40Conduits

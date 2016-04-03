@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns      #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module HaskellWorks.Data.Conduit.Json.Blank
@@ -16,26 +17,31 @@ import           Data.Word
 import           HaskellWorks.Data.Conduit.Json.Words
 import           Prelude                              as P
 
-blankEscapedChars :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankEscapedChars = blankEscapedChars' ""
+data FastState
+  = NotEscaped
+  | Escaped
 
-blankEscapedChars' :: MonadThrow m => BS.ByteString -> Conduit BS.ByteString m BS.ByteString
-blankEscapedChars' rs = do
-  mbs <- await
+blankEscapedChars :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
+blankEscapedChars = blankEscapedChars' NotEscaped
+
+blankEscapedChars' :: MonadThrow m => FastState -> Conduit BS.ByteString m BS.ByteString
+blankEscapedChars' lastState = do
+  !mbs <- await
   case mbs of
     Just bs -> do
-      let cs = if BS.length rs /= 0 then BS.concat [rs, bs] else bs
-      let ds = fst (unfoldrN (BS.length cs) unescapeByteString (False, cs))
-      yield ds
-      blankEscapedChars' (BS.drop (BS.length ds) cs)
-    Nothing -> when (BS.length rs > 0) (yield rs)
+      let (!cs, Just (!nextState, _)) = unfoldrN (BS.length bs) unescapeByteString (lastState, bs)
+      yield cs
+      blankEscapedChars' nextState
+    Nothing -> return ()
   where
-    unescapeByteString :: (Bool, ByteString) -> Maybe (Word8, (Bool, ByteString))
-    unescapeByteString (wasEscaped, bs) = case BS.uncons bs of
-      Just (_, cs) | wasEscaped       -> Just (wUnderscore, (False, cs))
-      Just (c, cs) | c /= wBackslash  -> Just (c, (False, cs))
-      Just (c, cs)                    -> Just (c, (True, cs))
-      Nothing                         -> Nothing
+    unescapeByteString :: (FastState, ByteString) -> Maybe (Word8, (FastState, ByteString))
+    unescapeByteString (Escaped, bs) = case BS.uncons bs of
+      Just (_, !cs) -> Just (wUnderscore, (NotEscaped, cs))
+      Nothing       -> Nothing
+    unescapeByteString (NotEscaped, bs) = case BS.uncons bs of
+      Just (!c, !cs) | c /= wBackslash  -> Just (c, (NotEscaped, cs))
+      Just (!c, !cs)                    -> Just (c, (Escaped   , cs))
+      Nothing                           -> Nothing
 
 blankStrings :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 blankStrings = blankStrings' False
