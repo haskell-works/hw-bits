@@ -50,11 +50,10 @@ blankStrings' :: MonadThrow m => Bool -> Conduit BS.ByteString m BS.ByteString
 blankStrings' wasInString = do
   mbs <- await
   case mbs of
-    Just bs -> case unfoldrN (BS.length bs) blankByteString (wasInString, bs) of
-      (cs, Just (nextInString, _)) -> do
-        yield cs
-        blankStrings' nextInString
-      (cs, _) -> yield cs
+    Just bs -> do
+      let (!cs, Just (!nextInString, _)) = unfoldrN (BS.length bs) blankByteString (wasInString, bs)
+      yield cs
+      blankStrings' nextInString
     Nothing -> return ()
   where
     blankByteString :: (Bool, ByteString) -> Maybe (Word8, (Bool, ByteString))
