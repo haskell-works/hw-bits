@@ -20,7 +20,7 @@ import           Prelude                              as P
 data FastState
   = NotEscaped
   | Escaped
-  | NotInString
+  | InJson
   | InString
 
 blankEscapedChars :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
@@ -46,7 +46,7 @@ blankEscapedChars' lastState = do
       Nothing                           -> Nothing
 
 blankStrings :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankStrings = blankStrings' NotInString
+blankStrings = blankStrings' InJson
 
 blankStrings' :: MonadThrow m => FastState -> Conduit BS.ByteString m BS.ByteString
 blankStrings' lastState = do
@@ -62,11 +62,11 @@ blankStrings' lastState = do
     blankByteString (InString, bs) = case BS.uncons bs of
       Just (!c, !cs) -> if c /= wDoubleQuote
         then Just (wSpace     , (InString   , cs))
-        else Just (wCloseParen, (NotInString, cs))
+        else Just (wCloseParen, (InJson     , cs))
       Nothing -> Nothing
-    blankByteString (NotInString, bs) = case BS.uncons bs of
+    blankByteString (InJson, bs) = case BS.uncons bs of
       Just (!c, !cs) -> if c /= wDoubleQuote
-        then Just (c          , (NotInString, cs))
+        then Just (c          , (InJson     , cs))
         else Just (wOpenParen , (InString   , cs))
       Nothing -> Nothing
 
