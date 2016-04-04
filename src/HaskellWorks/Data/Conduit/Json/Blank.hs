@@ -2,8 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module HaskellWorks.Data.Conduit.Json.Blank
-  ( blankStrings
-  , blankJson
+  ( blankJson
   ) where
 
 import           Control.Monad
@@ -14,27 +13,27 @@ import           Data.Word
 import           HaskellWorks.Data.Conduit.Json.Words
 import           Prelude                              as P
 
-data FastState
+data BlankState
   = Escaped
   | InJson
   | InString
   | InNumber
   | InIdent
 
-blankStrings :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankStrings = blankStrings' InJson
+blankJson :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
+blankJson = blankJson' InJson
 
-blankStrings' :: MonadThrow m => FastState -> Conduit BS.ByteString m BS.ByteString
-blankStrings' lastState = do
+blankJson' :: MonadThrow m => BlankState -> Conduit BS.ByteString m BS.ByteString
+blankJson' lastState = do
   mbs <- await
   case mbs of
     Just bs -> do
       let (!cs, Just (!nextState, _)) = unfoldrN (BS.length bs) blankByteString (lastState, bs)
       yield cs
-      blankStrings' nextState
+      blankJson' nextState
     Nothing -> return ()
   where
-    blankByteString :: (FastState, ByteString) -> Maybe (Word8, (FastState, ByteString))
+    blankByteString :: (BlankState, ByteString) -> Maybe (Word8, (BlankState, ByteString))
     blankByteString (InJson, bs) = case BS.uncons bs of
       Just (!c, !cs) | isLeadingDigit c   -> Just (w1         , (InNumber , cs))
       Just (!c, !cs) | c == wDoubleQuote  -> Just (wOpenParen , (InString , cs))
@@ -61,6 +60,3 @@ blankStrings' lastState = do
       Just (!c, !cs) | c == wDoubleQuote  -> Just (wOpenParen , (InString , cs))
       Just (!c, !cs)                      -> Just (c          , (InJson   , cs))
       Nothing                             -> Nothing
-
-blankJson :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankJson = blankStrings
