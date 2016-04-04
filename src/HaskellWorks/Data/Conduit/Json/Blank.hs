@@ -3,7 +3,6 @@
 
 module HaskellWorks.Data.Conduit.Json.Blank
   ( blankIdentifiers
-  , blankNumbers
   , blankStrings
   , blankJson
   ) where
@@ -20,6 +19,7 @@ data FastState
   = Escaped
   | InJson
   | InString
+  | InNumber
 
 blankStrings :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 blankStrings = blankStrings' InJson
@@ -35,41 +35,23 @@ blankStrings' lastState = do
     Nothing -> return ()
   where
     blankByteString :: (FastState, ByteString) -> Maybe (Word8, (FastState, ByteString))
+    blankByteString (InJson, bs) = case BS.uncons bs of
+      Just (!c, !cs) | isLeadingDigit c   -> Just (w1         , (InNumber , cs))
+      Just (!c, !cs) | c /= wDoubleQuote  -> Just (c          , (InJson   , cs))
+      Just ( _, !cs)                      -> Just (wOpenParen , (InString , cs))
+      Nothing -> Nothing
     blankByteString (InString, bs) = case BS.uncons bs of
       Just (!c, !cs) | c == wBackslash    -> Just (wSpace     , (Escaped  , cs))
       Just (!c, !cs) | c == wDoubleQuote  -> Just (wCloseParen, (InJson   , cs))
-      Just (!c, !cs)                      -> Just (wSpace     , (InString , cs))
+      Just (_ , !cs)                      -> Just (wSpace     , (InString , cs))
       Nothing                             -> Nothing
-    blankByteString (InJson, bs) = case BS.uncons bs of
-      Just (!c, !cs) -> if c /= wDoubleQuote
-        then Just (c          , (InJson     , cs))
-        else Just (wOpenParen , (InString   , cs))
-      Nothing -> Nothing
     blankByteString (Escaped, bs) = case BS.uncons bs of
-      Just (_, !cs) -> Just (wSpace, (InString, cs))
-      Nothing       -> Nothing
-
-
-blankNumbers :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankNumbers = blankNumbers' False
-
-blankNumbers' :: MonadThrow m => Bool -> Conduit BS.ByteString m BS.ByteString
-blankNumbers' wasInNumber = do
-  mbs <- await
-  case mbs of
-    Just bs -> case unfoldrN (BS.length bs) blankByteString (wasInNumber, bs) of
-      (cs, Just (nextInNumber, _)) -> do
-        yield cs
-        blankNumbers' nextInNumber
-      (cs, _) -> yield cs
-    Nothing -> return ()
-  where
-    blankByteString :: (Bool, ByteString) -> Maybe (Word8, (Bool, ByteString))
-    blankByteString (isInNumber, bs) = case BS.uncons bs of
-      Just (c, cs) | isInNumber && isTrailingDigit c  -> Just (w0, (True  , cs))
-      Just (c, cs) | isLeadingDigit c                 -> Just (w1, (True  , cs))
-      Just (c, cs)                                    -> Just (c,  (False , cs))
-      Nothing                                         -> Nothing
+      Just (_, !cs)                       -> Just (wSpace, (InString, cs))
+      Nothing                             -> Nothing
+    blankByteString (InNumber, bs) = case BS.uncons bs of
+      Just (!c, !cs) | isTrailingDigit c  -> Just (w0, (InNumber, cs))
+      Just (!c, !cs)                      -> Just (c,  (InJson  , cs))
+      Nothing                             -> Nothing
 
 blankIdentifiers :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 blankIdentifiers = blankIdentifiers' False
@@ -93,4 +75,4 @@ blankIdentifiers' wasIdentifier = do
       Nothing                                         -> Nothing
 
 blankJson :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankJson = blankStrings =$= blankNumbers =$= blankIdentifiers
+blankJson = blankStrings =$= blankIdentifiers

@@ -14,11 +14,6 @@ whenBlankedStringsShouldBe original expected = do
   it (show original ++ " when blanked escaped should be " ++ show expected) $ do
     BS.concat (runListConduit blankStrings [original]) `shouldBe` expected
 
-whenBlankedNumbersShouldBe :: BS.ByteString -> BS.ByteString -> Spec
-whenBlankedNumbersShouldBe original expected = do
-  it (show original ++ " when blanked numbers should be " ++ show expected) $ do
-    BS.concat (runListConduit blankNumbers [original]) `shouldBe` expected
-
 whenBlankedIdentifiersShouldBe :: BS.ByteString -> BS.ByteString -> Spec
 whenBlankedIdentifiersShouldBe original expected = do
   it (show original ++ " when blanked identifiers should be " ++ show expected) $ do
@@ -44,15 +39,15 @@ spec = describe "HaskellWorks.Data.Conduit.Json.BlankSpec" $ do
     " \"a \" x"     `whenBlankedStringsShouldBe` " (  ) x"
     " \"a\"b\"c\"d" `whenBlankedStringsShouldBe` " ( )b( )d"
   describe "Can blank numbers" $ do
-    ""              `whenBlankedNumbersShouldBe` ""
-    "1"             `whenBlankedNumbersShouldBe` "1"
-    "11"            `whenBlankedNumbersShouldBe` "10"
-    "00"            `whenBlankedNumbersShouldBe` "10"
-    "00"            `whenBlankedNumbersShouldBe` "10"
-    "-0.12e+34"     `whenBlankedNumbersShouldBe` "100000000"
-    "10.12E-34 "    `whenBlankedNumbersShouldBe` "100000000 "
-    "10.12E-34 12"  `whenBlankedNumbersShouldBe` "100000000 10"
-    " 10.12E-34 -1" `whenBlankedNumbersShouldBe` " 100000000 10"
+    ""              `whenBlankedStringsShouldBe` ""
+    "1"             `whenBlankedStringsShouldBe` "1"
+    "11"            `whenBlankedStringsShouldBe` "10"
+    "00"            `whenBlankedStringsShouldBe` "10"
+    "00"            `whenBlankedStringsShouldBe` "10"
+    "-0.12e+34"     `whenBlankedStringsShouldBe` "100000000"
+    "10.12E-34 "    `whenBlankedStringsShouldBe` "100000000 "
+    "10.12E-34 12"  `whenBlankedStringsShouldBe` "100000000 10"
+    " 10.12E-34 -1" `whenBlankedStringsShouldBe` " 100000000 10"
   describe "Can blank identifiers" $ do
     ""              `whenBlankedIdentifiersShouldBe` ""
     "a"             `whenBlankedIdentifiersShouldBe` "a"
