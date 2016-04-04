@@ -37,8 +37,8 @@ blankStrings' lastState = do
     blankByteString :: (FastState, ByteString) -> Maybe (Word8, (FastState, ByteString))
     blankByteString (InJson, bs) = case BS.uncons bs of
       Just (!c, !cs) | isLeadingDigit c   -> Just (w1         , (InNumber , cs))
-      Just (!c, !cs) | c /= wDoubleQuote  -> Just (c          , (InJson   , cs))
-      Just ( _, !cs)                      -> Just (wOpenParen , (InString , cs))
+      Just (!c, !cs) | c == wDoubleQuote  -> Just (wOpenParen , (InString , cs))
+      Just (!c, !cs)                      -> Just (c          , (InJson   , cs))
       Nothing -> Nothing
     blankByteString (InString, bs) = case BS.uncons bs of
       Just (!c, !cs) | c == wBackslash    -> Just (wSpace     , (Escaped  , cs))
