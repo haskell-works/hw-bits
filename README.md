@@ -2,11 +2,10 @@
 [![Circle CI](https://circleci.com/gh/haskell-works/hw-succinct.svg?style=svg)](https://circleci.com/gh/haskell-works/hw-succinct)
 Conduits for tokenizing streams.
 
-`hw-succinct` is an extension to the `conduit` library based on
-`Data.Conduit.Attoparsec` that allows the tokenization of a stream whilst also
-tracking arbitrary state.  The library includes in-built support for tracking
-such as line-column and stream offset, but can be extended with type-classes to
-support alternative state tracking.
+`hw-succinct` is a succinct JSON parsing library.  It uses succinct data-structures to allow traversal of
+large JSON strings with minimal memory overhead.
+
+It is currently considered experimental.
 
 For an example, see [`app/Main.hs`](../master/app/Main.hs)
 

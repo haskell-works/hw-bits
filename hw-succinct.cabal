@@ -1,5 +1,5 @@
 name:                   hw-succinct
-version:                0.1.0.0
+version:                0.0.0.1
 synopsis:               Conduits for tokenizing streams.
 description:            Please see README.md
 homepage:               http://github.com/haskell-works/hw-succinct#readme
@@ -115,7 +115,7 @@ library
                       , word8
 
   default-language:     Haskell2010
-  ghc-options:          -rtsopts -with-rtsopts=-N -Wall
+  ghc-options:          -rtsopts -with-rtsopts=-N -Wall -O2 -Wall -msse4.2
 
 test-suite hw-succinct-test
   type:                 exitcode-stdio-1.0
