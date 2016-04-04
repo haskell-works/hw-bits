@@ -49,8 +49,8 @@ blankStrings' lastState = do
       Just (_, !cs)                       -> Just (wSpace, (InString, cs))
       Nothing                             -> Nothing
     blankByteString (InNumber, bs) = case BS.uncons bs of
-      Just (!c, !cs) | isTrailingDigit c  -> Just (w0, (InNumber, cs))
-      Just (!c, !cs)                      -> Just (c,  (InJson  , cs))
+      Just (!c, !cs) | isTrailingDigit c  -> Just (w0         , (InNumber, cs))
+      Just _                              -> blankByteString    (InJson  , bs)
       Nothing                             -> Nothing
 
 blankIdentifiers :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
