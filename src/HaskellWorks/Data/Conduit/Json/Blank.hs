@@ -20,6 +20,7 @@ data FastState
   | InJson
   | InString
   | InNumber
+  | InIdent
 
 blankStrings :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 blankStrings = blankStrings' InJson
@@ -54,9 +55,9 @@ blankStrings' lastState = do
       Nothing                             -> Nothing
 
 blankIdentifiers :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankIdentifiers = blankIdentifiers' False
+blankIdentifiers = blankIdentifiers' InJson
 
-blankIdentifiers' :: MonadThrow m => Bool -> Conduit BS.ByteString m BS.ByteString
+blankIdentifiers' :: MonadThrow m => FastState -> Conduit BS.ByteString m BS.ByteString
 blankIdentifiers' wasIdentifier = do
   mbs <- await
   case mbs of
@@ -67,12 +68,15 @@ blankIdentifiers' wasIdentifier = do
       (cs, _) -> yield cs
     Nothing -> return ()
   where
-    blankByteString :: (Bool, ByteString) -> Maybe (Word8, (Bool, ByteString))
-    blankByteString (isInIdentifier, bs) = case BS.uncons bs of
-      Just (c, cs) | isInIdentifier && isAlphabetic c -> Just (wUnderscore, (True  , cs))
-      Just (c, cs) | isAlphabetic c                   -> Just (c          , (True  , cs))
-      Just (c, cs)                                    -> Just (c          , (False , cs))
-      Nothing                                         -> Nothing
+    blankByteString :: (FastState, ByteString) -> Maybe (Word8, (FastState, ByteString))
+    blankByteString (InIdent, bs) = case BS.uncons bs of
+      Just (c, cs) | isAlphabetic c       -> Just (wUnderscore, (InIdent, cs))
+      Just (c, cs)                        -> Just (c          , (InJson , cs))
+      Nothing                             -> Nothing
+    blankByteString (InJson, bs) = case BS.uncons bs of
+      Just (c, cs) | isAlphabetic c       -> Just (c          , (InIdent , cs))
+      Just (c, cs)                        -> Just (c          , (InJson  , cs))
+      Nothing                             -> Nothing
 
 blankJson :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 blankJson = blankStrings =$= blankIdentifiers
