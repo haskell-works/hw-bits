@@ -2,8 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module HaskellWorks.Data.Conduit.Json.Blank
-  ( blankIdentifiers
-  , blankStrings
+  ( blankStrings
   , blankJson
   ) where
 
@@ -39,6 +38,7 @@ blankStrings' lastState = do
     blankByteString (InJson, bs) = case BS.uncons bs of
       Just (!c, !cs) | isLeadingDigit c   -> Just (w1         , (InNumber , cs))
       Just (!c, !cs) | c == wDoubleQuote  -> Just (wOpenParen , (InString , cs))
+      Just (!c, !cs) | isAlphabetic c     -> Just (c          , (InIdent  , cs))
       Just (!c, !cs)                      -> Just (c          , (InJson   , cs))
       Nothing -> Nothing
     blankByteString (InString, bs) = case BS.uncons bs of
@@ -50,33 +50,17 @@ blankStrings' lastState = do
       Just (_, !cs)                       -> Just (wSpace, (InString, cs))
       Nothing                             -> Nothing
     blankByteString (InNumber, bs) = case BS.uncons bs of
-      Just (!c, !cs) | isTrailingDigit c  -> Just (w0         , (InNumber, cs))
-      Just _                              -> blankByteString    (InJson  , bs)
+      Just (!c, !cs) | isTrailingDigit c  -> Just (w0         , (InNumber , cs))
+      Just (!c, !cs) | c == wDoubleQuote  -> Just (wOpenParen , (InString , cs))
+      Just (!c, !cs) | isAlphabetic c     -> Just (c          , (InIdent  , cs))
+      Just (!c, !cs)                      -> Just (c          , (InJson   , cs))
       Nothing                             -> Nothing
-
-blankIdentifiers :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankIdentifiers = blankIdentifiers' InJson
-
-blankIdentifiers' :: MonadThrow m => FastState -> Conduit BS.ByteString m BS.ByteString
-blankIdentifiers' wasIdentifier = do
-  mbs <- await
-  case mbs of
-    Just bs -> case unfoldrN (BS.length bs) blankByteString (wasIdentifier, bs) of
-      (cs, Just (nextInIdentifier, _)) -> do
-        yield cs
-        blankIdentifiers' nextInIdentifier
-      (cs, _) -> yield cs
-    Nothing -> return ()
-  where
-    blankByteString :: (FastState, ByteString) -> Maybe (Word8, (FastState, ByteString))
     blankByteString (InIdent, bs) = case BS.uncons bs of
-      Just (c, cs) | isAlphabetic c       -> Just (wUnderscore, (InIdent, cs))
-      Just (c, cs)                        -> Just (c          , (InJson , cs))
-      Nothing                             -> Nothing
-    blankByteString (InJson, bs) = case BS.uncons bs of
-      Just (c, cs) | isAlphabetic c       -> Just (c          , (InIdent , cs))
-      Just (c, cs)                        -> Just (c          , (InJson  , cs))
+      Just (!c, !cs) | isAlphabetic c     -> Just (wUnderscore, (InIdent  , cs))
+      Just (!c, !cs) | isLeadingDigit c   -> Just (w1         , (InNumber , cs))
+      Just (!c, !cs) | c == wDoubleQuote  -> Just (wOpenParen , (InString , cs))
+      Just (!c, !cs)                      -> Just (c          , (InJson   , cs))
       Nothing                             -> Nothing
 
 blankJson :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-blankJson = blankStrings =$= blankIdentifiers
+blankJson = blankStrings

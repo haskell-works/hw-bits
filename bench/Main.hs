@@ -40,9 +40,6 @@ setupEnvJson filepath = do
 loadJson :: BS.ByteString -> JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
 loadJson bs = fromByteString bs :: JsonCursor BS.ByteString (BitShown (DVS.Vector Word64)) (SimpleBalancedParens (DVS.Vector Word64))
 
-runBlankIdentifiers :: BS.ByteString -> BS.ByteString
-runBlankIdentifiers bs = BS.concat $ runListConduit blankIdentifiers [bs]
-
 runCon :: Conduit i [] BS.ByteString -> i -> BS.ByteString
 runCon con bs = BS.concat $ runListConduit con [bs]
 
@@ -69,9 +66,7 @@ benchRankSelect =
 benchRankJson40Conduits :: [Benchmark]
 benchRankJson40Conduits =
   [ env (setupEnvJson "/Users/jky/Downloads/part40.json") $ \bs -> bgroup "Json40"
-    [ bench "Run blankStrings                 "  (whnf (runCon blankStrings               ) bs)
-    , bench "Run blankIdentifiers             "  (whnf (runCon blankIdentifiers           ) bs)
-    , bench "Run blankedJsonToInterestBits    "  (whnf (runCon blankedJsonToInterestBits  ) bs)
+    [ bench "Run blankJson                    "  (whnf (runCon blankJson                  ) bs)
     , bench "Run jsonToInterestBits3          "  (whnf (runCon jsonToInterestBits3        ) bs)
     , bench "Run jsonToInterestBitsOld        "  (whnf (runCon jsonToInterestBitsOld      ) bs)
     , bench "loadJson                         "  (whnf  loadJson                            bs)
