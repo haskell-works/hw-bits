@@ -1,6 +1,6 @@
 {-# LANGUAGE BangPatterns #-}
 
-module HaskellWorks.Data.Time where
+module HaskellWorks.Diagnostics.Time where
 
 import           System.CPUTime
 
