@@ -134,15 +134,16 @@ test-suite hw-succinct-test
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.OffsetSpec
                       , HaskellWorks.Data.Json.Final.TokenizeSpec
                       , HaskellWorks.Data.Json.Succinct.CursorSpec
+                      , HaskellWorks.Data.Json.Succinct.Cursor.InterestBitsSpec
                       , HaskellWorks.Data.Json.SuccinctSpec
                       , HaskellWorks.Data.Succinct.BalancedParensSpec
-                      , HaskellWorks.Data.Succinct.RankSelect.InternalSpec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0Spec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1Spec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0Spec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1Spec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.BasicGen
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512Spec
+                      , HaskellWorks.Data.Succinct.RankSelect.InternalSpec
                       , HaskellWorks.Data.Succinct.SimpleSpec
   build-depends:        base
                       , attoparsec                      >= 0.10
