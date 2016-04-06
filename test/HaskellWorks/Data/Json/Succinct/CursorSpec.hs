@@ -183,7 +183,7 @@ genSpec t _ = do
       let cursor = "[null, {\"field\": 1}]" :: JsonCursor BS.ByteString t u
       cd ((ns . fc . ns . fc) cursor)  `shouldBe` 3
     it "can navigate down and forwards" $ do
-      (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
+      (fptr, offset, size) <- mmapFileForeignPtr "test/data/sample.json" ReadOnly Nothing
       let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString t u
       jsonCursorType                                                              cursor  `shouldBe` JsonCursorObject
       jsonCursorType ((                                                       fc) cursor) `shouldBe` JsonCursorString
@@ -199,7 +199,7 @@ genSpec t _ = do
       jsonCursorType ((     ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorString
       jsonCursorType ((ns . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` JsonCursorNumber
     it "can navigate up" $ do
-      (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
+      (fptr, offset, size) <- mmapFileForeignPtr "test/data/sample.json" ReadOnly Nothing
       let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString t u
       (                                                        pn . fc) cursor `shouldBe`                               cursor
       (                                                   pn . ns . fc) cursor `shouldBe`                               cursor
@@ -214,7 +214,7 @@ genSpec t _ = do
       (      pn . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor `shouldBe` (ns . ns . ns . fc . ns . fc) cursor
       ( pn . ns . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor `shouldBe` (ns . ns . ns . fc . ns . fc) cursor
     it "can get subtree size" $ do
-      (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
+      (fptr, offset, size) <- mmapFileForeignPtr "test/data/sample.json" ReadOnly Nothing
       let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString t u
       ss                                                              cursor  `shouldBe` 45
       ss ((                                                       fc) cursor) `shouldBe` 1
@@ -230,7 +230,7 @@ genSpec t _ = do
       ss ((     ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` 1
       ss ((ns . ns . ns . ns . ns . fc . ns . ns . ns . fc . ns . fc) cursor) `shouldBe` 1
     it "can get token at cursor" $ do
-      (fptr, offset, size) <- mmapFileForeignPtr "test/Resources/sample.json" ReadOnly Nothing
+      (fptr, offset, size) <- mmapFileForeignPtr "test/data/sample.json" ReadOnly Nothing
       let cursor = fromForeignRegion (fptr, offset, size) :: JsonCursor BS.ByteString t u
       jsonTokenAt                                                              cursor  `shouldBe` JsonTokenBraceL
       jsonTokenAt ((                                                       fc) cursor) `shouldBe` JsonTokenString "widget"

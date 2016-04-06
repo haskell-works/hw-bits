@@ -1,5 +1,5 @@
 name:                   hw-succinct
-version:                0.0.0.3
+version:                0.0.0.4
 synopsis:               Conduits for tokenizing streams.
 description:            Please see README.md
 homepage:               http://github.com/haskell-works/hw-succinct#readme
@@ -12,7 +12,7 @@ category:               Data, Conduit
 build-type:             Simple
 extra-source-files:     README.md
 cabal-version:          >= 1.10
-data-dir:               test/data
+data-files:             test/data/sample.json
 
 executable hw-succinct-example
   hs-source-dirs:       app
