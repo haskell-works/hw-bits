@@ -17,52 +17,40 @@ class BoxedVectorLike v e where
 
 instance BoxedVectorLike DV.Vector Word8 where
   bImap = DV.imap
-  {-# INLINABLE bImap #-}
-
   bMap = DV.map
-  {-# INLINABLE bMap #-}
-
   bUnfoldr = DV.unfoldr
-  {-# INLINABLE bUnfoldr #-}
-
   bUnfoldrN = DV.unfoldrN
+  {-# INLINABLE bImap     #-}
+  {-# INLINABLE bMap      #-}
+  {-# INLINABLE bUnfoldr  #-}
   {-# INLINABLE bUnfoldrN #-}
 
 instance BoxedVectorLike DV.Vector Word16 where
   bImap = DV.imap
-  {-# INLINABLE bImap #-}
-
   bMap = DV.map
-  {-# INLINABLE bMap #-}
-
   bUnfoldr = DV.unfoldr
-  {-# INLINABLE bUnfoldr #-}
-
   bUnfoldrN = DV.unfoldrN
+  {-# INLINABLE bImap     #-}
+  {-# INLINABLE bMap      #-}
+  {-# INLINABLE bUnfoldr  #-}
   {-# INLINABLE bUnfoldrN #-}
 
 instance BoxedVectorLike DV.Vector Word32 where
   bImap = DV.imap
-  {-# INLINABLE bImap #-}
-
   bMap = DV.map
-  {-# INLINABLE bMap #-}
-
   bUnfoldr = DV.unfoldr
-  {-# INLINABLE bUnfoldr #-}
-
   bUnfoldrN = DV.unfoldrN
+  {-# INLINABLE bImap     #-}
+  {-# INLINABLE bMap      #-}
+  {-# INLINABLE bUnfoldr  #-}
   {-# INLINABLE bUnfoldrN #-}
 
 instance BoxedVectorLike DV.Vector Word64 where
   bImap = DV.imap
-  {-# INLINABLE bImap #-}
-
   bMap = DV.map
-  {-# INLINABLE bMap #-}
-
   bUnfoldr = DV.unfoldr
-  {-# INLINABLE bUnfoldr #-}
-
   bUnfoldrN = DV.unfoldrN
+  {-# INLINABLE bImap     #-}
+  {-# INLINABLE bMap      #-}
+  {-# INLINABLE bUnfoldr  #-}
   {-# INLINABLE bUnfoldrN #-}

@@ -17,52 +17,40 @@ class StorableVectorLike v e where
 
 instance StorableVectorLike DVS.Vector Word8 where
   sImap = DVS.imap
-  {-# INLINABLE sImap #-}
-
   sMap = DVS.map
-  {-# INLINABLE sMap #-}
-
   sUnfoldr = DVS.unfoldr
-  {-# INLINABLE sUnfoldr #-}
-
   sUnfoldrN = DVS.unfoldrN
+  {-# INLINABLE sImap     #-}
+  {-# INLINABLE sMap      #-}
+  {-# INLINABLE sUnfoldr  #-}
   {-# INLINABLE sUnfoldrN #-}
 
 instance StorableVectorLike DVS.Vector Word16 where
   sImap = DVS.imap
-  {-# INLINABLE sImap #-}
-
   sMap = DVS.map
-  {-# INLINABLE sMap #-}
-
   sUnfoldr = DVS.unfoldr
-  {-# INLINABLE sUnfoldr #-}
-
   sUnfoldrN = DVS.unfoldrN
+  {-# INLINABLE sImap     #-}
+  {-# INLINABLE sMap      #-}
+  {-# INLINABLE sUnfoldr  #-}
   {-# INLINABLE sUnfoldrN #-}
 
 instance StorableVectorLike DVS.Vector Word32 where
   sImap = DVS.imap
-  {-# INLINABLE sImap #-}
-
   sMap = DVS.map
-  {-# INLINABLE sMap #-}
-
   sUnfoldr = DVS.unfoldr
-  {-# INLINABLE sUnfoldr #-}
-
   sUnfoldrN = DVS.unfoldrN
+  {-# INLINABLE sImap     #-}
+  {-# INLINABLE sMap      #-}
+  {-# INLINABLE sUnfoldr  #-}
   {-# INLINABLE sUnfoldrN #-}
 
 instance StorableVectorLike DVS.Vector Word64 where
   sImap = DVS.imap
-  {-# INLINABLE sImap #-}
-
   sMap = DVS.map
-  {-# INLINABLE sMap #-}
-
   sUnfoldr = DVS.unfoldr
-  {-# INLINABLE sUnfoldr #-}
-
   sUnfoldrN = DVS.unfoldrN
+  {-# INLINABLE sImap     #-}
+  {-# INLINABLE sMap      #-}
+  {-# INLINABLE sUnfoldr  #-}
   {-# INLINABLE sUnfoldrN #-}
