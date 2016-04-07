@@ -129,13 +129,11 @@ test-suite hw-succinct-test
                       , HaskellWorks.Data.Bits.BitWiseSpec
                       , HaskellWorks.Data.Bits.FromBoolsSpec
                       , HaskellWorks.Data.Conduit.Json.BlankSpec
-                      , HaskellWorks.Data.Conduit.JsonSpec
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumnSpec
                       , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.OffsetSpec
                       , HaskellWorks.Data.Json.Final.TokenizeSpec
                       , HaskellWorks.Data.Json.Succinct.CursorSpec
                       , HaskellWorks.Data.Json.Succinct.Cursor.InterestBitsSpec
-                      , HaskellWorks.Data.Json.SuccinctSpec
                       , HaskellWorks.Data.Succinct.BalancedParensSpec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0Spec
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1Spec
