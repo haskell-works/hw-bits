@@ -25,11 +25,8 @@ import           HaskellWorks.Data.Succinct.BalancedParens.Simple
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic
 import           System.IO.MMap
 
-v :: DVS.Vector Word64
-v = DVS.fromList (take 1000000 (cycle [maxBound, 0]))
-
 setupEnv :: IO (DVS.Vector Word64)
-setupEnv = return v
+setupEnv = return $ DVS.fromList (take 1000000 (cycle [maxBound, 0]))
 
 setupEnvJson :: FilePath -> IO BS.ByteString
 setupEnvJson filepath = do
@@ -45,9 +42,6 @@ runCon con bs = BS.concat $ runListConduit con [bs]
 
 jsonToInterestBits3 :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 jsonToInterestBits3 = blankJson =$= blankedJsonToInterestBits
-
-runBlankedJsonToInterestBits :: BS.ByteString -> BS.ByteString
-runBlankedJsonToInterestBits bs = BS.concat $ runListConduit blankedJsonToInterestBits [bs]
 
 benchRankSelect :: [Benchmark]
 benchRankSelect =

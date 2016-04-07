@@ -97,7 +97,6 @@ library
                       , HaskellWorks.Data.Vector.StorableVectorLike
                       , HaskellWorks.Data.Vector.VectorLike
                       , HaskellWorks.Data.Word
-                      , HaskellWorks.Function
                       , HaskellWorks.Diagnostics.Time
   build-depends:        base                            >= 4.7  && < 5
                       , array
