@@ -46,9 +46,6 @@ runCon con bs = BS.concat $ runListConduit con [bs]
 jsonToInterestBits3 :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 jsonToInterestBits3 = blankJson =$= blankedJsonToInterestBits
 
-jsonToInterestBitsOld :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
-jsonToInterestBitsOld = textToJsonToken =$= jsonToken2Markers =$= markerToByteString
-
 runBlankedJsonToInterestBits :: BS.ByteString -> BS.ByteString
 runBlankedJsonToInterestBits bs = BS.concat $ runListConduit blankedJsonToInterestBits [bs]
 
@@ -68,7 +65,6 @@ benchRankJson40Conduits =
   [ env (setupEnvJson "/Users/jky/Downloads/part40.json") $ \bs -> bgroup "Json40"
     [ bench "Run blankJson                    "  (whnf (runCon blankJson                  ) bs)
     , bench "Run jsonToInterestBits3          "  (whnf (runCon jsonToInterestBits3        ) bs)
-    , bench "Run jsonToInterestBitsOld        "  (whnf (runCon jsonToInterestBitsOld      ) bs)
     , bench "loadJson                         "  (whnf  loadJson                            bs)
     ]
   ]

@@ -4,7 +4,6 @@
 module HaskellWorks.Data.Conduit.Json
   ( blankedJsonToInterestBits
   , byteStringToBits
-  , markerToByteString
   , blankedJsonToBalancedParens
   , jsonToken2Markers
   , textToJsonToken
@@ -64,21 +63,6 @@ blankedJsonToInterestBits' rs = do
           else Just ( BS.foldr (\b m -> (interestingWord8s ! b) .|. (m .<. 1)) 0 (padRight 0 8 (BS.take 8 as))
                     , BS.drop 8 as
                     )
-
-markerToByteString' :: Monad m => Int64 -> Word8 -> Conduit Int64 m BS.ByteString
-markerToByteString' a v = do
-  mo <- await
-  case mo of
-    Just o -> if o < (a + 8)
-      then markerToByteString' a (BITS.bit (fromIntegral (o - a)) .|. v)
-      else do
-        yield $ BS.singleton v
-        leftover o
-        markerToByteString' (a + 8) 0
-    Nothing -> when (v /= 0) $ yield $ BS.singleton v
-
-markerToByteString :: Monad m => Conduit Int64 m BS.ByteString
-markerToByteString = markerToByteString' 0 0
 
 textToJsonToken :: MonadThrow m => Conduit BS.ByteString m (ParseDelta Offset, JsonToken)
 textToJsonToken = conduitParser (Offset 0) parseJsonToken
