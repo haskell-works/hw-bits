@@ -22,5 +22,18 @@ interestBitsOf = getJsonInterestBits . fromBlankedJson . fromByteString
 spec :: Spec
 spec = describe "HaskellWorks.Data.Json.Succinct.Cursor.InterestBitsSpec" $ do
   it "Evaluating interest bits" $ do
-    (interestBitsOf ""  :: BitShown (DVS.Vector Word64)) `shouldBe` fromString ""
-    (interestBitsOf "2" :: BitShown (DVS.Vector Word64)) `shouldBe` fromString "1"
+    (interestBitsOf ""            :: BitShown (DVS.Vector Word8)) `shouldBe` fromString ""
+    (interestBitsOf "  \n \r \t " :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "00000000"
+    (interestBitsOf "1234 "       :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "10000000"
+    (interestBitsOf "false "      :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "10000000"
+    (interestBitsOf "true "       :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "10000000"
+    (interestBitsOf "\"hello\" "  :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "10000000"
+    (interestBitsOf "\"\\\"\" "   :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "10000000"
+    (interestBitsOf "{ "          :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "10000000"
+    (interestBitsOf "} "          :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "00000000"
+    (interestBitsOf "[ "          :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "10000000"
+    (interestBitsOf "] "          :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "00000000"
+    (interestBitsOf ": "          :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "00000000"
+    (interestBitsOf ", "          :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "00000000"
+    (interestBitsOf "{{}}"        :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "11000000"
+    (interestBitsOf " { { } } "   :: BitShown (DVS.Vector Word8)) `shouldBe` fromString "01010000 00000000"
