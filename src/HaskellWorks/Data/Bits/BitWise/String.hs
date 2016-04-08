@@ -11,8 +11,8 @@ module HaskellWorks.Data.Bits.BitWise.String
   , stringToBits
   ) where
 
-import Data.Bits
-import Data.Word
+import           Data.Bits
+import           Data.Word
 
 bitsDiff' :: FiniteBits a => a -> Int -> Int -> [Bool] -> [Bool]
 bitsDiff' a n len bs
@@ -33,16 +33,6 @@ bitsShows = bitsShows' . bits
 
 bitsToString :: AsBits a => a -> String
 bitsToString bs = bitsShows bs ""
-
--- unbits :: AsBits a => [Bool] -> (a, [Bool])
--- unbits a =  _uu
-
-
--- bitsUnshows :: AsBits a => String -> (a, String)
--- bitsUnshows = bitsShows' . bits
---
--- stringToBits :: AsBits a => String -> (a, String)
--- stringToBits as = _u
 
 class AsBits a where
   bitsDiff :: a -> [Bool] -> [Bool]
