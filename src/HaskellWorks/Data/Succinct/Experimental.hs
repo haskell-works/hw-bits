@@ -11,9 +11,9 @@ module HaskellWorks.Data.Succinct.Experimental (
     , select9imp
     ) where
 
-import Data.Int
-import Data.Word
-import HaskellWorks.Data.Succinct.Internal
+import           Data.Int
+import           Data.Word
+import           HaskellWorks.Data.Succinct.Internal
 
 class Broadword a where
   bwL8 :: a
@@ -21,30 +21,26 @@ class Broadword a where
 
 instance Broadword Word8 where
   bwL8 = 0x01
-  {-# INLINABLE bwL8 #-}
-
   bwH8 = 0x80
+  {-# INLINABLE bwL8 #-}
   {-# INLINABLE bwH8 #-}
 
 instance Broadword Word16 where
   bwL8 = 0x0101
-  {-# INLINABLE bwL8 #-}
-
   bwH8 = 0x8080
+  {-# INLINABLE bwL8 #-}
   {-# INLINABLE bwH8 #-}
 
 instance Broadword Word32 where
   bwL8 = 0x01010101
-  {-# INLINABLE bwL8 #-}
-
   bwH8 = 0x80808080
+  {-# INLINABLE bwL8 #-}
   {-# INLINABLE bwH8 #-}
 
 instance Broadword Word64 where
   bwL8 = 0x0101010101010101
-  {-# INLINABLE bwL8 #-}
-
   bwH8 = 0x8080808080808080
+  {-# INLINABLE bwL8 #-}
   {-# INLINABLE bwH8 #-}
 
 select9imp :: Integral a => a -> Word64 -> Int64
