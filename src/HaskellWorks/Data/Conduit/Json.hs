@@ -5,27 +5,19 @@ module HaskellWorks.Data.Conduit.Json
   ( blankedJsonToInterestBits
   , byteStringToBits
   , blankedJsonToBalancedParens
-  , jsonToken2Markers
-  , textToJsonToken
   , interestingWord8s
-  , jsonToken2BalancedParens
   ) where
 
 import           Control.Monad
-import           Control.Monad.Trans.Resource                         (MonadThrow)
-import           Data.Array.Unboxed                                   as A
-import qualified Data.Bits                                            as BITS
-import           Data.ByteString                                      as BS
+import           Data.Array.Unboxed                   as A
+import qualified Data.Bits                            as BITS
+import           Data.ByteString                      as BS
 import           Data.Conduit
 import           Data.Int
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Conduit.Json.Words
-import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec
-import           HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Offset
-import           HaskellWorks.Data.Json.Final.Tokenize
-import           HaskellWorks.Data.Json.Token
-import           Prelude                                              as P
+import           Prelude                              as P
 
 interestingWord8s :: A.UArray Word8 Word8
 interestingWord8s = A.array (0, 255) [
@@ -64,49 +56,6 @@ blankedJsonToInterestBits' rs = do
                     , BS.drop 8 as
                     )
 
-textToJsonToken :: MonadThrow m => Conduit BS.ByteString m (ParseDelta Offset, JsonToken)
-textToJsonToken = conduitParser (Offset 0) parseJsonToken
-
-jsonToken2Markers :: Monad m => Conduit (ParseDelta Offset, JsonToken) m Int64
-jsonToken2Markers = do
-  mi <- await
-  case mi of
-    Just (ParseDelta (Offset start) _, token) -> do
-      case token of
-        JsonTokenBraceL     -> yield $ fromIntegral start
-        JsonTokenBraceR     -> return ()
-        JsonTokenBracketL   -> yield $ fromIntegral start
-        JsonTokenBracketR   -> return ()
-        JsonTokenComma      -> return ()
-        JsonTokenColon      -> return ()
-        JsonTokenWhitespace -> return ()
-        JsonTokenString _   -> yield $ fromIntegral start
-        JsonTokenBoolean _  -> yield $ fromIntegral start
-        JsonTokenNumber _   -> yield $ fromIntegral start
-        JsonTokenNull       -> yield $ fromIntegral start
-      jsonToken2Markers
-    Nothing -> return ()
-
-jsonToken2BalancedParens :: Monad m => Conduit (ParseDelta Offset, JsonToken) m Bool
-jsonToken2BalancedParens = do
-  mi <- await
-  case mi of
-    Just (ParseDelta (Offset _) _, token) -> do
-      case token of
-        JsonTokenBraceL     -> yield True
-        JsonTokenBraceR     -> yield False
-        JsonTokenBracketL   -> yield True
-        JsonTokenBracketR   -> yield False
-        JsonTokenComma      -> return ()
-        JsonTokenColon      -> return ()
-        JsonTokenWhitespace -> return ()
-        JsonTokenString _   -> yield True >> yield False
-        JsonTokenBoolean _  -> yield True >> yield False
-        JsonTokenNumber _   -> yield True >> yield False
-        JsonTokenNull       -> yield True >> yield False
-      jsonToken2BalancedParens
-    Nothing -> return ()
-
 blankedJsonToBalancedParens :: Monad m => Conduit BS.ByteString m Bool
 blankedJsonToBalancedParens = do
   mbs <- await
@@ -131,8 +80,6 @@ blankedJsonToBalancedParens' bs = case BS.uncons bs of
       _                       -> return ()
     blankedJsonToBalancedParens' cs
   Nothing -> return ()
-
-------------------------
 
 yieldBitsOfWord8 :: Monad m => Word8 -> Conduit BS.ByteString m Bool
 yieldBitsOfWord8 w = do
