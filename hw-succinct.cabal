@@ -74,7 +74,6 @@ library
                       , HaskellWorks.Data.Json.Succinct.Cursor.CursorType
                       , HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
                       , HaskellWorks.Data.Json.Succinct.Cursor.Internal
-                      , HaskellWorks.Data.Json.Succinct.Transform
                       , HaskellWorks.Data.Json.Token
                       , HaskellWorks.Data.Positioning
                       , HaskellWorks.Data.Search

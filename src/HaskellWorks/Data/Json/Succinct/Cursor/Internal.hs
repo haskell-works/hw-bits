@@ -20,7 +20,6 @@ import           HaskellWorks.Data.FromForeignRegion
 import           HaskellWorks.Data.Json.Succinct.Cursor.BalancedParens
 import           HaskellWorks.Data.Json.Succinct.Cursor.BlankedJson
 import           HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
-import           HaskellWorks.Data.Json.Succinct.Transform
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Succinct.BalancedParens             as BP
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
@@ -49,11 +48,11 @@ instance IsString (JsonCursor String (BitShown [Bool]) (SimpleBalancedParens [Bo
   fromString s = JsonCursor
     { cursorText      = s
     , cursorRank      = 1
-    , balancedParens  = SimpleBalancedParens (jsonToInterestBalancedParens [bs])
-    , interests       = BitShown interests'
+    , interests       = getJsonInterestBits (fromBlankedJson blankedJson)
+    , balancedParens  = getJsonBalancedParens (fromBlankedJson blankedJson)
     }
-    where bs          = BSC.pack s :: BS.ByteString
-          interests'  = jsonToInterestBits [bs]
+    where blankedJson :: BlankedJson
+          blankedJson = fromByteString (BSC.pack s)
 
 instance IsString (JsonCursor BS.ByteString (BitShown (DVS.Vector Word8)) (SimpleBalancedParens (DVS.Vector Word8))) where
   fromString = fromByteString . BSC.pack

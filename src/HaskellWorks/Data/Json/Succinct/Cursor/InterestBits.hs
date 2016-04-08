@@ -11,11 +11,14 @@ module HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
 import           Control.Applicative
 import qualified Data.ByteString                                       as BS
 import           Data.ByteString.Internal
+import           Data.Conduit
 import qualified Data.Vector.Storable                                  as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.Conduit.Json
+import           HaskellWorks.Data.Conduit.Json.Blank
 import           HaskellWorks.Data.Conduit.List
+import           HaskellWorks.Data.FromByteString
 import           HaskellWorks.Data.Json.Succinct.Cursor.BlankedJson
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
 
@@ -33,11 +36,14 @@ genInterest = BS.uncons
 genInterestForever :: ByteString -> Maybe (Word8, ByteString)
 genInterestForever bs = BS.uncons bs <|> Just (0, bs)
 
+instance FromBlankedJson (JsonInterestBits (BitShown [Bool])) where
+  fromBlankedJson = JsonInterestBits . fromByteString . BS.concat . runListConduit blankedJsonToInterestBits . getBlankedJson
+
 instance FromBlankedJson (JsonInterestBits (BitShown BS.ByteString)) where
-  fromBlankedJson (BlankedJson bj) = JsonInterestBits (BitShown (BS.unfoldr genInterest (blankedJsonBssToInterestBitsBs bj)))
+  fromBlankedJson = JsonInterestBits . BitShown . BS.unfoldr genInterest . blankedJsonBssToInterestBitsBs . getBlankedJson
 
 instance FromBlankedJson (JsonInterestBits (BitShown (DVS.Vector Word8))) where
-  fromBlankedJson (BlankedJson bj) = JsonInterestBits (BitShown (DVS.unfoldr genInterest (blankedJsonBssToInterestBitsBs bj)))
+  fromBlankedJson = JsonInterestBits . BitShown . DVS.unfoldr genInterest . blankedJsonBssToInterestBitsBs . getBlankedJson
 
 instance FromBlankedJson (JsonInterestBits (BitShown (DVS.Vector Word16))) where
   fromBlankedJson bj = JsonInterestBits (BitShown (DVS.unsafeCast (DVS.unfoldrN newLen genInterestForever interestBS)))
