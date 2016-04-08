@@ -93,7 +93,6 @@ library
                       , HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
                       , HaskellWorks.Data.Succinct.RankSelect.Internal
                       , HaskellWorks.Data.Vector.BoxedVectorLike
-                      , HaskellWorks.Data.Vector.Storable.ByteString
                       , HaskellWorks.Data.Vector.StorableVectorLike
                       , HaskellWorks.Data.Vector.VectorLike
                       , HaskellWorks.Data.Word
