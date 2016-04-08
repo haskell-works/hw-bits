@@ -39,7 +39,6 @@ library
                       , HaskellWorks.Data.Bits.BitShow
                       , HaskellWorks.Data.Bits.BitShown
                       , HaskellWorks.Data.Bits.BitWise
-                      , HaskellWorks.Data.Bits.BitWise.String
                       , HaskellWorks.Data.Bits.Conversion
                       , HaskellWorks.Data.Bits.ElemFixedBitSize
                       , HaskellWorks.Data.Bits.FixedBitSize
