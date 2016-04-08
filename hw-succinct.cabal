@@ -35,8 +35,6 @@ library
                       , HaskellWorks.Data.Attoparsec.Final.IsChar.Internal
                       , HaskellWorks.Data.Attoparsec.Final.Parser
                       , HaskellWorks.Data.Attoparsec.Final.Parser.ByteString
-                      , HaskellWorks.Data.Attoparsec.Final.Parser.Internal
-                      , HaskellWorks.Data.Attoparsec.Final.Parser.Text
                       , HaskellWorks.Data.Bits
                       , HaskellWorks.Data.Bits.BitLength
                       , HaskellWorks.Data.Bits.BitParse
