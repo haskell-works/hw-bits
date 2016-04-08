@@ -52,10 +52,6 @@ library
                       , HaskellWorks.Data.Conduit.Json.Blank
                       , HaskellWorks.Data.Conduit.Json.Words
                       , HaskellWorks.Data.Conduit.List
-                      , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Internal
-                      , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumn
-                      , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.Offset
-                      , HaskellWorks.Data.Conduit.Tokenize.Attoparsec
                       , HaskellWorks.Data.FromByteString
                       , HaskellWorks.Data.FromForeignRegion
                       , HaskellWorks.Data.Json.Final.Tokenize
@@ -119,8 +115,6 @@ test-suite hw-succinct-test
                       , HaskellWorks.Data.Bits.BitWiseSpec
                       , HaskellWorks.Data.Bits.FromBoolsSpec
                       , HaskellWorks.Data.Conduit.Json.BlankSpec
-                      , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.LineColumnSpec
-                      , HaskellWorks.Data.Conduit.Tokenize.Attoparsec.OffsetSpec
                       , HaskellWorks.Data.Json.Final.TokenizeSpec
                       , HaskellWorks.Data.Json.Succinct.CursorSpec
                       , HaskellWorks.Data.Json.Succinct.Cursor.InterestBitsSpec
