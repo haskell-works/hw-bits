@@ -78,6 +78,12 @@ w1 = fromIntegral (ord '1')
 w9 :: Word8
 w9 = fromIntegral (ord '9')
 
+w00 :: Word8
+w00 = fromIntegral (ord '0')
+
+wFF :: Word8
+wFF = fromIntegral (ord '\255')
+
 isLeadingDigit :: Word8 -> Bool
 isLeadingDigit w = w == wMinus || (w >= w0 && w <= w9)
 

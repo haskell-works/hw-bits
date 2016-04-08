@@ -5,6 +5,8 @@ module HaskellWorks.Data.Conduit.Json
   ( blankedJsonToInterestBits
   , byteStringToBits
   , blankedJsonToBalancedParens
+  , blankedJsonToBalancedParens2
+  , compressWordAsBit
   , interestingWord8s
   ) where
 
@@ -80,6 +82,56 @@ blankedJsonToBalancedParens' bs = case BS.uncons bs of
       _                       -> return ()
     blankedJsonToBalancedParens' cs
   Nothing -> return ()
+
+compressWordAsBit :: Monad m => Conduit BS.ByteString m BS.ByteString
+compressWordAsBit = do
+  mbs <- await
+  case mbs of
+    Just bs -> do
+      let (cs, _) = BS.unfoldrN (BS.length bs + 7 `div` 8) gen bs
+      yield cs
+    Nothing -> return ()
+  where gen :: ByteString -> Maybe (Word8, ByteString)
+        gen xs = if BS.length xs == 0
+          then Nothing
+          else Just ( BS.foldr (\b m -> ((b .&. 1) .|. (m .<. 1))) 0 (padRight 0 8 (BS.take 8 xs))
+                    , BS.drop 8 xs
+                    )
+
+blankedJsonToBalancedParens2 :: Monad m => Conduit BS.ByteString m BS.ByteString
+blankedJsonToBalancedParens2 = do
+  mbs <- await
+  case mbs of
+    Just bs -> do
+      let (cs, _) = BS.unfoldrN (BS.length bs * 2) gen (Nothing, bs)
+      yield cs
+    Nothing -> return ()
+  where gen :: (Maybe Bool, ByteString) -> Maybe (Word8, (Maybe Bool, ByteString))
+        gen (Just True  , bs) = Just (wFF, (Nothing, bs))
+        gen (Just False , bs) = Just (w00, (Nothing, bs))
+        gen (Nothing    , bs) = case BS.uncons bs of
+          Just (c, cs) -> case balancedParensOf c of
+            MiniN   -> gen        (Nothing    , cs)
+            MiniT   -> Just (wFF, (Nothing    , cs))
+            MiniF   -> Just (w00, (Nothing    , cs))
+            MiniTF  -> Just (wFF, (Just False , cs))
+          Nothing   -> Nothing
+
+data MiniBP = MiniN | MiniT | MiniF | MiniTF
+
+balancedParensOf :: Word8 -> MiniBP
+balancedParensOf c = case c of
+    d | d == wOpenBrace     -> MiniT
+    d | d == wCloseBrace    -> MiniF
+    d | d == wOpenBracket   -> MiniT
+    d | d == wCloseBracket  -> MiniF
+    d | d == wOpenParen     -> MiniT
+    d | d == wCloseParen    -> MiniF
+    d | d == wt             -> MiniTF
+    d | d == wf             -> MiniTF
+    d | d == w1             -> MiniTF
+    d | d == wn             -> MiniTF
+    _                       -> MiniN
 
 yieldBitsOfWord8 :: Monad m => Word8 -> Conduit BS.ByteString m Bool
 yieldBitsOfWord8 w = do

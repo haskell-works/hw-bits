@@ -50,6 +50,12 @@ loadJson bs = fromByteString bs :: JsonCursor BS.ByteString (BitShown (DVS.Vecto
 runCon :: Conduit i [] BS.ByteString -> i -> BS.ByteString
 runCon con bs = BS.concat $ runListConduit con [bs]
 
+runCon2 :: Conduit i [] o -> [i] -> [o]
+runCon2 con is = let os = runListConduit con is in seq (length os) os
+
+runCon3 :: Conduit i [] BS.ByteString -> [i] -> [BS.ByteString]
+runCon3 con is = let os = runListConduit con is in seq (BS.length (last os)) os
+
 jsonToInterestBits3 :: MonadThrow m => Conduit BS.ByteString m BS.ByteString
 jsonToInterestBits3 = blankJson =$= blankedJsonToInterestBits
 
@@ -84,6 +90,15 @@ benchRankJsonBigConduits :: [Benchmark]
 benchRankJsonBigConduits =
   [ env (setupEnvJson "/Users/jky/Downloads/78mb.json") $ \bs -> bgroup "JsonBig"
     [ bench "loadJson" (whnf loadJson bs)
+    ]
+  ]
+
+benchBlankedJsonToBalancedParens :: [Benchmark]
+benchBlankedJsonToBalancedParens =
+  [ env (setupEnvJson "/Users/jky/Downloads/part40.json") $ \bs -> bgroup "JsonBig"
+    [ bench "blankedJsonToBalancedParens2" (whnf (runCon2 blankedJsonToBalancedParens) [bs])
+    , bench "blankedJsonToBalancedParens2" (whnf (runCon3 blankedJsonToBalancedParens2) [bs])
+    , bench "blankedJsonToBalancedParens2" (whnf (runCon3 (blankedJsonToBalancedParens2 =$= rechunk 4060)) [bs])
     ]
   ]
 
