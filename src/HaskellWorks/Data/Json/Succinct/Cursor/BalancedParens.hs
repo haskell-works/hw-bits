@@ -8,13 +8,11 @@ module HaskellWorks.Data.Json.Succinct.Cursor.BalancedParens
   , getJsonBalancedParens
   ) where
 
-import qualified Data.ByteString                                    as BS
 import qualified Data.Vector.Storable                               as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.FromBools
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Conduit.List
-import           HaskellWorks.Data.FromByteString
 import           HaskellWorks.Data.Json.Succinct.Cursor.BlankedJson
 import           HaskellWorks.Data.Succinct.BalancedParens          as BP
 

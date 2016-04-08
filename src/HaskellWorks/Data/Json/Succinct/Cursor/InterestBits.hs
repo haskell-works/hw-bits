@@ -11,12 +11,10 @@ module HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
 import           Control.Applicative
 import qualified Data.ByteString                                       as BS
 import           Data.ByteString.Internal
-import           Data.Conduit
 import qualified Data.Vector.Storable                                  as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitShown
 import           HaskellWorks.Data.Conduit.Json
-import           HaskellWorks.Data.Conduit.Json.Blank
 import           HaskellWorks.Data.Conduit.List
 import           HaskellWorks.Data.FromByteString
 import           HaskellWorks.Data.Json.Succinct.Cursor.BlankedJson
