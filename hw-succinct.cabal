@@ -31,10 +31,7 @@ executable hw-succinct-example
 library
   hs-source-dirs:       src
   exposed-modules:      HaskellWorks.Data.Attoparsec.Final.IsChar
-                      , HaskellWorks.Data.Attoparsec.Final.IsChar.Char
-                      , HaskellWorks.Data.Attoparsec.Final.IsChar.Internal
                       , HaskellWorks.Data.Attoparsec.Final.Parser
-                      , HaskellWorks.Data.Attoparsec.Final.Parser.ByteString
                       , HaskellWorks.Data.Bits
                       , HaskellWorks.Data.Bits.BitLength
                       , HaskellWorks.Data.Bits.BitParse

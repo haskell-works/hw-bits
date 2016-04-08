@@ -1,6 +1,15 @@
 module HaskellWorks.Data.Attoparsec.Final.IsChar
-    ( module X
+    ( IsChar(..)
     ) where
 
-import           HaskellWorks.Data.Attoparsec.Final.IsChar.Char     as X ()
-import           HaskellWorks.Data.Attoparsec.Final.IsChar.Internal as X
+import qualified Data.ByteString.Internal as BI
+import           Data.Word8
+
+class IsChar c where
+  toChar :: c -> Char
+
+instance IsChar Word8 where
+  toChar = BI.w2c
+
+instance IsChar Char where
+  toChar = id
