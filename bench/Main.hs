@@ -95,4 +95,4 @@ benchRechunk =
   ]
 
 main :: IO ()
-main = defaultMain benchRechunk
+main = defaultMain benchRankJson40Conduits
