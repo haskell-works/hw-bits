@@ -48,6 +48,7 @@ library
                       , HaskellWorks.Data.Bits.PopCount.PopCount1.Broadword
                       , HaskellWorks.Data.Bits.PopCount.PopCount1.GHC
                       , HaskellWorks.Data.ByteString
+                      , HaskellWorks.Data.Conduit.ByteString
                       , HaskellWorks.Data.Conduit.Json
                       , HaskellWorks.Data.Conduit.Json.Blank
                       , HaskellWorks.Data.Conduit.Json.Words
@@ -114,6 +115,7 @@ test-suite hw-succinct-test
   other-modules:        HaskellWorks.Data.Bits.BitReadSpec
                       , HaskellWorks.Data.Bits.BitWiseSpec
                       , HaskellWorks.Data.Bits.FromBoolsSpec
+                      , HaskellWorks.Data.Conduit.ByteStringSpec
                       , HaskellWorks.Data.Conduit.Json.BlankSpec
                       , HaskellWorks.Data.Json.Final.TokenizeSpec
                       , HaskellWorks.Data.Json.Succinct.CursorSpec
