@@ -41,7 +41,6 @@ library
                       , HaskellWorks.Data.Bits.BitWise
                       , HaskellWorks.Data.Bits.ElemFixedBitSize
                       , HaskellWorks.Data.Bits.FixedBitSize
-                      , HaskellWorks.Data.Bits.FromBools
                       , HaskellWorks.Data.Bits.PopCount
                       , HaskellWorks.Data.Bits.PopCount.PopCount0
                       , HaskellWorks.Data.Bits.PopCount.PopCount1
@@ -114,7 +113,6 @@ test-suite hw-succinct-test
   main-is:              Spec.hs
   other-modules:        HaskellWorks.Data.Bits.BitReadSpec
                       , HaskellWorks.Data.Bits.BitWiseSpec
-                      , HaskellWorks.Data.Bits.FromBoolsSpec
                       , HaskellWorks.Data.Conduit.ByteStringSpec
                       , HaskellWorks.Data.Conduit.Json.BlankSpec
                       , HaskellWorks.Data.Json.Final.TokenizeSpec
