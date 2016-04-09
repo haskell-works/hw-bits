@@ -47,44 +47,14 @@ library
                       , HaskellWorks.Data.Bits.PopCount.PopCount1.Broadword
                       , HaskellWorks.Data.Bits.PopCount.PopCount1.GHC
                       , HaskellWorks.Data.ByteString
-                      , HaskellWorks.Data.Conduit.ByteString
-                      , HaskellWorks.Data.Conduit.Json
-                      , HaskellWorks.Data.Conduit.Json.Blank
-                      , HaskellWorks.Data.Conduit.Json.Words
-                      , HaskellWorks.Data.Conduit.List
                       , HaskellWorks.Data.FromByteString
                       , HaskellWorks.Data.FromForeignRegion
-                      , HaskellWorks.Data.Json.Final.Tokenize
-                      , HaskellWorks.Data.Json.Final.Tokenize.Internal
-                      , HaskellWorks.Data.Json.Succinct
-                      , HaskellWorks.Data.Json.Succinct.Cursor
-                      , HaskellWorks.Data.Json.Succinct.Cursor.BalancedParens
-                      , HaskellWorks.Data.Json.Succinct.Cursor.BlankedJson
-                      , HaskellWorks.Data.Json.Succinct.Cursor.CursorType
-                      , HaskellWorks.Data.Json.Succinct.Cursor.InterestBits
-                      , HaskellWorks.Data.Json.Succinct.Cursor.Internal
-                      , HaskellWorks.Data.Json.Token
                       , HaskellWorks.Data.Positioning
                       , HaskellWorks.Data.Search
-                      , HaskellWorks.Data.Succinct
-                      , HaskellWorks.Data.Succinct.BalancedParens
-                      , HaskellWorks.Data.Succinct.BalancedParens.Internal
-                      , HaskellWorks.Data.Succinct.BalancedParens.Simple
-                      , HaskellWorks.Data.Succinct.NearestNeighbour
-                      , HaskellWorks.Data.Succinct.RankSelect
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512
-                      , HaskellWorks.Data.Succinct.RankSelect.Internal
                       , HaskellWorks.Data.Vector.BoxedVectorLike
                       , HaskellWorks.Data.Vector.StorableVectorLike
                       , HaskellWorks.Data.Vector.VectorLike
                       , HaskellWorks.Data.Word
-                      , HaskellWorks.Diagnostics.Time
   build-depends:        base                            >= 4.7  && < 5
                       , array
                       , attoparsec                      >= 0.10
@@ -113,20 +83,6 @@ test-suite hw-bits-test
   main-is:              Spec.hs
   other-modules:        HaskellWorks.Data.Bits.BitReadSpec
                       , HaskellWorks.Data.Bits.BitWiseSpec
-                      , HaskellWorks.Data.Conduit.ByteStringSpec
-                      , HaskellWorks.Data.Conduit.Json.BlankSpec
-                      , HaskellWorks.Data.Json.Final.TokenizeSpec
-                      , HaskellWorks.Data.Json.Succinct.CursorSpec
-                      , HaskellWorks.Data.Json.Succinct.Cursor.InterestBitsSpec
-                      , HaskellWorks.Data.Succinct.BalancedParensSpec
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank0Spec
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Rank1Spec
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select0Spec
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Basic.Select1Spec
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.BasicGen
-                      , HaskellWorks.Data.Succinct.RankSelect.Binary.Poppy512Spec
-                      , HaskellWorks.Data.Succinct.RankSelect.InternalSpec
-                      , HaskellWorks.Data.Succinct.SimpleSpec
   build-depends:        base
                       , attoparsec                      >= 0.10
                       , bytestring
