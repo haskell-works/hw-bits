@@ -15,6 +15,7 @@ import           Foreign
 import           HaskellWorks.Data.Bits.BitShown
 import qualified HaskellWorks.Data.Bits.PopCount.PopCount1.Broadword as PC1BW
 import qualified HaskellWorks.Data.Bits.PopCount.PopCount1.GHC       as PC1GHC
+import           HaskellWorks.Data.Conduit.ByteString
 import           HaskellWorks.Data.Conduit.Json
 import           HaskellWorks.Data.Conduit.Json.Blank
 import           HaskellWorks.Data.Conduit.List
@@ -25,8 +26,17 @@ import           HaskellWorks.Data.Succinct.BalancedParens.Simple
 import           HaskellWorks.Data.Succinct.RankSelect.Binary.Basic
 import           System.IO.MMap
 
-setupEnv :: IO (DVS.Vector Word64)
-setupEnv = return $ DVS.fromList (take 1000000 (cycle [maxBound, 0]))
+setupEnvBs :: Int -> IO BS.ByteString
+setupEnvBs n = return $ BS.pack (take n (cycle [maxBound, 0]))
+
+setupEnvBss :: Int -> Int -> IO [BS.ByteString]
+setupEnvBss n k = setupEnvBs n >>= \v -> return (replicate k v)
+
+setupEnvVector :: Int -> IO (DVS.Vector Word64)
+setupEnvVector n = return $ DVS.fromList (take n (cycle [maxBound, 0]))
+
+setupEnvVectors :: Int -> Int -> IO [DVS.Vector Word64]
+setupEnvVectors n k = setupEnvVector n >>= \v -> return (replicate k v)
 
 setupEnvJson :: FilePath -> IO BS.ByteString
 setupEnvJson filepath = do
@@ -45,7 +55,7 @@ jsonToInterestBits3 = blankJson =$= blankedJsonToInterestBits
 
 benchRankSelect :: [Benchmark]
 benchRankSelect =
-  [ env setupEnv $ \bv -> bgroup "Rank"
+  [ env (setupEnvVector 1000000) $ \bv -> bgroup "Rank"
     [ bench "Rank - Once"   (whnf (rank1    bv) 1)
     , bench "Select - Once" (whnf (select1  bv) 1)
     , bench "Rank - Many"   (nf   (map (getCount . rank1  bv)) [0, 1000..10000000])
@@ -77,5 +87,12 @@ benchRankJsonBigConduits =
     ]
   ]
 
+benchRechunk :: [Benchmark]
+benchRechunk =
+  [ env (setupEnvBss 4060 19968) $ \bss -> bgroup "Rank"
+    [ bench "Rechunk"   (whnf (runListConduit (rechunk 1000)) bss)
+    ]
+  ]
+
 main :: IO ()
-main = defaultMain benchRankJson40Conduits
+main = defaultMain benchRechunk
