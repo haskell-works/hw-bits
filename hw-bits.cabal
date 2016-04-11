@@ -1,5 +1,5 @@
 name:                   hw-bits
-version:                0.0.0.2
+version:                0.0.0.3
 synopsis:               Conduits for tokenizing streams.
 description:            Please see README.md
 homepage:               http://github.com/haskell-works/hw-bits#readme
@@ -30,9 +30,7 @@ executable hw-bits-example
 
 library
   hs-source-dirs:       src
-  exposed-modules:      HaskellWorks.Data.Attoparsec.Final.IsChar
-                      , HaskellWorks.Data.Attoparsec.Final.Parser
-                      , HaskellWorks.Data.Bits
+  exposed-modules:      HaskellWorks.Data.Bits
                       , HaskellWorks.Data.Bits.BitLength
                       , HaskellWorks.Data.Bits.BitParse
                       , HaskellWorks.Data.Bits.BitRead
@@ -44,8 +42,8 @@ library
                       , HaskellWorks.Data.Bits.PopCount
                       , HaskellWorks.Data.Bits.PopCount.PopCount0
                       , HaskellWorks.Data.Bits.PopCount.PopCount1
-                      , HaskellWorks.Data.Bits.PopCount.PopCount1.Broadword
-                      , HaskellWorks.Data.Bits.PopCount.PopCount1.GHC
+                      , HaskellWorks.Data.Bits.Types.Broadword
+                      , HaskellWorks.Data.Bits.Types.Builtin
                       , HaskellWorks.Data.ByteString
                       , HaskellWorks.Data.FromByteString
                       , HaskellWorks.Data.FromForeignRegion
@@ -75,7 +73,7 @@ library
                       , word8
 
   default-language:     Haskell2010
-  ghc-options:          -rtsopts -with-rtsopts=-N -Wall -msse4.2
+  ghc-options:          -rtsopts -with-rtsopts=-N -Wall -O2 -msse4.2
 
 test-suite hw-bits-test
   type:                 exitcode-stdio-1.0
@@ -106,7 +104,7 @@ benchmark bench
     Type: exitcode-stdio-1.0
     HS-Source-Dirs: bench
     Main-Is: Main.hs
-    GHC-Options: -Wall -msse4.2
+    GHC-Options: -Wall -O2 -msse4.2
     Default-Language: Haskell2010
     Build-Depends:      base            >= 4       && < 5
                       , bytestring
