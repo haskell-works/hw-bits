@@ -21,6 +21,7 @@ import           HaskellWorks.Data.Bits.Types.Builtin
 import           HaskellWorks.Data.Positioning
 import           Prelude                                   as P
 
+-- | The number of zero bits in the value.
 class PopCount0 v where
   popCount0 :: v -> Count
 

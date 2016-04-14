@@ -12,6 +12,7 @@ import qualified Data.Vector.Storable          as DVS
 import           Data.Word
 import           HaskellWorks.Data.Positioning
 
+-- | Class of values that support vector like operations
 class VectorLike v where
   type Elem v
   vToList :: v -> [Elem v]
@@ -43,19 +44,19 @@ instance VectorLike String where
   vTake = take . fromIntegral
   vIndex v (Position i) = v !! fromIntegral i
   vSlice (Position i) (Position j) = take (fromIntegral j) . drop (fromIntegral i)
-  {-# INLINABLE vToList   #-}
-  {-# INLINABLE vFromList #-}
-  {-# INLINABLE (!!!)     #-}
-  {-# INLINABLE vConcat   #-}
-  {-# INLINABLE vEmpty    #-}
-  {-# INLINABLE vFilter   #-}
-  {-# INLINABLE vGenerate #-}
-  {-# INLINABLE vLength   #-}
-  {-# INLINABLE vSnoc     #-}
-  {-# INLINABLE vDrop     #-}
-  {-# INLINABLE vTake     #-}
-  {-# INLINABLE vIndex    #-}
-  {-# INLINABLE vSlice    #-}
+  {-# INLINE vToList   #-}
+  {-# INLINE vFromList #-}
+  {-# INLINE (!!!)     #-}
+  {-# INLINE vConcat   #-}
+  {-# INLINE vEmpty    #-}
+  {-# INLINE vFilter   #-}
+  {-# INLINE vGenerate #-}
+  {-# INLINE vLength   #-}
+  {-# INLINE vSnoc     #-}
+  {-# INLINE vDrop     #-}
+  {-# INLINE vTake     #-}
+  {-# INLINE vIndex    #-}
+  {-# INLINE vSlice    #-}
 
 instance VectorLike BS.ByteString where
   type Elem BS.ByteString = Word8
@@ -74,19 +75,19 @@ instance VectorLike BS.ByteString where
   vTake = BS.take . fromIntegral
   vIndex v (Position i) = BS.index v (fromIntegral i)
   vSlice (Position i) (Position j) = BS.take (fromIntegral j) . BS.drop (fromIntegral i)
-  {-# INLINABLE vToList   #-}
-  {-# INLINABLE vFromList #-}
-  {-# INLINABLE (!!!)     #-}
-  {-# INLINABLE vConcat   #-}
-  {-# INLINABLE vEmpty    #-}
-  {-# INLINABLE vFilter   #-}
-  {-# INLINABLE vGenerate #-}
-  {-# INLINABLE vLength   #-}
-  {-# INLINABLE vSnoc     #-}
-  {-# INLINABLE vDrop     #-}
-  {-# INLINABLE vTake     #-}
-  {-# INLINABLE vIndex    #-}
-  {-# INLINABLE vSlice    #-}
+  {-# INLINE vToList   #-}
+  {-# INLINE vFromList #-}
+  {-# INLINE (!!!)     #-}
+  {-# INLINE vConcat   #-}
+  {-# INLINE vEmpty    #-}
+  {-# INLINE vFilter   #-}
+  {-# INLINE vGenerate #-}
+  {-# INLINE vLength   #-}
+  {-# INLINE vSnoc     #-}
+  {-# INLINE vDrop     #-}
+  {-# INLINE vTake     #-}
+  {-# INLINE vIndex    #-}
+  {-# INLINE vSlice    #-}
 
 instance VectorLike (DV.Vector Word8) where
   type Elem (DV.Vector Word8) = Word8
@@ -104,19 +105,19 @@ instance VectorLike (DV.Vector Word8) where
   vTake = DV.take . fromIntegral
   vIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   vSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE vToList   #-}
-  {-# INLINABLE vFromList #-}
-  {-# INLINABLE (!!!)     #-}
-  {-# INLINABLE vConcat   #-}
-  {-# INLINABLE vEmpty    #-}
-  {-# INLINABLE vFilter   #-}
-  {-# INLINABLE vGenerate #-}
-  {-# INLINABLE vLength   #-}
-  {-# INLINABLE vSnoc     #-}
-  {-# INLINABLE vDrop     #-}
-  {-# INLINABLE vTake     #-}
-  {-# INLINABLE vIndex    #-}
-  {-# INLINABLE vSlice    #-}
+  {-# INLINE vToList   #-}
+  {-# INLINE vFromList #-}
+  {-# INLINE (!!!)     #-}
+  {-# INLINE vConcat   #-}
+  {-# INLINE vEmpty    #-}
+  {-# INLINE vFilter   #-}
+  {-# INLINE vGenerate #-}
+  {-# INLINE vLength   #-}
+  {-# INLINE vSnoc     #-}
+  {-# INLINE vDrop     #-}
+  {-# INLINE vTake     #-}
+  {-# INLINE vIndex    #-}
+  {-# INLINE vSlice    #-}
 
 instance VectorLike (DV.Vector Word16) where
   type Elem (DV.Vector Word16) = Word16
@@ -134,19 +135,19 @@ instance VectorLike (DV.Vector Word16) where
   vTake = DV.take . fromIntegral
   vIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   vSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE vToList   #-}
-  {-# INLINABLE vFromList #-}
-  {-# INLINABLE (!!!)     #-}
-  {-# INLINABLE vConcat   #-}
-  {-# INLINABLE vEmpty    #-}
-  {-# INLINABLE vFilter   #-}
-  {-# INLINABLE vGenerate #-}
-  {-# INLINABLE vLength   #-}
-  {-# INLINABLE vSnoc     #-}
-  {-# INLINABLE vDrop     #-}
-  {-# INLINABLE vTake     #-}
-  {-# INLINABLE vIndex    #-}
-  {-# INLINABLE vSlice    #-}
+  {-# INLINE vToList   #-}
+  {-# INLINE vFromList #-}
+  {-# INLINE (!!!)     #-}
+  {-# INLINE vConcat   #-}
+  {-# INLINE vEmpty    #-}
+  {-# INLINE vFilter   #-}
+  {-# INLINE vGenerate #-}
+  {-# INLINE vLength   #-}
+  {-# INLINE vSnoc     #-}
+  {-# INLINE vDrop     #-}
+  {-# INLINE vTake     #-}
+  {-# INLINE vIndex    #-}
+  {-# INLINE vSlice    #-}
 
 instance VectorLike (DV.Vector Word32) where
   type Elem (DV.Vector Word32) = Word32
@@ -164,19 +165,19 @@ instance VectorLike (DV.Vector Word32) where
   vTake = DV.take . fromIntegral
   vIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   vSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE vToList   #-}
-  {-# INLINABLE vFromList #-}
-  {-# INLINABLE (!!!)     #-}
-  {-# INLINABLE vConcat   #-}
-  {-# INLINABLE vEmpty    #-}
-  {-# INLINABLE vFilter   #-}
-  {-# INLINABLE vGenerate #-}
-  {-# INLINABLE vLength   #-}
-  {-# INLINABLE vSnoc     #-}
-  {-# INLINABLE vDrop     #-}
-  {-# INLINABLE vTake     #-}
-  {-# INLINABLE vIndex    #-}
-  {-# INLINABLE vSlice    #-}
+  {-# INLINE vToList   #-}
+  {-# INLINE vFromList #-}
+  {-# INLINE (!!!)     #-}
+  {-# INLINE vConcat   #-}
+  {-# INLINE vEmpty    #-}
+  {-# INLINE vFilter   #-}
+  {-# INLINE vGenerate #-}
+  {-# INLINE vLength   #-}
+  {-# INLINE vSnoc     #-}
+  {-# INLINE vDrop     #-}
+  {-# INLINE vTake     #-}
+  {-# INLINE vIndex    #-}
+  {-# INLINE vSlice    #-}
 
 instance VectorLike (DV.Vector Word64) where
   type Elem (DV.Vector Word64) = Word64
@@ -194,19 +195,19 @@ instance VectorLike (DV.Vector Word64) where
   vTake = DV.take . fromIntegral
   vIndex v (Position i) = DV.unsafeIndex v (fromIntegral i)
   vSlice (Position i) (Position j) = DV.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE vToList   #-}
-  {-# INLINABLE vFromList #-}
-  {-# INLINABLE (!!!)     #-}
-  {-# INLINABLE vConcat   #-}
-  {-# INLINABLE vEmpty    #-}
-  {-# INLINABLE vFilter   #-}
-  {-# INLINABLE vGenerate #-}
-  {-# INLINABLE vLength   #-}
-  {-# INLINABLE vSnoc     #-}
-  {-# INLINABLE vDrop     #-}
-  {-# INLINABLE vTake     #-}
-  {-# INLINABLE vIndex    #-}
-  {-# INLINABLE vSlice    #-}
+  {-# INLINE vToList   #-}
+  {-# INLINE vFromList #-}
+  {-# INLINE (!!!)     #-}
+  {-# INLINE vConcat   #-}
+  {-# INLINE vEmpty    #-}
+  {-# INLINE vFilter   #-}
+  {-# INLINE vGenerate #-}
+  {-# INLINE vLength   #-}
+  {-# INLINE vSnoc     #-}
+  {-# INLINE vDrop     #-}
+  {-# INLINE vTake     #-}
+  {-# INLINE vIndex    #-}
+  {-# INLINE vSlice    #-}
 
 instance VectorLike (DVS.Vector Word8) where
   type Elem (DVS.Vector Word8) = Word8
@@ -224,19 +225,19 @@ instance VectorLike (DVS.Vector Word8) where
   vTake = DVS.take . fromIntegral
   vIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   vSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE vToList   #-}
-  {-# INLINABLE vFromList #-}
-  {-# INLINABLE (!!!)     #-}
-  {-# INLINABLE vConcat   #-}
-  {-# INLINABLE vEmpty    #-}
-  {-# INLINABLE vFilter   #-}
-  {-# INLINABLE vGenerate #-}
-  {-# INLINABLE vLength   #-}
-  {-# INLINABLE vSnoc     #-}
-  {-# INLINABLE vDrop     #-}
-  {-# INLINABLE vTake     #-}
-  {-# INLINABLE vIndex    #-}
-  {-# INLINABLE vSlice    #-}
+  {-# INLINE vToList   #-}
+  {-# INLINE vFromList #-}
+  {-# INLINE (!!!)     #-}
+  {-# INLINE vConcat   #-}
+  {-# INLINE vEmpty    #-}
+  {-# INLINE vFilter   #-}
+  {-# INLINE vGenerate #-}
+  {-# INLINE vLength   #-}
+  {-# INLINE vSnoc     #-}
+  {-# INLINE vDrop     #-}
+  {-# INLINE vTake     #-}
+  {-# INLINE vIndex    #-}
+  {-# INLINE vSlice    #-}
 
 instance VectorLike (DVS.Vector Word16) where
   type Elem (DVS.Vector Word16) = Word16
@@ -254,19 +255,19 @@ instance VectorLike (DVS.Vector Word16) where
   vTake = DVS.take . fromIntegral
   vIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   vSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE vToList   #-}
-  {-# INLINABLE vFromList #-}
-  {-# INLINABLE (!!!)     #-}
-  {-# INLINABLE vConcat   #-}
-  {-# INLINABLE vEmpty    #-}
-  {-# INLINABLE vFilter   #-}
-  {-# INLINABLE vGenerate #-}
-  {-# INLINABLE vLength   #-}
-  {-# INLINABLE vSnoc     #-}
-  {-# INLINABLE vDrop     #-}
-  {-# INLINABLE vTake     #-}
-  {-# INLINABLE vIndex    #-}
-  {-# INLINABLE vSlice    #-}
+  {-# INLINE vToList   #-}
+  {-# INLINE vFromList #-}
+  {-# INLINE (!!!)     #-}
+  {-# INLINE vConcat   #-}
+  {-# INLINE vEmpty    #-}
+  {-# INLINE vFilter   #-}
+  {-# INLINE vGenerate #-}
+  {-# INLINE vLength   #-}
+  {-# INLINE vSnoc     #-}
+  {-# INLINE vDrop     #-}
+  {-# INLINE vTake     #-}
+  {-# INLINE vIndex    #-}
+  {-# INLINE vSlice    #-}
 
 instance VectorLike (DVS.Vector Word32) where
   type Elem (DVS.Vector Word32) = Word32
@@ -284,19 +285,19 @@ instance VectorLike (DVS.Vector Word32) where
   vTake = DVS.take . fromIntegral
   vIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   vSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE vToList   #-}
-  {-# INLINABLE vFromList #-}
-  {-# INLINABLE (!!!)     #-}
-  {-# INLINABLE vConcat   #-}
-  {-# INLINABLE vEmpty    #-}
-  {-# INLINABLE vFilter   #-}
-  {-# INLINABLE vGenerate #-}
-  {-# INLINABLE vLength   #-}
-  {-# INLINABLE vSnoc     #-}
-  {-# INLINABLE vDrop     #-}
-  {-# INLINABLE vTake     #-}
-  {-# INLINABLE vIndex    #-}
-  {-# INLINABLE vSlice    #-}
+  {-# INLINE vToList   #-}
+  {-# INLINE vFromList #-}
+  {-# INLINE (!!!)     #-}
+  {-# INLINE vConcat   #-}
+  {-# INLINE vEmpty    #-}
+  {-# INLINE vFilter   #-}
+  {-# INLINE vGenerate #-}
+  {-# INLINE vLength   #-}
+  {-# INLINE vSnoc     #-}
+  {-# INLINE vDrop     #-}
+  {-# INLINE vTake     #-}
+  {-# INLINE vIndex    #-}
+  {-# INLINE vSlice    #-}
 
 instance VectorLike (DVS.Vector Word64) where
   type Elem (DVS.Vector Word64) = Word64
@@ -314,16 +315,16 @@ instance VectorLike (DVS.Vector Word64) where
   vTake = DVS.take . fromIntegral
   vIndex v (Position i) = DVS.unsafeIndex v (fromIntegral i)
   vSlice (Position i) (Position j) = DVS.unsafeSlice (fromIntegral i) (fromIntegral j)
-  {-# INLINABLE vToList   #-}
-  {-# INLINABLE vFromList #-}
-  {-# INLINABLE (!!!)     #-}
-  {-# INLINABLE vConcat   #-}
-  {-# INLINABLE vEmpty    #-}
-  {-# INLINABLE vFilter   #-}
-  {-# INLINABLE vGenerate #-}
-  {-# INLINABLE vLength   #-}
-  {-# INLINABLE vSnoc     #-}
-  {-# INLINABLE vDrop     #-}
-  {-# INLINABLE vTake     #-}
-  {-# INLINABLE vIndex    #-}
-  {-# INLINABLE vSlice    #-}
+  {-# INLINE vToList   #-}
+  {-# INLINE vFromList #-}
+  {-# INLINE (!!!)     #-}
+  {-# INLINE vConcat   #-}
+  {-# INLINE vEmpty    #-}
+  {-# INLINE vFilter   #-}
+  {-# INLINE vGenerate #-}
+  {-# INLINE vLength   #-}
+  {-# INLINE vSnoc     #-}
+  {-# INLINE vDrop     #-}
+  {-# INLINE vTake     #-}
+  {-# INLINE vIndex    #-}
+  {-# INLINE vSlice    #-}

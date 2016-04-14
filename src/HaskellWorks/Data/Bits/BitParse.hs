@@ -18,8 +18,11 @@ import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitWise
 import           Text.ParserCombinators.Parsec
 
+-- | Parsers for bit strings
 class BitParse a where
+  -- | Version of bit string parser that can consume no inputs
   bitParse0       :: Parser a
+  -- | Version of bit string parser that must consume at least one input
   bitParse1       :: Parser a
 
 p0 :: Parser Bool

@@ -9,6 +9,7 @@ import qualified Data.Vector.Storable as DVS
 import           Data.Word
 import           Foreign.Storable
 
+-- | Class of values that support storable vector like operations
 class StorableVectorLike v e where
   sImap :: (Storable a, Storable b) => (Int -> a -> b) -> v a -> v b
   sMap :: (Storable a, Storable b) => (a -> b) -> v a -> v b

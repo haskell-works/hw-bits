@@ -9,6 +9,7 @@ import qualified Data.Vector      as DV
 import           Data.Word
 import           Foreign.Storable
 
+-- | Class of values that support boxed vector like operations
 class BoxedVectorLike v e where
   bImap :: (Int -> a -> b) -> v a -> v b
   bMap :: (a -> b) -> v a -> v b
@@ -20,37 +21,37 @@ instance BoxedVectorLike DV.Vector Word8 where
   bMap = DV.map
   bUnfoldr = DV.unfoldr
   bUnfoldrN = DV.unfoldrN
-  {-# INLINABLE bImap     #-}
-  {-# INLINABLE bMap      #-}
-  {-# INLINABLE bUnfoldr  #-}
-  {-# INLINABLE bUnfoldrN #-}
+  {-# INLINE bImap     #-}
+  {-# INLINE bMap      #-}
+  {-# INLINE bUnfoldr  #-}
+  {-# INLINE bUnfoldrN #-}
 
 instance BoxedVectorLike DV.Vector Word16 where
   bImap = DV.imap
   bMap = DV.map
   bUnfoldr = DV.unfoldr
   bUnfoldrN = DV.unfoldrN
-  {-# INLINABLE bImap     #-}
-  {-# INLINABLE bMap      #-}
-  {-# INLINABLE bUnfoldr  #-}
-  {-# INLINABLE bUnfoldrN #-}
+  {-# INLINE bImap     #-}
+  {-# INLINE bMap      #-}
+  {-# INLINE bUnfoldr  #-}
+  {-# INLINE bUnfoldrN #-}
 
 instance BoxedVectorLike DV.Vector Word32 where
   bImap = DV.imap
   bMap = DV.map
   bUnfoldr = DV.unfoldr
   bUnfoldrN = DV.unfoldrN
-  {-# INLINABLE bImap     #-}
-  {-# INLINABLE bMap      #-}
-  {-# INLINABLE bUnfoldr  #-}
-  {-# INLINABLE bUnfoldrN #-}
+  {-# INLINE bImap     #-}
+  {-# INLINE bMap      #-}
+  {-# INLINE bUnfoldr  #-}
+  {-# INLINE bUnfoldrN #-}
 
 instance BoxedVectorLike DV.Vector Word64 where
   bImap = DV.imap
   bMap = DV.map
   bUnfoldr = DV.unfoldr
   bUnfoldrN = DV.unfoldrN
-  {-# INLINABLE bImap     #-}
-  {-# INLINABLE bMap      #-}
-  {-# INLINABLE bUnfoldr  #-}
-  {-# INLINABLE bUnfoldrN #-}
+  {-# INLINE bImap     #-}
+  {-# INLINE bMap      #-}
+  {-# INLINE bUnfoldr  #-}
+  {-# INLINE bUnfoldrN #-}

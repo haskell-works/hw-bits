@@ -17,6 +17,7 @@ import           HaskellWorks.Data.Bits.BitShow
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.FromByteString
 
+-- | Tag for a value describe the value as being able to be shown as a bit string
 newtype BitShown a = BitShown a deriving (Eq, BitRead, BitShow)
 
 deriving instance Functor BitShown
@@ -27,6 +28,7 @@ instance BitRead a => IsString (BitShown a) where
 instance BitShow a => Show (BitShown a) where
   show a = bitShows a ""
 
+-- | Show the value as a bit string
 bitShown :: BitShown a -> a
 bitShown (BitShown a) = a
 

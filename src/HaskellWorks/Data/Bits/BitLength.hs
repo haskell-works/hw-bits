@@ -21,6 +21,7 @@ import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Vector.VectorLike
 import           Prelude                             as P
 
+-- | Number of bits in a value including ones and zeros.
 class BitLength v where
   bitLength :: v -> Count
 

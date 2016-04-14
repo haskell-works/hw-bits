@@ -16,8 +16,17 @@ import qualified Data.Vector.Storable          as DVS
 import           Data.Word
 import           HaskellWorks.Data.Positioning
 
+-- | Class of values that have elements of a fixed bit size
+--
+-- >>> elemFixedBitSize (Vector Word8)
+-- 8
 class ElemFixedBitSize v where
+  -- | The element type of the elemnet
   type Elem v
+  -- | Get the bit size of an element for a given composite bit-string type.
+  --
+  -- >>> elemFixedBitSize (Vector Word8)
+  -- 8
   elemFixedBitSize :: v -> Count
 
 instance ElemFixedBitSize [Bool] where
@@ -79,4 +88,3 @@ instance ElemFixedBitSize (DVS.Vector Word32) where
 instance ElemFixedBitSize (DVS.Vector Word64) where
   type Elem (DVS.Vector Word64) = Word64
   elemFixedBitSize _ = 64
-

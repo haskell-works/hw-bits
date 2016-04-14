@@ -25,6 +25,7 @@ fastWord :: a -> FastWord a
 fastWord = Builtin
 {-# INLINE fastWord #-}
 
+-- | The number of one bits in the value.
 class PopCount1 v where
   popCount1 :: v -> Count
 

@@ -12,7 +12,9 @@ import           Data.Word
 import           HaskellWorks.Data.Bits.BitParse
 import           Text.ParserCombinators.Parsec
 
+-- | Bit string reader that produces a value of a type
 class BitRead a where
+  -- | Read a bit string into a value
   bitRead :: String -> Maybe a
 
 bitRead' :: BitParse a => String -> Maybe a

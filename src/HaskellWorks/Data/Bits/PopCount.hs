@@ -15,5 +15,6 @@ import           HaskellWorks.Data.Bits.PopCount.PopCount0 as X
 import           HaskellWorks.Data.Bits.PopCount.PopCount1 as X
 import           HaskellWorks.Data.Positioning
 
+{-# DEPRECATED #-}
 class PopCount v e where
   popCount :: e -> v -> Count

@@ -11,7 +11,12 @@ module HaskellWorks.Data.Bits.FixedBitSize
 import           Data.Word
 import           HaskellWorks.Data.Positioning
 
+-- | Class of values that have a fix bit size
 class FixedBitSize a where
+  -- | Get the bit size of a value of given type.
+  --
+  -- >>> fixedBitSize Word8
+  -- 8
   fixedBitSize :: a -> Count
 
 instance FixedBitSize Bool where

@@ -33,19 +33,31 @@ infixl 7 .&.        -- Bitwise AND.  eg. ∧
 infixl 6 .^.        -- Bitwise XOR.  eg. ⊕
 infixl 5 .|.        -- Bitwise OR.   eg. ∨
 
+-- | Class of values that have shift operations
 class Shift a where
+  -- | Shift left by the specified count
   (.<.) :: a -> Count -> a
+  -- | Shift right by the specified count
   (.>.) :: a -> Count -> a
 
+  -- | Class of values that have bit test operations
 class TestBit a where
+  -- | Test whether the bit ad the given offset is set
   (.?.) :: a -> Position -> Bool
 
+-- | Class of values that have bit wise logical operations
 class BitWise a where
+  -- | Bit wise AND
   (.&.) :: a -> a -> a
+  -- | Bit wise OR
   (.|.) :: a -> a -> a
+  -- | Bit wise XOR
   (.^.) :: a -> a -> a
+  -- | Bit wise complement
   comp  :: a -> a
+  -- | Bit-wise value of the given type with all bits set to zero
   all0s :: a
+  -- | Bit-wise value of the given type with all bits set to one
   all1s :: a
 
 --------------------------------------------------------------------------------

@@ -18,7 +18,9 @@ import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Word
 
+-- | Shower of a value as a bit string
 class BitShow a where
+  -- | Show a value as a bit string
   bitShows :: a -> String -> String
 
 instance BitShow Bool where
