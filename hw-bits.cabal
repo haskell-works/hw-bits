@@ -8,7 +8,8 @@ license-file:           LICENSE
 author:                 John Ky
 maintainer:             newhoggy@gmail.com
 copyright:              2016 John Ky
-category:               Data, Conduit
+category:               Data, Bit
+stability:              Experimental
 build-type:             Simple
 extra-source-files:     README.md
 cabal-version:          >= 1.10

@@ -54,160 +54,160 @@ class BitWise a where
 instance TestBit Bool where
   (.?.) w 0 = w
   (.?.) _ _ = error "Invalid bit index"
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit [Bool] where
   (.?.) v p = v !! fromIntegral p
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit Word8 where
   (.?.) w n = B.testBit w (fromIntegral (getPosition n))
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit Word16 where
   (.?.) w n = B.testBit w (fromIntegral (getPosition n))
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit Word32 where
   (.?.) w n = B.testBit w (fromIntegral (getPosition n))
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit Word64 where
   (.?.) w n = B.testBit w (fromIntegral (getPosition n))
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit (DV.Vector Word8) where
   (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit (DV.Vector Word16) where
   (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit (DV.Vector Word32) where
   (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit (DV.Vector Word64) where
   (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit (DVS.Vector Word8) where
   (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit (DVS.Vector Word16) where
   (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit (DVS.Vector Word32) where
   (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance TestBit (DVS.Vector Word64) where
   (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
-  {-# INLINABLE (.?.) #-}
+  {-# INLINE (.?.) #-}
 
 instance BitWise Word8 where
   (.&.) = (B..&.)
-  {-# INLINABLE (.&.) #-}
+  {-# INLINE (.&.) #-}
 
   (.|.) = (B..|.)
-  {-# INLINABLE (.|.) #-}
+  {-# INLINE (.|.) #-}
 
   (.^.) = B.xor
-  {-# INLINABLE (.^.) #-}
+  {-# INLINE (.^.) #-}
 
   comp  = B.complement
-  {-# INLINABLE comp #-}
+  {-# INLINE comp #-}
 
   all0s = 0
-  {-# INLINABLE all0s #-}
+  {-# INLINE all0s #-}
 
   all1s = 0
-  {-# INLINABLE all1s #-}
+  {-# INLINE all1s #-}
 
 instance BitWise Word16 where
   (.&.) = (B..&.)
-  {-# INLINABLE (.&.) #-}
+  {-# INLINE (.&.) #-}
 
   (.|.) = (B..|.)
-  {-# INLINABLE (.|.) #-}
+  {-# INLINE (.|.) #-}
 
   (.^.) = B.xor
-  {-# INLINABLE (.^.) #-}
+  {-# INLINE (.^.) #-}
 
   comp  = B.complement
-  {-# INLINABLE comp #-}
+  {-# INLINE comp #-}
 
   all0s = 0
-  {-# INLINABLE all0s #-}
+  {-# INLINE all0s #-}
 
   all1s = 0
-  {-# INLINABLE all1s #-}
+  {-# INLINE all1s #-}
 
 instance BitWise Word32 where
   (.&.) = (B..&.)
-  {-# INLINABLE (.&.) #-}
+  {-# INLINE (.&.) #-}
 
   (.|.) = (B..|.)
-  {-# INLINABLE (.|.) #-}
+  {-# INLINE (.|.) #-}
 
   (.^.) = B.xor
-  {-# INLINABLE (.^.) #-}
+  {-# INLINE (.^.) #-}
 
   comp  = B.complement
-  {-# INLINABLE comp #-}
+  {-# INLINE comp #-}
 
   all0s = 0
-  {-# INLINABLE all0s #-}
+  {-# INLINE all0s #-}
 
   all1s = 0
-  {-# INLINABLE all1s #-}
+  {-# INLINE all1s #-}
 
 instance BitWise Word64 where
   (.&.) = (B..&.)
-  {-# INLINABLE (.&.) #-}
+  {-# INLINE (.&.) #-}
 
   (.|.) = (B..|.)
-  {-# INLINABLE (.|.) #-}
+  {-# INLINE (.|.) #-}
 
   (.^.) = B.xor
-  {-# INLINABLE (.^.) #-}
+  {-# INLINE (.^.) #-}
 
   comp  = B.complement
-  {-# INLINABLE comp #-}
+  {-# INLINE comp #-}
 
   all0s = 0
-  {-# INLINABLE all0s #-}
+  {-# INLINE all0s #-}
 
   all1s = 0
-  {-# INLINABLE all1s #-}
+  {-# INLINE all1s #-}
 
 instance Shift Word8  where
   (.<.) w n = B.shiftL w (fromIntegral n)
-  {-# INLINABLE (.<.) #-}
+  {-# INLINE (.<.) #-}
 
   (.>.) w n = B.shiftR w (fromIntegral n)
-  {-# INLINABLE (.>.) #-}
+  {-# INLINE (.>.) #-}
 
 instance Shift Word16 where
   (.<.) w n = B.shiftL w (fromIntegral n)
-  {-# INLINABLE (.<.) #-}
+  {-# INLINE (.<.) #-}
 
   (.>.) w n = B.shiftR w (fromIntegral n)
-  {-# INLINABLE (.>.) #-}
+  {-# INLINE (.>.) #-}
 
 instance Shift Word32 where
   (.<.) w n = B.shiftL w (fromIntegral n)
-  {-# INLINABLE (.<.) #-}
+  {-# INLINE (.<.) #-}
 
   (.>.) w n = B.shiftR w (fromIntegral n)
-  {-# INLINABLE (.>.) #-}
+  {-# INLINE (.>.) #-}
 
 instance Shift Word64 where
   (.<.) w n = B.shiftL w (fromIntegral n)
-  {-# INLINABLE (.<.) #-}
+  {-# INLINE (.<.) #-}
 
   (.>.) w n = B.shiftR w (fromIntegral n)
-  {-# INLINABLE (.>.) #-}
+  {-# INLINE (.>.) #-}
