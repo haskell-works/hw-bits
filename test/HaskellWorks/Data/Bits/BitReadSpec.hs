@@ -1,10 +1,12 @@
 {-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE OverloadedLists     #-}
 
 module HaskellWorks.Data.Bits.BitReadSpec (spec) where
 
 import qualified Data.Vector                    as DV
 import           Data.Word
+import           GHC.Exts
 import           HaskellWorks.Data.Bits.BitRead
 import           HaskellWorks.Data.Bits.BitShow
 import           Test.Hspec
@@ -27,16 +29,16 @@ spec = describe "HaskellWorks.Data.BitReadSpec" $ do
     ws `shouldBe` Just []
   it "bitRead \"10000000 101\" :: Maybe (DV.Vector Word8)" $
     let v = bitRead "10000000 101" :: Maybe (DV.Vector Word8) in
-    v `shouldBe` Just (DV.fromList [1, 5])
+    v `shouldBe` Just [1, 5]
   it "bitRead \"11100100 10101111 1\" :: Maybe (DV.Vector Word8)" $
     let v = bitRead "11100100 10101111 1" :: Maybe (DV.Vector Word8) in
-    v `shouldBe` Just (DV.fromList [39, 245, 1])
+    v `shouldBe` Just [39, 245, 1]
   it "bitRead \"11100100 10101111 1\" :: Maybe (DV.Vector Word16)" $
     let v = bitRead "11100100 10101111 1" :: Maybe (DV.Vector Word16) in
-    v `shouldBe` Just (DV.fromList [39 + 62720, 1])
+    v `shouldBe` Just [39 + 62720, 1]
   it "bitRead \"\" :: Maybe (DV.Vector Word8)" $
     let v = bitRead "" :: Maybe (DV.Vector Word8) in
-    v `shouldBe` Just (DV.fromList [])
+    v `shouldBe` Just []
   it "bitShow (8 :: Word8)" $
     let bs = bitShow (8 :: Word8) in
     bs `shouldBe` "00010000"
@@ -44,5 +46,5 @@ spec = describe "HaskellWorks.Data.BitReadSpec" $ do
     let bs = bitShow (8 :: Word64) in
     bs `shouldBe` "00010000 00000000 00000000 00000000 00000000 00000000 00000000 00000000"
   it "bitShow [0x0102040810204080 :: Word64]" $
-    let bs = bitShow [0x0102040810204080 :: Word64] in
+    let bs = bitShow ([0x0102040810204080] :: [Word64]) in
     bs `shouldBe` "00000001 00000010 00000100 00001000 00010000 00100000 01000000 10000000"

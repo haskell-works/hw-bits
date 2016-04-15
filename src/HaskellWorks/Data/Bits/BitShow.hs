@@ -15,6 +15,7 @@ import qualified Data.ByteString                as BS
 import qualified Data.Vector                    as DV
 import qualified Data.Vector.Storable           as DVS
 import           Data.Word
+import           GHC.Exts
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Word
 
@@ -79,28 +80,28 @@ instance BitShow [Word64] where
   bitShows (w:ws) = bitShows w . (' ':) . bitShows ws
 
 instance BitShow (DV.Vector Word8) where
-  bitShows = bitShows . DV.toList
+  bitShows = bitShows . toList
 
 instance BitShow (DV.Vector Word16) where
-  bitShows = bitShows . DV.toList
+  bitShows = bitShows . toList
 
 instance BitShow (DV.Vector Word32) where
-  bitShows = bitShows . DV.toList
+  bitShows = bitShows . toList
 
 instance BitShow (DV.Vector Word64) where
-  bitShows = bitShows . DV.toList
+  bitShows = bitShows . toList
 
 instance BitShow (DVS.Vector Word8) where
-  bitShows = bitShows . DVS.toList
+  bitShows = bitShows . toList
 
 instance BitShow (DVS.Vector Word16) where
-  bitShows = bitShows . DVS.toList
+  bitShows = bitShows . toList
 
 instance BitShow (DVS.Vector Word32) where
-  bitShows = bitShows . DVS.toList
+  bitShows = bitShows . toList
 
 instance BitShow (DVS.Vector Word64) where
-  bitShows = bitShows . DVS.toList
+  bitShows = bitShows . toList
 
 bitShow :: BitShow a => a -> String
 bitShow a = bitShows a ""
