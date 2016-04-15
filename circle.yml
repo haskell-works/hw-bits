@@ -1,21 +1,30 @@
 machine:
-  ghc:
-    version: 7.10.2
+  environment:
+    CABAL_INSTALL_FLAGS: |
+        -j
+        --upgrade-dependencies
+        --disable-library-profiling
+        --disable-executable-profiling
+        --disable-documentation
+        --disable-library-coverage
+        --disable-benchmarks
+  post:
+    - curl https://nixos.org/nix/install | sh
 
 dependencies:
   cache_directories:
-    - "~/.stack"
-    - "~/.ghc"
     - "~/.cabal"
-    - "~/stack-1.0.4-linux-x86_64/stack"
+    - "~/.ghc"
   pre:
-    - ./install-stack.sh 1.0.4
+    - cp ./nox ~/bin/nox
+    - nox nix-env -i ghc-7.10.3
+    - nox nix-env -i cabal-install-1.22.9.0
+    - nox cabal update
+    - nox cabal install -j $CABAL_INSTALL_FLAGS --only-dependencies
+    - nox cabal install -j $CABAL_INSTALL_FLAGS --only-dependencies --enable-tests
+    - nox cabal install -j $CABAL_INSTALL_FLAGS --only-dependencies --enable-benchmarks
   override:
-    - stack setup
-    - stack clean
-    - stack build
-
+    - nox cabal build -j
 test:
   override:
-    - stack clean
-    - stack test
+    - nox cabal test
