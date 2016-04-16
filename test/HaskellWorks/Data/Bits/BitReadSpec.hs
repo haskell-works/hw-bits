@@ -6,7 +6,6 @@ module HaskellWorks.Data.Bits.BitReadSpec (spec) where
 
 import qualified Data.Vector                    as DV
 import           Data.Word
-import           GHC.Exts
 import           HaskellWorks.Data.Bits.BitRead
 import           HaskellWorks.Data.Bits.BitShow
 import           Test.Hspec

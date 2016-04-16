@@ -61,6 +61,7 @@ library
                       , conduit
                       , deepseq
                       , ghc-prim
+                      , hw-prim
                       , lens
                       , mmap
                       , mono-traversable
