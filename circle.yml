@@ -2,6 +2,7 @@ machine:
   environment:
     CABAL_INSTALL_FLAGS: |
         -j
+        --force-reinstalls
         --upgrade-dependencies
         --disable-library-profiling
         --disable-executable-profiling
