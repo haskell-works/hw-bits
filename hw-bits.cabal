@@ -45,14 +45,6 @@ library
                       , HaskellWorks.Data.Bits.PopCount.PopCount1
                       , HaskellWorks.Data.Bits.Types.Broadword
                       , HaskellWorks.Data.Bits.Types.Builtin
-                      , HaskellWorks.Data.ByteString
-                      , HaskellWorks.Data.FromByteString
-                      , HaskellWorks.Data.FromForeignRegion
-                      , HaskellWorks.Data.Positioning
-                      , HaskellWorks.Data.Search
-                      , HaskellWorks.Data.Vector.BoxedVectorLike
-                      , HaskellWorks.Data.Vector.StorableVectorLike
-                      , HaskellWorks.Data.Vector.VectorLike
                       , HaskellWorks.Data.Word
   build-depends:        base                            >= 4.7  && < 5
                       , array
@@ -113,6 +105,7 @@ benchmark bench
                       , conduit
                       , criterion
                       , hw-bits
+                      , hw-prim
                       , mmap
                       , resourcet
                       , vector
