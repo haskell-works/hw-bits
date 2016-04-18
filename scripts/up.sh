@@ -64,7 +64,5 @@ fi
 
 echo "  git add $_repo_name.cabal"
 echo "  git commit -m 'New version $_new_version'"
-echo "  git tag -a v$_new_version -m 'New version $_new_version'"
 echo "  git push origin"
-echo "  git push origin v$_new_version"
 echo ""
