@@ -1,7 +1,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeFamilies          #-}
 
-module HaskellWorks.Data.Word where
+module HaskellWorks.Data.Bits.Word where
 
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength

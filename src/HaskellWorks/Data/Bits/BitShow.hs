@@ -17,7 +17,7 @@ import qualified Data.Vector.Storable           as DVS
 import           Data.Word
 import           GHC.Exts
 import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.Word
+import           HaskellWorks.Data.Bits.Word
 
 -- | Shower of a value as a bit string
 class BitShow a where

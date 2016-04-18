@@ -45,7 +45,7 @@ library
                       , HaskellWorks.Data.Bits.PopCount.PopCount1
                       , HaskellWorks.Data.Bits.Types.Broadword
                       , HaskellWorks.Data.Bits.Types.Builtin
-                      , HaskellWorks.Data.Word
+                      , HaskellWorks.Data.Bits.Word
   build-depends:        base                            >= 4.7  && < 5
                       , array
                       , attoparsec

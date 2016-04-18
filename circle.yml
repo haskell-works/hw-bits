@@ -24,6 +24,8 @@ dependencies:
     - nox cabal install -j $CABAL_INSTALL_FLAGS --only-dependencies
     - nox cabal install -j $CABAL_INSTALL_FLAGS --only-dependencies --enable-tests
     - nox cabal install -j $CABAL_INSTALL_FLAGS --only-dependencies --enable-benchmarks
+    - nox cabal install -j --force-reinstalls --reinstall hspec-discover
+    - ln -sf ~/.cabal/bin/hspec-discover ~/bin/hspec-discover
   override:
     - nox cabal build -j
 test:
@@ -35,11 +37,10 @@ deployment:
     owner: haskell-works
     branch: /v.*/
     commands:
-      - ./scripts/autotag.sh
+      - nox ./scripts/autotag.sh
 
   hackage:
     owner: haskell-works
     tag: /v.*/
     commands:
-      - ./scripts/publish.sh
-
+      - nox ./scripts/publish.sh
