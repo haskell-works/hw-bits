@@ -1,5 +1,6 @@
 # hw-succinct
-[![Circle CI](https://circleci.com/gh/haskell-works/hw-succinct.svg?style=svg)](https://circleci.com/gh/haskell-works/hw-succinct)
+[![v0.0-branch](https://circleci.com/gh/haskell-works/hw-bits/tree/v0.0-branch.svg?style=svg)](https://circleci.com/gh/haskell-works/hw-bits/tree/v0.0-branch)
+
 Conduits for tokenizing streams.
 
 `hw-succinct` is a succinct JSON parsing library.  It uses succinct data-structures to allow traversal of
@@ -88,7 +89,7 @@ Run the following in the shell:
     let !bs = BSI.fromForeignPtr (castForeignPtr fptr) offset size
     x <- measure $ BS.concat $ runListConduit [bs] (blankJson =$= blankedJsonToInterestBits)
     x <- measure $ jsonBsToInterestBs bs
-    
+
     jsonTokenAt $ J.nextSibling $ J.firstChild $ J.nextSibling $ J.firstChild $ J.firstChild  cursor
 
 ## References
