@@ -17,30 +17,30 @@ dependencies:
     - "~/.cabal"
     - "~/.ghc"
   pre:
-    - cp ./nox ~/bin/nox
-    - nox nix-env -i ghc-7.10.3
-    - nox nix-env -i cabal-install-1.22.9.0
-    - nox cabal update
-    - nox cabal install -j $CABAL_INSTALL_FLAGS --only-dependencies
-    - nox cabal install -j $CABAL_INSTALL_FLAGS --only-dependencies --enable-tests
-    - nox cabal install -j $CABAL_INSTALL_FLAGS --only-dependencies --enable-benchmarks
-    - nox cabal install -j --force-reinstalls --reinstall hspec-discover
-    - ln -sf ~/.cabal/bin/hspec-discover ~/bin/hspec-discover
+    - cp ./scripts/* ~/bin/
+    - nox when deps nix-env -i ghc-7.10.3
+    - nox when deps nix-env -i cabal-install-1.22.9.0
+    - nox when deps cabal update
+    - nox when deps cabal install -j $CABAL_INSTALL_FLAGS --only-dependencies
+    - nox when deps cabal install -j $CABAL_INSTALL_FLAGS --only-dependencies --enable-tests
+    - nox when deps cabal install -j $CABAL_INSTALL_FLAGS --only-dependencies --enable-benchmarks
+    - nox when deps cabal install -j --force-reinstalls --reinstall hspec-discover
+    - nox when deps ln -sf ~/.cabal/bin/hspec-discover ~/bin/hspec-discover
   override:
-    - nox cabal build -j
+    - nox when build cabal build -j
 test:
   override:
-    - nox cabal test
+    - nox when test cabal test
 
 deployment:
   release_branch:
     owner: haskell-works
     branch: /v.*/
     commands:
-      - nox ./scripts/autotag.sh
+      - nox when tag autotag
 
   hackage:
     owner: haskell-works
     tag: /v.*/
     commands:
-      - nox ./scripts/publish.sh
+      - nox when deploy publish
