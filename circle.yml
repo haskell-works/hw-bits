@@ -27,9 +27,11 @@ dependencies:
     - nox when deps cabal install -j --force-reinstalls --reinstall hspec-discover
     - nox when deps ln -sf ~/.cabal/bin/hspec-discover ~/bin/hspec-discover
   override:
-    - nox when build cabal build -j
+    - echo "Suppress default Circle CI dependencies"
+
 test:
   override:
+    - nox when build cabal build -j
     - nox when test cabal test
 
 deployment:
