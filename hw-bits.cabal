@@ -19,9 +19,7 @@ executable hw-bits-example
   hs-source-dirs:       app
   main-is:              Main.hs
   ghc-options:          -threaded -rtsopts -with-rtsopts=-N -Wall -msse4.2
-  build-depends:        base            >= 4       && < 5
-                      , bytestring
-                      , conduit
+  build-depends:        base            >= 4    && < 5
                       , criterion
                       , hw-bits
                       , mmap
@@ -46,25 +44,11 @@ library
                       , HaskellWorks.Data.Bits.Types.Broadword
                       , HaskellWorks.Data.Bits.Types.Builtin
                       , HaskellWorks.Data.Bits.Word
-  build-depends:        base                            >= 4.7  && < 5
-                      , array
-                      , attoparsec
+  build-depends:        base            >= 4.7  && < 5
                       , bytestring
-                      , conduit
-                      , deepseq
-                      , ghc-prim
                       , hw-prim
-                      , lens
-                      , mmap
-                      , mono-traversable
                       , parsec
-                      , QuickCheck
-                      , random
-                      , resourcet
-                      , safe
-                      , text
                       , vector
-                      , word8
 
   default-language:     Haskell2010
   ghc-options:          -rtsopts -with-rtsopts=-N -Wall -O2 -msse4.2
@@ -76,16 +60,9 @@ test-suite hw-bits-test
   other-modules:        HaskellWorks.Data.Bits.BitReadSpec
                       , HaskellWorks.Data.Bits.BitWiseSpec
   build-depends:        base
-                      , attoparsec
-                      , bytestring
-                      , conduit
                       , hspec
                       , hw-bits
-                      , mmap
-                      , parsec
                       , QuickCheck
-                      , resourcet
-                      , transformers
                       , vector
   ghc-options:          -threaded -rtsopts -with-rtsopts=-N -Wall
   default-language:     Haskell2010
@@ -100,12 +77,8 @@ benchmark bench
     Main-Is: Main.hs
     GHC-Options: -Wall -O2 -msse4.2
     Default-Language: Haskell2010
-    Build-Depends:      base            >= 4       && < 5
-                      , bytestring
-                      , conduit
+    Build-Depends:      base            >= 4    && < 5
                       , criterion
                       , hw-bits
                       , hw-prim
-                      , mmap
-                      , resourcet
                       , vector
