@@ -13,4 +13,9 @@ cabal.sandbox.config
 *.prof
 *.aux
 *.hp
-*.submodules
+
+/*.submodules
+/.stack-work/
+/*.nix
+/*.nix.part
+/result
