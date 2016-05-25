@@ -18,7 +18,7 @@ executable hw-bits-example
   hs-source-dirs:       app
   main-is:              Main.hs
   ghc-options:          -threaded -rtsopts -with-rtsopts=-N -Wall -msse4.2
-  build-depends:        base            >= 4    && < 5
+  build-depends:        base                          >= 4          && < 5
                       , criterion
                       , hw-bits
                       , mmap
@@ -43,9 +43,9 @@ library
                       , HaskellWorks.Data.Bits.Types.Broadword
                       , HaskellWorks.Data.Bits.Types.Builtin
                       , HaskellWorks.Data.Bits.Word
-  build-depends:        base            >= 4.7  && < 5
+  build-depends:        base                          >= 4          && < 5
                       , bytestring
-                      , hw-prim
+                      , hw-prim                       >= 0.0.2
                       , parsec
                       , vector
 
@@ -58,7 +58,7 @@ test-suite hw-bits-test
   main-is:              Spec.hs
   other-modules:        HaskellWorks.Data.Bits.BitReadSpec
                       , HaskellWorks.Data.Bits.BitWiseSpec
-  build-depends:        base
+  build-depends:        base                          >= 4          && < 5
                       , hspec
                       , hw-bits
                       , QuickCheck
@@ -76,8 +76,8 @@ benchmark bench
     Main-Is: Main.hs
     GHC-Options: -Wall -O2 -msse4.2
     Default-Language: Haskell2010
-    Build-Depends:      base            >= 4    && < 5
+    Build-Depends:      base                          >= 4          && < 5
                       , criterion
                       , hw-bits
-                      , hw-prim
+                      , hw-prim                       >= 0.0.2
                       , vector
