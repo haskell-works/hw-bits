@@ -45,7 +45,7 @@ library
                       , HaskellWorks.Data.Bits.Word
   build-depends:        base                          >= 4          && < 5
                       , bytestring
-                      , hw-prim                       >= 0.0.2
+                      , hw-prim                       >= 0.0.3
                       , parsec
                       , vector
 
@@ -79,5 +79,5 @@ benchmark bench
     Build-Depends:      base                          >= 4          && < 5
                       , criterion
                       , hw-bits
-                      , hw-prim                       >= 0.0.2
+                      , hw-prim                       >= 0.0.3
                       , vector
