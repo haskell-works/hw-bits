@@ -12,7 +12,7 @@ category:               Data, Bit
 stability:              Experimental
 build-type:             Simple
 extra-source-files:     README.md
-cabal-version:          >= 1.10
+cabal-version:          >= 1.22
 
 executable hw-bits-example
   hs-source-dirs:       app
