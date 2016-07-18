@@ -1,30 +1,33 @@
+machine:
+  post:
+    - curl https://nixos.org/nix/install | sh
+
 dependencies:
   cache_directories:
     - "~/.cabal"
     - "~/.ghc"
-    - "~/.ambiata"
   pre:
-    - ./mafia upgrade
-    - ./mafia update
     - cp ./scripts/* ~/bin/
-    - ./mafia install hspec-discover; cp $HOME/.ambiata/mafia/bin/hspec-discover/bin/hspec-discover ~/bin/
   override:
-    - ./mafia lock; ./mafia unlock
-    - ./mafia build
+    # Fix to latest stable release
+    - nox nix-channel --add https://nixos.org/channels/nixos-16.03/ nixpkgs
+    - nox nix-channel --update
+    - nox when deps nix-mk
+    - nox when deps nix-deps
 
 test:
   override:
-    - ./mafia test
+    - nox when build nix-build
 
 deployment:
   release_branch:
     owner: haskell-works
     branch: /.*-branch/
     commands:
-      - when tag autotag
+      - nox when tag autotag
 
   hackage:
     owner: haskell-works
     tag: /v.*/
     commands:
-      - publish
+      - nox when deploy nix-shell shell.nix --command publish
