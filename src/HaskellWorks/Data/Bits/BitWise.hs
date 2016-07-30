@@ -72,6 +72,10 @@ instance TestBit [Bool] where
   (.?.) v p = v !! fromIntegral p
   {-# INLINE (.?.) #-}
 
+instance TestBit Int where
+  (.?.) w n = B.testBit w (fromIntegral (getPosition n))
+  {-# INLINE (.?.) #-}
+
 instance TestBit Word8 where
   (.?.) w n = B.testBit w (fromIntegral (getPosition n))
   {-# INLINE (.?.) #-}
@@ -120,6 +124,25 @@ instance TestBit (DVS.Vector Word64) where
   (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
   {-# INLINE (.?.) #-}
 
+instance BitWise Int where
+  (.&.) = (B..&.)
+  {-# INLINE (.&.) #-}
+
+  (.|.) = (B..|.)
+  {-# INLINE (.|.) #-}
+
+  (.^.) = B.xor
+  {-# INLINE (.^.) #-}
+
+  comp  = B.complement
+  {-# INLINE comp #-}
+
+  all0s = 0
+  {-# INLINE all0s #-}
+
+  all1s = -1
+  {-# INLINE all1s #-}
+
 instance BitWise Word8 where
   (.&.) = (B..&.)
   {-# INLINE (.&.) #-}
@@ -136,7 +159,7 @@ instance BitWise Word8 where
   all0s = 0
   {-# INLINE all0s #-}
 
-  all1s = 0
+  all1s = 0xff
   {-# INLINE all1s #-}
 
 instance BitWise Word16 where
@@ -155,7 +178,7 @@ instance BitWise Word16 where
   all0s = 0
   {-# INLINE all0s #-}
 
-  all1s = 0
+  all1s = 0xffff
   {-# INLINE all1s #-}
 
 instance BitWise Word32 where
@@ -174,7 +197,7 @@ instance BitWise Word32 where
   all0s = 0
   {-# INLINE all0s #-}
 
-  all1s = 0
+  all1s = 0xffffffff
   {-# INLINE all1s #-}
 
 instance BitWise Word64 where
@@ -193,8 +216,15 @@ instance BitWise Word64 where
   all0s = 0
   {-# INLINE all0s #-}
 
-  all1s = 0
+  all1s = 0xffffffffffffffff
   {-# INLINE all1s #-}
+
+instance Shift Int  where
+  (.<.) w n = B.shiftL w (fromIntegral n)
+  {-# INLINE (.<.) #-}
+
+  (.>.) w n = B.shiftR w (fromIntegral n)
+  {-# INLINE (.>.) #-}
 
 instance Shift Word8  where
   (.<.) w n = B.shiftL w (fromIntegral n)
