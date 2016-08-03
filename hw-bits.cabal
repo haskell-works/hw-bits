@@ -29,6 +29,9 @@ executable hw-bits-example
 library
   hs-source-dirs:       src
   exposed-modules:      HaskellWorks.Data.Bits
+                      , HaskellWorks.Data.Bits.AllExcess
+                      , HaskellWorks.Data.Bits.AllExcess.AllExcess0
+                      , HaskellWorks.Data.Bits.AllExcess.AllExcess1
                       , HaskellWorks.Data.Bits.BitLength
                       , HaskellWorks.Data.Bits.BitParse
                       , HaskellWorks.Data.Bits.BitRead
