@@ -27,6 +27,7 @@ class BitLength v where
 
   endPosition :: v -> Position
   endPosition = Position . fromIntegral . getCount . bitLength
+  {-# INLINE endPosition #-}
 
 --------------------------------------------------------------------------------
 -- Functions
