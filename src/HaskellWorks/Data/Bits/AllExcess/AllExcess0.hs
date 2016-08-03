@@ -11,6 +11,13 @@ import           HaskellWorks.Data.Bits.PopCount.PopCount1
 class AllExcess0 a where
   allExcess0 :: a -> Int
 
+instance AllExcess0 [Bool] where
+  allExcess0 = go 0
+    where go n (False:ys) = go (n + 1) ys
+          go n (True :ys) = go (n - 1) ys
+          go n _          = n
+  {-# INLINE allExcess0 #-}
+
 instance AllExcess0 Word8 where
   allExcess0 w = fromIntegral (popCount0 w) - fromIntegral (popCount1 w)
   {-# INLINE allExcess0 #-}
