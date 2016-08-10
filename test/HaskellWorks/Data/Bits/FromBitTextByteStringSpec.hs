@@ -15,7 +15,7 @@ import           Test.Hspec
 {-# ANN module ("HLint: Ignore Redundant do" :: String) #-}
 
 spec :: Spec
-spec = describe "HaskellWorks.Data.FromBitTextByteStringSpec" $ do
+spec = describe "HaskellWorks.Data.Bits.FromBitTextByteStringSpec" $ do
   describe "For (DVS.Vector Word8)" $ do
     it "fromBitTextByteString (BS.unpack []) :: DVS.Vector Word8" $
       let w = fromBitTextByteString (BS.pack []) ::DVS.Vector Word8 in

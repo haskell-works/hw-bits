@@ -15,7 +15,7 @@ import           Test.QuickCheck
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 
 spec :: Spec
-spec = describe "HaskellWorks.Data.SuccinctSpec" $ do
+spec = describe "HaskellWorks.Data.Bits.BitWiseSpec" $ do
   describe "for popCount0" $ do
     it "for Word8 matches Data.Bits implementation" $ property $
       \(w :: Word8 ) -> popCount0 w == bitLength w - fromIntegral (B.popCount w)
