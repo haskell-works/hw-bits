@@ -38,6 +38,7 @@ library
                       , HaskellWorks.Data.Bits.BitShow
                       , HaskellWorks.Data.Bits.BitShown
                       , HaskellWorks.Data.Bits.BitWise
+                      , HaskellWorks.Data.Bits.Broadword
                       , HaskellWorks.Data.Bits.ElemFixedBitSize
                       , HaskellWorks.Data.Bits.FixedBitSize
                       , HaskellWorks.Data.Bits.FromBitTextByteString
