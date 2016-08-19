@@ -24,7 +24,7 @@ module HaskellWorks.Data.Bits.Broadword
   , k8BitZ
   , k8BitUpdateB
   , k8BitUpdateZ
-  , xxxxx
+  , findCloseW64
   ) where
 
 import qualified Data.Bits                        as DB
@@ -109,8 +109,8 @@ traceW s w = trace (s ++ ": " ++ show (BitShown w) ++ " : " ++ show w) w
 lsb :: Word64 -> Word64
 lsb w = fromIntegral (DB.countTrailingZeros w)
 
-xxxxx :: Word64 -> Word64
-xxxxx x = let !_ = traceW "x00" x in
+findCloseW64 :: Word64 -> Word64
+findCloseW64 x = let !_ = traceW "x00" x in
   let !b00 = x - ((x .&. 0xaaaaaaaaaaaaaaaa) .>. 1)                                 in let !_ = traceW "b00" b00 in
   let !b01 = (b00 .&. 0x3333333333333333) + ((b00 .>. 2) .&. 0x3333333333333333)    in let !_ = traceW "b01" b01 in
   let !b02 = (b01 + (b01 .>. 4)) .&. 0x0f0f0f0f0f0f0f0f                             in let !_ = traceW "b02" b02 in
