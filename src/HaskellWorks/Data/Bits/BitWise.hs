@@ -19,6 +19,7 @@ import qualified Data.Vector                         as DV
 import qualified Data.Vector.Storable                as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength
+import           HaskellWorks.Data.Naive
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Vector.VectorLike as VL
 import           Prelude                             as P
@@ -90,6 +91,22 @@ instance TestBit Word32 where
 
 instance TestBit Word64 where
   (.?.) w n = B.testBit w (fromIntegral (getPosition n))
+  {-# INLINE (.?.) #-}
+
+instance TestBit (Naive Word8) where
+  (.?.) w n = B.testBit (naive w) (fromIntegral (getPosition n))
+  {-# INLINE (.?.) #-}
+
+instance TestBit (Naive Word16) where
+  (.?.) w n = B.testBit (naive w) (fromIntegral (getPosition n))
+  {-# INLINE (.?.) #-}
+
+instance TestBit (Naive Word32) where
+  (.?.) w n = B.testBit (naive w) (fromIntegral (getPosition n))
+  {-# INLINE (.?.) #-}
+
+instance TestBit (Naive Word64) where
+  (.?.) w n = B.testBit (naive w) (fromIntegral (getPosition n))
   {-# INLINE (.?.) #-}
 
 instance TestBit (DV.Vector Word8) where

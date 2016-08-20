@@ -22,7 +22,7 @@ import qualified Data.Bits                        as DB
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 
-newtype Broadword a = Broadword a
+newtype Broadword a = Broadword a deriving (Eq, Show)
 
 broadword :: Broadword Word64 -> Word64
 broadword (Broadword a) = a
