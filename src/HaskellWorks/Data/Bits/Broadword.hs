@@ -9,7 +9,9 @@
 --
 -- Succinct operations.
 module HaskellWorks.Data.Bits.Broadword
-  ( h
+  ( Broadword(..)
+  , broadword
+  , h
   , l
   , lsb
   , kBitDiff
@@ -19,6 +21,12 @@ module HaskellWorks.Data.Bits.Broadword
 import qualified Data.Bits                        as DB
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
+
+newtype Broadword a = Broadword a
+
+broadword :: Broadword Word64 -> Word64
+broadword (Broadword a) = a
+{-# INLINE broadword #-}
 
 l :: Int -> Word64
 l 2   = 0x5555555555555555
