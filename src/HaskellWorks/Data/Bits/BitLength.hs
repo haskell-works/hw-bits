@@ -17,6 +17,7 @@ module HaskellWorks.Data.Bits.BitLength
 import qualified Data.Vector                         as DV
 import qualified Data.Vector.Storable                as DVS
 import           Data.Word
+import           HaskellWorks.Data.Naive
 import           HaskellWorks.Data.Positioning
 import           HaskellWorks.Data.Vector.VectorLike
 import           Prelude                             as P
@@ -64,6 +65,22 @@ instance BitLength Word32 where
   {-# INLINE bitLength #-}
 
 instance BitLength Word64 where
+  bitLength _ = 64
+  {-# INLINE bitLength #-}
+
+instance BitLength (Naive Word8) where
+  bitLength _ = 8
+  {-# INLINE bitLength #-}
+
+instance BitLength (Naive Word16) where
+  bitLength _ = 16
+  {-# INLINE bitLength #-}
+
+instance BitLength (Naive Word32) where
+  bitLength _ = 32
+  {-# INLINE bitLength #-}
+
+instance BitLength (Naive Word64) where
   bitLength _ = 64
   {-# INLINE bitLength #-}
 
