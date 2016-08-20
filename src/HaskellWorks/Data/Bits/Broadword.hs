@@ -49,5 +49,5 @@ kBitDiffSimple k x y = ((x .|. h k) - y) .^. h k
 {-# INLINE kBitDiffSimple #-}
 
 lsb :: Word64 -> Word64
-lsb w = fromIntegral (DB.countTrailingZeros w)
+lsb w = let r = fromIntegral (DB.countTrailingZeros w) in r .|. negate ((r .>. 6) .&. 0x1)
 {-# INLINE lsb #-}
