@@ -15,7 +15,8 @@ module HaskellWorks.Data.Bits.Broadword
   , l
   , lsb
   , kBitDiff
-  , kBitDiffSimple
+  , kBitDiffPos
+  , kBitDiffUnsafe
   ) where
 
 import qualified Data.Bits                        as DB
@@ -52,9 +53,13 @@ kBitDiff :: Int -> Word64 -> Word64 -> Word64
 kBitDiff k x y = ((x .|. h k) - (y .&. comp (h k))) .^. ((x .^. comp y) .&. h k)
 {-# INLINE kBitDiff #-}
 
-kBitDiffSimple :: Int -> Word64 -> Word64 -> Word64
-kBitDiffSimple k x y = ((x .|. h k) - y) .^. h k
-{-# INLINE kBitDiffSimple #-}
+kBitDiffPos :: Int -> Word64 -> Word64 -> Word64
+kBitDiffPos k x y = let d = kBitDiff k x y in d .&. ((d .>. fromIntegral (k - 1)) - 1)
+{-# INLINE kBitDiffPos #-}
+
+kBitDiffUnsafe :: Int -> Word64 -> Word64 -> Word64
+kBitDiffUnsafe k x y = ((x .|. h k) - y) .^. h k
+{-# INLINE kBitDiffUnsafe #-}
 
 lsb :: Word64 -> Word64
 lsb w = let r = fromIntegral (DB.countTrailingZeros w) in r .|. negate ((r .>. 6) .&. 0x1)
