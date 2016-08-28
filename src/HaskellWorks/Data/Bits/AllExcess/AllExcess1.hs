@@ -3,7 +3,8 @@
 module HaskellWorks.Data.Bits.AllExcess.AllExcess1 where
 
 import           Data.Word
-import qualified Data.Vector.Storable             as DVS
+import qualified Data.Vector                                as DV
+import qualified Data.Vector.Storable                       as DVS
 import           HaskellWorks.Data.Bits.PopCount.PopCount0
 import           HaskellWorks.Data.Bits.PopCount.PopCount1
 
@@ -31,6 +32,22 @@ instance AllExcess1 Word32 where
   {-# INLINE allExcess1 #-}
 
 instance AllExcess1 Word64 where
+  allExcess1 w = fromIntegral (popCount1 w) - fromIntegral (popCount0 w)
+  {-# INLINE allExcess1 #-}
+
+instance AllExcess1 (DV.Vector Word8) where
+  allExcess1 w = fromIntegral (popCount1 w) - fromIntegral (popCount0 w)
+  {-# INLINE allExcess1 #-}
+
+instance AllExcess1 (DV.Vector Word16) where
+  allExcess1 w = fromIntegral (popCount1 w) - fromIntegral (popCount0 w)
+  {-# INLINE allExcess1 #-}
+
+instance AllExcess1 (DV.Vector Word32) where
+  allExcess1 w = fromIntegral (popCount1 w) - fromIntegral (popCount0 w)
+  {-# INLINE allExcess1 #-}
+
+instance AllExcess1 (DV.Vector Word64) where
   allExcess1 w = fromIntegral (popCount1 w) - fromIntegral (popCount0 w)
   {-# INLINE allExcess1 #-}
 
