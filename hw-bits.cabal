@@ -46,6 +46,8 @@ library
                       , HaskellWorks.Data.Bits.PopCount
                       , HaskellWorks.Data.Bits.PopCount.PopCount0
                       , HaskellWorks.Data.Bits.PopCount.PopCount1
+                      , HaskellWorks.Data.Bits.SubWord64Vector
+                      , HaskellWorks.Data.Bits.SubWord64Vector.Internal
                       , HaskellWorks.Data.Bits.Types.Broadword
                       , HaskellWorks.Data.Bits.Types.Builtin
                       , HaskellWorks.Data.Bits.Unmatched
@@ -69,6 +71,8 @@ test-suite hw-bits-test
                       , HaskellWorks.Data.Bits.FromBitTextByteStringSpec
                       , HaskellWorks.Data.Bits.Log2Spec
                       , HaskellWorks.Data.Bits.UnmatchedSpec
+                      , HaskellWorks.Data.Bits.SubWord64VectorSpec
+                      , HaskellWorks.Data.Bits.SubWord64Vector.InternalSpec
   build-depends:        base                          >= 4          && < 5
                       , bytestring
                       , hspec
