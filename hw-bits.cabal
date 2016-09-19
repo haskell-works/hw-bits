@@ -39,6 +39,7 @@ library
                       , HaskellWorks.Data.Bits.BitShown
                       , HaskellWorks.Data.Bits.BitWise
                       , HaskellWorks.Data.Bits.Broadword
+                      , HaskellWorks.Data.Bits.EliasFano64
                       , HaskellWorks.Data.Bits.ElemFixedBitSize
                       , HaskellWorks.Data.Bits.FixedBitSize
                       , HaskellWorks.Data.Bits.FromBitTextByteString
@@ -70,6 +71,7 @@ test-suite hw-bits-test
   main-is:              Spec.hs
   other-modules:        HaskellWorks.Data.Bits.BitReadSpec
                       , HaskellWorks.Data.Bits.BitWiseSpec
+                      , HaskellWorks.Data.Bits.EliasFano64Spec
                       , HaskellWorks.Data.Bits.FromBitTextByteStringSpec
                       , HaskellWorks.Data.Bits.Log2Spec
                       , HaskellWorks.Data.Bits.UnmatchedSpec
