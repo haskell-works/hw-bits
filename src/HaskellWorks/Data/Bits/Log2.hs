@@ -5,7 +5,7 @@ module HaskellWorks.Data.Bits.Log2
 import qualified Data.Vector.Storable as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.Vector.VectorLike
+import           HaskellWorks.Data.IndexedSeq
 
 class Log2 a where
   log2 :: a -> Int

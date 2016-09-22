@@ -19,9 +19,9 @@ import qualified Data.Vector                         as DV
 import qualified Data.Vector.Storable                as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitLength
+import           HaskellWorks.Data.IndexedSeq        as IS
 import           HaskellWorks.Data.Naive
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Vector.VectorLike as VL
 import           Prelude                             as P
 
 -- We pervasively use precedence to avoid excessive parentheses, and we use

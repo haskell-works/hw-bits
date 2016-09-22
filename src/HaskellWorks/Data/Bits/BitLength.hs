@@ -17,9 +17,9 @@ module HaskellWorks.Data.Bits.BitLength
 import qualified Data.Vector                         as DV
 import qualified Data.Vector.Storable                as DVS
 import           Data.Word
+import           HaskellWorks.Data.IndexedSeq
 import           HaskellWorks.Data.Naive
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Vector.VectorLike
 import           Prelude                             as P
 
 -- | Number of bits in a value including ones and zeros.
@@ -33,11 +33,11 @@ class BitLength v where
 --------------------------------------------------------------------------------
 -- Functions
 
-elemBitLength :: (VectorLike v, BitLength (Elem v)) => v -> Count
+elemBitLength :: (IndexedSeq v, BitLength (Elem v)) => v -> Count
 elemBitLength v = bitLength (v !!! 0)
 {-# INLINE elemBitLength #-}
 
-elemBitEnd :: (VectorLike v, BitLength (Elem v)) => v -> Position
+elemBitEnd :: (IndexedSeq v, BitLength (Elem v)) => v -> Position
 elemBitEnd v = endPosition (v !!! 0)
 {-# INLINE elemBitEnd #-}
 
