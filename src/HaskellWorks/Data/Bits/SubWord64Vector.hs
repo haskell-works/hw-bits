@@ -24,14 +24,30 @@ data SubWord64Vector (n :: Nat) = SubWord64Vector
     , swBufferLen   :: !Int
     } deriving (Eq, Show)
 
-fromList :: Integer -> [Word64] -> (forall n. (KnownNat n, 1 <= n, n <= 64) => Maybe (SubWord64Vector n))
-fromList n ws = case someNatVal n of
+class Moo a where
+  toList' :: a -> [Word64]
+
+instance KnownNat n => Moo (SubWord64Vector (n :: Nat)) where
+  -- toList :: SubWord64Vector n -> [Word64]
+  toList' v = unpackBits (swBufferLen v) (fromIntegral (natVal (Proxy :: Proxy n))) (DVS.toList (swBuffer v))
+
+-- data DP a = forall n. DP n a
+-- (n, Maybe (Vect n)) --- (forall n. (n, Maybe (Vect n)))
+fromList :: Int -> [Word64] -> (forall n. KnownNat n => SubWord64Vector n)
+fromList n ws = case someNatVal (fromIntegral n) of
   Just (SomeNat m) | 1 <= n && n <= 64 ->
-    Just SubWord64Vector
+    SubWord64Vector
     { swBuffer    = DVS.fromList (packBits (fromIntegral (natVal m)) ws)
     , swBufferLen = fromIntegral (length ws)
     }
-  _ -> Nothing
+  _ ->
+    SubWord64Vector
+    { swBuffer    = DVS.empty
+    , swBufferLen = 0
+    }
 
-toList :: forall n. (KnownNat n, 1 <= n, n <= 64) => SubWord64Vector n -> [Word64]
-toList v = unpackBits (swBufferLen v) (fromIntegral (natVal (Proxy :: Proxy n))) (DVS.toList (swBuffer v))
+-- toList' :: forall n. (KnownNat n, 1 <= n, n <= 64) => SubWord64Vector n -> [Word64]
+-- toList' = undefined
+
+toList :: (forall n. KnownNat n => SubWord64Vector n) -> [Word64]
+toList = toList'

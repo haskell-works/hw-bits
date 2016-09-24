@@ -1,5 +1,13 @@
 {-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}
 {-# LANGUAGE    ScopedTypeVariables           #-}
+{-# LANGUAGE DataKinds            #-}
+{-# LANGUAGE FlexibleContexts     #-}
+{-# LANGUAGE GADTs                #-}
+{-# LANGUAGE KindSignatures       #-}
+{-# LANGUAGE PolyKinds            #-}
+{-# LANGUAGE RankNTypes           #-}
+{-# LANGUAGE ScopedTypeVariables  #-}
+{-# LANGUAGE TypeOperators        #-}
 
 module HaskellWorks.Data.Bits.SubWord64VectorSpec (spec) where
 
@@ -26,4 +34,4 @@ spec = describe "HaskellWorks.Data.Bits.SubWord64VectorSpec" $ do
     forAll (subWordSize 64) $ \wSize ->
       forAll listLen $ \len ->
         forAll (vectorOf len (word64OfSize wSize)) $ \ws ->
-          toList (fromList wSize ws) `shouldBe` ws
+          toList (fromList (fromIntegral wSize) ws) `shouldBe` ws
