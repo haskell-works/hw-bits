@@ -20,7 +20,7 @@ import           Data.Word
 import           HaskellWorks.Data.IndexedSeq
 import           HaskellWorks.Data.Naive
 import           HaskellWorks.Data.Positioning
-import           Prelude                             as P
+import           Prelude hiding (length)
 
 -- | Number of bits in a value including ones and zeros.
 class BitLength v where
@@ -49,7 +49,7 @@ instance BitLength Bool where
   {-# INLINE bitLength #-}
 
 instance BitLength [Bool] where
-  bitLength = fromIntegral . P.length
+  bitLength = fromIntegral . length
   {-# INLINE bitLength #-}
 
 instance BitLength Word8 where
@@ -85,49 +85,49 @@ instance BitLength (Naive Word64) where
   {-# INLINE bitLength #-}
 
 instance BitLength [Word8] where
-  bitLength v = fromIntegral (P.length v) * bitLength (head v)
+  bitLength v = fromIntegral (length v) * bitLength (head v)
   {-# INLINE bitLength #-}
 
 instance BitLength [Word16] where
-  bitLength v = fromIntegral (P.length v) * bitLength (head v)
+  bitLength v = fromIntegral (length v) * bitLength (head v)
   {-# INLINE bitLength #-}
 
 instance BitLength [Word32] where
-  bitLength v = fromIntegral (P.length v) * bitLength (head v)
+  bitLength v = fromIntegral (length v) * bitLength (head v)
   {-# INLINE bitLength #-}
 
 instance BitLength [Word64] where
-  bitLength v = fromIntegral (P.length v) * bitLength (head v)
+  bitLength v = fromIntegral (length v) * bitLength (head v)
   {-# INLINE bitLength #-}
 
 instance BitLength (DV.Vector Word8) where
-  bitLength v = vLength v * bitLength (v !!! 0)
+  bitLength v = length v * bitLength (v !!! 0)
   {-# INLINE bitLength #-}
 
 instance BitLength (DV.Vector Word16) where
-  bitLength v = vLength v * bitLength (v !!! 0)
+  bitLength v = length v * bitLength (v !!! 0)
   {-# INLINE bitLength #-}
 
 instance BitLength (DV.Vector Word32) where
-  bitLength v = vLength v * bitLength (v !!! 0)
+  bitLength v = length v * bitLength (v !!! 0)
   {-# INLINE bitLength #-}
 
 instance BitLength (DV.Vector Word64) where
-  bitLength v = vLength v * bitLength (v !!! 0)
+  bitLength v = length v * bitLength (v !!! 0)
   {-# INLINE bitLength #-}
 
 instance BitLength (DVS.Vector Word8) where
-  bitLength v = vLength v * bitLength (v !!! 0)
+  bitLength v = length v * bitLength (v !!! 0)
   {-# INLINE bitLength #-}
 
 instance BitLength (DVS.Vector Word16) where
-  bitLength v = vLength v * bitLength (v !!! 0)
+  bitLength v = length v * bitLength (v !!! 0)
   {-# INLINE bitLength #-}
 
 instance BitLength (DVS.Vector Word32) where
-  bitLength v = vLength v * bitLength (v !!! 0)
+  bitLength v = length v * bitLength (v !!! 0)
   {-# INLINE bitLength #-}
 
 instance BitLength (DVS.Vector Word64) where
-  bitLength v = vLength v * bitLength (v !!! 0)
+  bitLength v = length v * bitLength (v !!! 0)
   {-# INLINE bitLength #-}

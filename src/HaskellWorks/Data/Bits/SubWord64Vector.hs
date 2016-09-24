@@ -14,14 +14,14 @@ data SubWord64Vector = SubWord64Vector
     , swBufferLen   :: !Int
     } deriving (Eq, Show)
 
-empty :: SubWord64Vector
-empty =
-  SubWord64Vector
-  { swBuffer    = DVS.empty
-  , swBufferLen = 0
-  , swBitSize   = 1
-  }
-
+-- empty :: SubWord64Vector
+-- empty =
+--   SubWord64Vector
+--   { swBuffer    = DVS.empty
+--   , swBufferLen = 0
+--   , swBitSize   = 1
+--   }
+--
 fromList :: Int -> [Word64] -> SubWord64Vector
 fromList wl ws =
   SubWord64Vector
