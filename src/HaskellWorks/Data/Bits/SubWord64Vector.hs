@@ -10,17 +10,25 @@ import           HaskellWorks.Data.Bits.SubWord64Vector.Internal
 
 data SubWord64Vector = SubWord64Vector
     { swBuffer      :: !(DVS.Vector Word64)
-    , swSize        :: !Word
+    , swBitSize     :: !Word
     , swBufferLen   :: !Int
     } deriving (Eq, Show)
+
+empty :: SubWord64Vector
+empty =
+  SubWord64Vector
+  { swBuffer    = DVS.empty
+  , swBufferLen = 0
+  , swBitSize   = 1
+  }
 
 fromList :: Int -> [Word64] -> SubWord64Vector
 fromList wl ws =
   SubWord64Vector
   { swBuffer    = DVS.fromList (packBits wl ws)
   , swBufferLen = fromIntegral (length ws)
-  , swSize      = fromIntegral wl
+  , swBitSize   = fromIntegral wl
   }
 
 toList :: SubWord64Vector -> [Word64]
-toList v = unpackBits (swBufferLen v) (fromIntegral (swSize v)) (DVS.toList (swBuffer v))
+toList v = unpackBits (swBufferLen v) (fromIntegral (swBitSize v)) (DVS.toList (swBuffer v))
