@@ -10,6 +10,7 @@ import qualified Data.Vector.Storable                 as DVS
 import           Data.Word
 import           HaskellWorks.Data.AtIndex
 import           HaskellWorks.Data.Bits.BitWise
+import           HaskellWorks.Data.Bits.EliasFano64.Internal
 import           HaskellWorks.Data.Bits.Log2
 import           HaskellWorks.Data.Bits.PackedVector  as PV
 import           HaskellWorks.Data.Positioning
@@ -33,7 +34,7 @@ class ToEliasFano64 a where
 instance ToEliasFano64 [Word64] where
   toEliasFano64 ws = case lastMay ws of
     Just end' -> EliasFano64
-      { hi      = DVS.empty
+      { hi      = DVS.fromList (packToWord64 (packToWord32 (packToWord16 (packToWord8 (mkHiBits loBits' ws)))))
       , lo      = PV.fromList loBits' ws
       , loBits  = fromIntegral loBits'
       , count   = length'
