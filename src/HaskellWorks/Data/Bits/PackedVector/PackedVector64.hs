@@ -39,13 +39,20 @@ instance Length PackedVector64 where
   {-# INLINE length #-}
 
 instance AtIndex PackedVector64 where
-  atIndex v i = let bitIndex    = fromIntegral (swBitSize v) * i
-                    vv          = swBuffer v
-                    (q, r)      = bitIndex `quotRem` 64
-                    loBitsSize  = 64 - toCount r
-                    loBits      = ((vv !!! q) .>. unsign r) .&. loBitsSized loBitsSize
-                    hiBits      = if r == 0 then 0 else (vv !!! (q + 1)) .>. loBitsSize .&. loBitsSized (fromIntegral r)
-                in loBits .|. (hiBits .<. loBitsSize)
+  atIndex v i =
+    let bitSize     = fromIntegral (swBitSize v) :: Count
+        bitIndex    = fromIntegral (swBitSize v) * i
+        (q, r)      = bitIndex `quotRem` 64
+        vv          = swBuffer v
+    in if r <= 64 - fromIntegral bitSize
+      then -- Not crossing boundary
+        ((vv !!! q) .>. unsign r) .&. loBitsSized bitSize
+      else -- Crossing boundary
+        let loBitsSize  = 64 - toCount r
+            hiBitsSize  = bitSize - loBitsSize
+            loBits      = ((vv !!! q) .>. unsign r) .&. loBitsSized loBitsSize
+            hiBits      = if r > 64 - fromIntegral bitSize then (vv !!! (q + 1)) .&. loBitsSized hiBitsSize else 0
+        in  loBits .|. (hiBits .<. loBitsSize)
   (!!!)       = atIndex
   {-# INLINE (!!!)   #-}
   {-# INLINE atIndex #-}
