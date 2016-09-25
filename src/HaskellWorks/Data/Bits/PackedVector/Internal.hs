@@ -9,20 +9,21 @@ import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.FixedBitSize
 import           HaskellWorks.Data.Bits.LoBitsSized
+import           HaskellWorks.Data.Positioning
 
 {-# ANN module ("HLint: Reduce duplication" :: String) #-}
 
 class Integral a => PackBits a where
-  packBits :: Int -> [a] -> [a]
+  packBits :: Count -> [a] -> [a]
   packBits = packBits' 0 0
 
-  packBits' :: Int -> a -> Int -> [a] -> [a]
+  packBits' :: Count -> a -> Count -> [a] -> [a]
 
 class Integral a => UnpackBits a where
-  unpackBits :: Int -> Int -> [a] -> [a]
+  unpackBits :: Int -> Count -> [a] -> [a]
   unpackBits = unpackBits' 0 0
 
-  unpackBits' :: Int -> a -> Int -> Int -> [a] -> [a]
+  unpackBits' :: Count -> a -> Int -> Count -> [a] -> [a]
 
 instance PackBits Word64 where
   packBits' filled carry bitLen (w:ws) = if fillNeeded < fromIntegral (fixedBitSize carry)
@@ -31,9 +32,9 @@ instance PackBits Word64 where
     where fillNeeded  = filled + bitLen
           fillMet     = fillNeeded `min` fromIntegral (fixedBitSize carry)
           fillLeft    = fillNeeded - fillMet
-          bitMet      = fillMet - filled
+          bitMet      = fromIntegral (fillMet - filled) :: Count
           newV        = carry .|. ((w .&. loBitsSized bitMet) .<. fromIntegral filled)
-          carryV      = w .>. fromIntegral bitMet
+          carryV      = w .>. bitMet
   packBits' _ carry _ _ = [carry]
 
 instance UnpackBits Word64 where
@@ -54,7 +55,7 @@ instance PackBits Word8 where
     where fillNeeded  = filled + bitLen
           fillMet     = fillNeeded `min` fromIntegral (fixedBitSize carry)
           fillLeft    = fillNeeded - fillMet
-          bitMet      = fillMet - filled
+          bitMet      = fromIntegral (fillMet - filled) :: Count
           newV        = carry .|. ((w .&. loBitsSized bitMet) .<. fromIntegral filled)
           carryV      = w .>. fromIntegral bitMet
   packBits' _ carry _ _ = [carry]

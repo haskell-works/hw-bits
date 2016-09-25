@@ -6,15 +6,16 @@ module HaskellWorks.Data.Bits.PackedVector.PackedVector64Spec (spec) where
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.PackedVector.PackedVector64
+import           HaskellWorks.Data.Positioning
 import           Test.Hspec
 import           Test.QuickCheck
 
 {-# ANN module ("HLint: Ignore Redundant do" :: String) #-}
 
-subWordSize :: Int -> Gen Int
+subWordSize :: Count -> Gen Count
 subWordSize maxWordSize = choose (1, maxWordSize)
 
-word64OfSize :: Int -> Gen Word64
+word64OfSize :: Count -> Gen Word64
 word64OfSize sz = choose (0, 1 .<. fromIntegral sz - 1)
 
 listLen :: Gen Int

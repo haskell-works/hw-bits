@@ -4,9 +4,10 @@ module HaskellWorks.Data.Bits.LoBitsSized
 
 import Data.Word
 import HaskellWorks.Data.Bits.BitWise
+import HaskellWorks.Data.Positioning
 
 class LoBitsSized a where
-  loBitsSized :: Int -> a
+  loBitsSized :: Count -> a
 
 instance LoBitsSized Word64 where
   loBitsSized n = let o = fromIntegral (64 - n) in 0xFFFFFFFFFFFFFFFF .<. o .>. o
