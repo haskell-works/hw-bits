@@ -2,6 +2,7 @@
 
 module HaskellWorks.Data.Bits.PackedVector.PackedVector64
   ( PackedVector64(..)
+  , empty
   , fromList
   , toList
   ) where
@@ -23,13 +24,13 @@ data PackedVector64 = PackedVector64
     , swBufferLen   :: !Int
     } deriving (Eq, Show)
 
--- empty :: PackedVector64
--- empty =
---   PackedVector64
---   { swBuffer    = DVS.empty
---   , swBufferLen = 0
---   , swBitSize   = 1
---   }
+empty :: PackedVector64
+empty =
+  PackedVector64
+  { swBuffer    = DVS.empty
+  , swBufferLen = 0
+  , swBitSize   = 1
+  }
 
 instance Container PackedVector64 where
   type Elem PackedVector64 = Word64
