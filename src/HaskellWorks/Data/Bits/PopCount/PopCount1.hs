@@ -17,6 +17,7 @@ import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.Types.Broadword
 import           HaskellWorks.Data.Bits.Types.Builtin
 import           HaskellWorks.Data.Positioning
+import           HaskellWorks.Data.Widen.Widen64
 import           Prelude                                as P
 
 type FastWord a = Builtin a
@@ -35,7 +36,7 @@ instance PopCount1 Bool where
   {-# INLINE popCount1 #-}
 
 instance PopCount1 (Broadword Word8) where
-  popCount1 (Broadword x0) = Count (fromIntegral x3)
+  popCount1 (Broadword x0) = widen64 x3
     where
       x1 = x0 - ((x0 .&. 0xaa) .>. 1)
       x2 = (x1 .&. 0x33) + ((x1 .>. 2) .&. 0x33)
@@ -43,7 +44,7 @@ instance PopCount1 (Broadword Word8) where
   {-# INLINE popCount1 #-}
 
 instance PopCount1 (Broadword Word16) where
-  popCount1 (Broadword x0) = Count (fromIntegral ((x3 * 0x0101) .>. 8))
+  popCount1 (Broadword x0) = widen64 ((x3 * 0x0101) .>. 8)
     where
       x1 = x0 - ((x0 .&. 0xaaaa) .>. 1)
       x2 = (x1 .&. 0x3333) + ((x1 .>. 2) .&. 0x3333)
@@ -51,7 +52,7 @@ instance PopCount1 (Broadword Word16) where
   {-# INLINE popCount1 #-}
 
 instance PopCount1 (Broadword Word32) where
-  popCount1 (Broadword x0) = Count (fromIntegral ((x3 * 0x01010101) .>. 24))
+  popCount1 (Broadword x0) = widen64 ((x3 * 0x01010101) .>. 24)
     where
       x1 = x0 - ((x0 .&. 0xaaaaaaaa) .>. 1)
       x2 = (x1 .&. 0x33333333) + ((x1 .>. 2) .&. 0x33333333)
@@ -59,7 +60,7 @@ instance PopCount1 (Broadword Word32) where
   {-# INLINE popCount1 #-}
 
 instance PopCount1 (Broadword Word64) where
-  popCount1 (Broadword x0) = Count ((x3 * 0x0101010101010101) .>. 56)
+  popCount1 (Broadword x0) = widen64 (x3 * 0x0101010101010101) .>. 56
     where
       x1 = x0 - ((x0 .&. 0xaaaaaaaaaaaaaaaa) .>. 1)
       x2 = (x1 .&. 0x3333333333333333) + ((x1 .>. 2) .&. 0x3333333333333333)
