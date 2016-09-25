@@ -74,39 +74,39 @@ instance TestBit [Bool] where
   {-# INLINE (.?.) #-}
 
 instance TestBit Int where
-  (.?.) w n = B.testBit w (fromIntegral (getPosition n))
+  (.?.) w n = B.testBit w (fromIntegral n)
   {-# INLINE (.?.) #-}
 
 instance TestBit Word8 where
-  (.?.) w n = B.testBit w (fromIntegral (getPosition n))
+  (.?.) w n = B.testBit w (fromIntegral n)
   {-# INLINE (.?.) #-}
 
 instance TestBit Word16 where
-  (.?.) w n = B.testBit w (fromIntegral (getPosition n))
+  (.?.) w n = B.testBit w (fromIntegral n)
   {-# INLINE (.?.) #-}
 
 instance TestBit Word32 where
-  (.?.) w n = B.testBit w (fromIntegral (getPosition n))
+  (.?.) w n = B.testBit w (fromIntegral n)
   {-# INLINE (.?.) #-}
 
 instance TestBit Word64 where
-  (.?.) w n = B.testBit w (fromIntegral (getPosition n))
+  (.?.) w n = B.testBit w (fromIntegral n)
   {-# INLINE (.?.) #-}
 
 instance TestBit (Naive Word8) where
-  (.?.) w n = B.testBit (naive w) (fromIntegral (getPosition n))
+  (.?.) w n = B.testBit (naive w) (fromIntegral n)
   {-# INLINE (.?.) #-}
 
 instance TestBit (Naive Word16) where
-  (.?.) w n = B.testBit (naive w) (fromIntegral (getPosition n))
+  (.?.) w n = B.testBit (naive w) (fromIntegral n)
   {-# INLINE (.?.) #-}
 
 instance TestBit (Naive Word32) where
-  (.?.) w n = B.testBit (naive w) (fromIntegral (getPosition n))
+  (.?.) w n = B.testBit (naive w) (fromIntegral n)
   {-# INLINE (.?.) #-}
 
 instance TestBit (Naive Word64) where
-  (.?.) w n = B.testBit (naive w) (fromIntegral (getPosition n))
+  (.?.) w n = B.testBit (naive w) (fromIntegral n)
   {-# INLINE (.?.) #-}
 
 instance TestBit (DV.Vector Word8) where

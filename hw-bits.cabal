@@ -54,7 +54,7 @@ library
                       , HaskellWorks.Data.Bits.Word
   build-depends:        base                          >= 4          && < 5
                       , bytestring
-                      , hw-prim                       >= 0.1.0.0
+                      , hw-prim                       >= 0.3.0.0
                       , parsec
                       , safe
                       , vector
@@ -77,7 +77,7 @@ test-suite hw-bits-test
                       , bytestring
                       , hspec
                       , hw-bits
-                      , hw-prim                       >= 0.1.0.0
+                      , hw-prim                       >= 0.3.0.0
                       , QuickCheck
                       , vector
   ghc-options:          -threaded -rtsopts -with-rtsopts=-N -Wall
@@ -96,5 +96,5 @@ benchmark bench
     Build-Depends:      base                          >= 4          && < 5
                       , criterion
                       , hw-bits
-                      , hw-prim                       >= 0.1.0.0
+                      , hw-prim                       >= 0.3.0.0
                       , vector
