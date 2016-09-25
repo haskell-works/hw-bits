@@ -18,8 +18,8 @@ import qualified Data.Bits                           as B
 import qualified Data.Vector                         as DV
 import qualified Data.Vector.Storable                as DVS
 import           Data.Word
+import           HaskellWorks.Data.AtIndex
 import           HaskellWorks.Data.Bits.BitLength
-import           HaskellWorks.Data.IndexedSeq        as IS
 import           HaskellWorks.Data.Naive
 import           HaskellWorks.Data.Positioning
 import           Prelude                             as P

@@ -17,7 +17,7 @@ module HaskellWorks.Data.Bits.BitLength
 import qualified Data.Vector                         as DV
 import qualified Data.Vector.Storable                as DVS
 import           Data.Word
-import           HaskellWorks.Data.IndexedSeq
+import           HaskellWorks.Data.AtIndex
 import           HaskellWorks.Data.Naive
 import           HaskellWorks.Data.Positioning
 import           Prelude hiding (length)
@@ -33,11 +33,11 @@ class BitLength v where
 --------------------------------------------------------------------------------
 -- Functions
 
-elemBitLength :: (IndexedSeq v, BitLength (Elem v)) => v -> Count
+elemBitLength :: (AtIndex v, BitLength (Elem v)) => v -> Count
 elemBitLength v = bitLength (v !!! 0)
 {-# INLINE elemBitLength #-}
 
-elemBitEnd :: (IndexedSeq v, BitLength (Elem v)) => v -> Position
+elemBitEnd :: (AtIndex v, BitLength (Elem v)) => v -> Position
 elemBitEnd v = endPosition (v !!! 0)
 {-# INLINE elemBitEnd #-}
 
