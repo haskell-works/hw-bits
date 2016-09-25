@@ -1,6 +1,5 @@
-module HaskellWorks.Data.Bits.SubWord64Vector.Internal
-  ( LoBitsSized(..)
-  , packBits
+module HaskellWorks.Data.Bits.PackedVector.Internal
+  ( packBits
   , packBits'
   , unpackBits
   , unpackBits'

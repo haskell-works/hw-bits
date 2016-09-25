@@ -1,11 +1,11 @@
 {-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}
 {-# LANGUAGE    ScopedTypeVariables           #-}
 
-module HaskellWorks.Data.Bits.SubWord64VectorSpec (spec) where
+module HaskellWorks.Data.Bits.PackedVector.PackedVector64Spec (spec) where
 
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.Bits.SubWord64Vector
+import           HaskellWorks.Data.Bits.PackedVector.PackedVector64
 import           Test.Hspec
 import           Test.QuickCheck
 
@@ -21,8 +21,8 @@ listLen :: Gen Int
 listLen = choose (1, 128)
 
 spec :: Spec
-spec = describe "HaskellWorks.Data.Bits.SubWord64VectorSpec" $ do
-  it "SubWord64Vector Word64" $
+spec = describe "HaskellWorks.Data.Bits.PackedVector.PackedVector64Spec" $ do
+  it "PackedVector Word64" $
     forAll (subWordSize 64) $ \wSize ->
       forAll listLen $ \len ->
         forAll (vectorOf len (word64OfSize wSize)) $ \ws ->
