@@ -1,5 +1,5 @@
 module HaskellWorks.Data.Bits.SubWord64Vector.Internal
-  ( loBitsSized
+  ( LoBitsSized(..)
   , packBits
   , packBits'
   , unpackBits
@@ -9,11 +9,9 @@ module HaskellWorks.Data.Bits.SubWord64Vector.Internal
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.FixedBitSize
+import           HaskellWorks.Data.Bits.LoBitsSized
 
 {-# ANN module ("HLint: Reduce duplication" :: String) #-}
-
-class LoBitsSized a where
-  loBitsSized :: Int -> a
 
 class Integral a => PackBits a where
   packBits :: Int -> [a] -> [a]
@@ -26,18 +24,6 @@ class Integral a => UnpackBits a where
   unpackBits = unpackBits' 0 0
 
   unpackBits' :: Int -> a -> Int -> Int -> [a] -> [a]
-
-instance LoBitsSized Word64 where
-  loBitsSized n = let o = fromIntegral (64 - n) in 0xFFFFFFFFFFFFFFFF .<. o .>. o
-
-instance LoBitsSized Word32 where
-  loBitsSized n = let o = fromIntegral (32 - n) in 0xFFFFFFFF .<. o .>. o
-
-instance LoBitsSized Word16 where
-  loBitsSized n = let o = fromIntegral (16 - n) in 0xFFFF .<. o .>. o
-
-instance LoBitsSized Word8 where
-  loBitsSized n = let o = fromIntegral (8 - n) in 0xFF .<. o .>. o
 
 instance PackBits Word64 where
   packBits' filled carry bitLen (w:ws) = if fillNeeded < fromIntegral (fixedBitSize carry)

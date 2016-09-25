@@ -42,6 +42,7 @@ library
                       , HaskellWorks.Data.Bits.ElemFixedBitSize
                       , HaskellWorks.Data.Bits.FixedBitSize
                       , HaskellWorks.Data.Bits.FromBitTextByteString
+                      , HaskellWorks.Data.Bits.LoBitsSized
                       , HaskellWorks.Data.Bits.Log2
                       , HaskellWorks.Data.Bits.PopCount
                       , HaskellWorks.Data.Bits.PopCount.PopCount0
