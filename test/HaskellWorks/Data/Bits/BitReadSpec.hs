@@ -10,7 +10,7 @@ import           HaskellWorks.Data.Bits.BitRead
 import           HaskellWorks.Data.Bits.BitShow
 import           Test.Hspec
 
-{-# ANN module ("HLint: ignore Redundant do" :: String) #-}
+{-# ANN module ("HLint: Ignore Redundant do" :: String) #-}
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.BitReadSpec" $ do
@@ -18,7 +18,7 @@ spec = describe "HaskellWorks.Data.BitReadSpec" $ do
     let w = bitRead "10000000 101" :: Maybe [Bool] in
     w `shouldBe` Just [True, False, False, False, False, False, False, False, True, False, True]
   it "bitRead \"10000000 101\" :: Maybe [Word8]"$
-     let w = bitRead "10000000 101" :: Maybe [Word8] in
+    let w = bitRead "10000000 101" :: Maybe [Word8] in
     w `shouldBe` Just [1, 5]
   it "bitRead \"11100100 10101111 1\" :: Maybe [Word8]" $
     let ws = bitRead "11100100 10101111 1" :: Maybe [Word8] in

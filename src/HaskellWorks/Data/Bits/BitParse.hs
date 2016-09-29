@@ -10,6 +10,7 @@ module HaskellWorks.Data.Bits.BitParse
   ( BitParse(..)
   ) where
 
+import           Control.Applicative
 import qualified Data.ByteString                  as BS
 import qualified Data.Vector                      as DV
 import qualified Data.Vector.Storable             as DVS
@@ -17,7 +18,7 @@ import           Data.Word
 import           GHC.Exts
 import           HaskellWorks.Data.Bits.BitLength
 import           HaskellWorks.Data.Bits.BitWise
-import           Text.ParserCombinators.Parsec
+import           HaskellWorks.Data.String.Parse
 
 -- | Parsers for bit strings
 class BitParse a where
@@ -33,11 +34,11 @@ p1 :: Parser Bool
 p1 = char '0' >> return False
 
 instance BitParse Bool where
-  bitParse0 = option False bitParse1
+  bitParse0 = bitParse1 <|> return False
   bitParse1 = p0 <|> p1
 
 instance BitParse Word8 where
-  bitParse0 = option 0 bitParse1
+  bitParse0 = bitParse1 <|> return 0
   bitParse1 = do
     a :: Bool <- bitParse1
     b :: Bool <- bitParse0
@@ -58,21 +59,21 @@ instance BitParse Word8 where
       (if h then 0x80 else 0)
 
 instance BitParse Word16 where
-  bitParse0 = option 0 bitParse1
+  bitParse0 = bitParse1 <|> return 0
   bitParse1 = do
     (a :: Word8) <- bitParse1
     (b :: Word8) <- bitParse0
     return $ (fromIntegral b .<. bitLength a) .|. fromIntegral a
 
 instance BitParse Word32 where
-  bitParse0 = option 0 bitParse1
+  bitParse0 = bitParse1 <|> return 0
   bitParse1 = do
     (a :: Word16) <- bitParse1
     (b :: Word16) <- bitParse0
     return $ (fromIntegral b .<. bitLength a) .|. fromIntegral a
 
 instance BitParse Word64 where
-  bitParse0 = option 0 bitParse1
+  bitParse0 = bitParse1 <|> return 0
   bitParse1 = do
     (a :: Word32) <- bitParse1
     (b :: Word32) <- bitParse0
@@ -83,49 +84,49 @@ instance BitParse BS.ByteString where
   bitParse1 = fmap BS.pack bitParse1
 
 instance BitParse [Word8] where
-  bitParse0 = option [] bitParse1
+  bitParse0 = bitParse1 <|> return []
   bitParse1 = many bitParse1
 
 instance BitParse [Word16] where
-  bitParse0 = option [] bitParse1
+  bitParse0 = bitParse1 <|> return []
   bitParse1 = many bitParse1
 
 instance BitParse [Word32] where
-  bitParse0 = option [] bitParse1
+  bitParse0 = bitParse1 <|> return []
   bitParse1 = many bitParse1
 
 instance BitParse [Word64] where
-  bitParse0 = option [] bitParse1
+  bitParse0 = bitParse1 <|> return []
   bitParse1 = many bitParse1
 
 instance BitParse (DV.Vector Word8) where
-  bitParse0 = option DV.empty bitParse1
+  bitParse0 = bitParse1 <|> return DV.empty
   bitParse1 = fromList `fmap` bitParse0
 
 instance BitParse (DV.Vector Word16) where
-  bitParse0 = option DV.empty bitParse1
+  bitParse0 = bitParse1 <|> return DV.empty
   bitParse1 = fromList `fmap` bitParse0
 
 instance BitParse (DV.Vector Word32) where
-  bitParse0 = option DV.empty bitParse1
+  bitParse0 = bitParse1 <|> return DV.empty
   bitParse1 = fromList `fmap` bitParse0
 
 instance BitParse (DV.Vector Word64) where
-  bitParse0 = option DV.empty bitParse1
+  bitParse0 = bitParse1 <|> return DV.empty
   bitParse1 = fromList `fmap` bitParse0
 
 instance BitParse (DVS.Vector Word8) where
-  bitParse0 = option DVS.empty bitParse1
+  bitParse0 = bitParse1 <|> return DVS.empty
   bitParse1 = fromList `fmap` bitParse0
 
 instance BitParse (DVS.Vector Word16) where
-  bitParse0 = option DVS.empty bitParse1
+  bitParse0 = bitParse1 <|> return DVS.empty
   bitParse1 = fromList `fmap` bitParse0
 
 instance BitParse (DVS.Vector Word32) where
-  bitParse0 = option DVS.empty bitParse1
+  bitParse0 = bitParse1 <|> return DVS.empty
   bitParse1 = fromList `fmap` bitParse0
 
 instance BitParse (DVS.Vector Word64) where
-  bitParse0 = option DVS.empty bitParse1
+  bitParse0 = bitParse1 <|> return DVS.empty
   bitParse1 = fromList `fmap` bitParse0

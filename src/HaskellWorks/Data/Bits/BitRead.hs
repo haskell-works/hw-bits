@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleInstances    #-}
+{-# LANGUAGE ScopedTypeVariables  #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module HaskellWorks.Data.Bits.BitRead
@@ -6,11 +7,12 @@ module HaskellWorks.Data.Bits.BitRead
   ) where
 
 import qualified Data.ByteString                 as BS
+import           Data.Maybe
 import qualified Data.Vector                     as DV
 import qualified Data.Vector.Storable            as DVS
 import           Data.Word
 import           HaskellWorks.Data.Bits.BitParse
-import           Text.ParserCombinators.Parsec
+import           HaskellWorks.Data.String.Parse
 
 -- | Bit string reader that produces a value of a type
 class BitRead a where
@@ -18,7 +20,7 @@ class BitRead a where
   bitRead :: String -> Maybe a
 
 bitRead' :: BitParse a => String -> Maybe a
-bitRead' = either (const Nothing) Just . parse bitParse0 "" . filter (/= ' ')
+bitRead' s = fst `fmap` listToMaybe (parse bitParse0 (filter (/= ' ') s))
 
 bitCharToBool :: Char -> Maybe Bool
 bitCharToBool '1' = Just True
