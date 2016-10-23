@@ -1,9 +1,9 @@
 name:                   hw-bits
 version:                0.3.0.0
-synopsis:               Conduits for tokenizing streams.
+synopsis:               Bit manipulation
 description:            Please see README.md
 homepage:               http://github.com/haskell-works/hw-bits#readme
-license:                MIT
+license:                BSD3
 license-file:           LICENSE
 author:                 John Ky
 maintainer:             newhoggy@gmail.com
