@@ -16,8 +16,8 @@ import           Data.Word
 import           HaskellWorks.Data.Bits.BitWise
 import           HaskellWorks.Data.Bits.Types.Broadword
 import           HaskellWorks.Data.Bits.Types.Builtin
+import           HaskellWorks.Data.Int.Widen.Widen64
 import           HaskellWorks.Data.Positioning
-import           HaskellWorks.Data.Widen.Widen64
 import           Prelude                                as P
 
 type FastWord a = Builtin a
