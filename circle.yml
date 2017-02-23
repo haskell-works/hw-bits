@@ -7,7 +7,7 @@ dependencies:
     - cp ./scripts/* ~/bin/
   override:
     - fetch
-    - stack init --resolver lts-7.2
+    - stack init --resolver lts-8.2
     - stack build --only-dependencies
 
 test:
