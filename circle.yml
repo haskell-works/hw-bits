@@ -7,8 +7,8 @@ dependencies:
     - cp ./scripts/* ~/bin/
   override:
     - fetch
-    - stack init --resolver lts-7.2
-    - stack build --only-dependencies
+    - stack init --resolver lts-8.2
+    - stack build --install-ghc --only-dependencies
 
 test:
   override:
