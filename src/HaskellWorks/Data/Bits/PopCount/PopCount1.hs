@@ -104,9 +104,9 @@ instance PopCount1 a => PopCount1 [a] where
   {-# INLINE popCount1 #-}
 
 instance PopCount1 a => PopCount1 (DV.Vector a) where
-  popCount1 = DV.foldl (\c -> (c +) . popCount1) 0
+  popCount1 = DV.foldl' (\c -> (c +) . popCount1) 0
   {-# INLINE popCount1 #-}
 
 instance (PopCount1 a, DVS.Storable a) => PopCount1 (DVS.Vector a) where
-  popCount1 = DVS.foldl (\c -> (c +) . popCount1) 0
+  popCount1 = DVS.foldl' (\c -> (c +) . popCount1) 0
   {-# INLINE popCount1 #-}
