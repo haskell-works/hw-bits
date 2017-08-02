@@ -8,17 +8,18 @@ module HaskellWorks.Data.Bits.BitShown
   , bitShown
   ) where
 
-import qualified Data.ByteString                  as BS
-import           Data.Maybe
-import           Data.String
-import           Data.Word
-import           HaskellWorks.Data.Bits.BitRead
-import           HaskellWorks.Data.Bits.BitShow
-import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.FromByteString
+import Data.Maybe
+import Data.String
+import Data.Word
+import HaskellWorks.Data.Bits.BitRead
+import HaskellWorks.Data.Bits.BitShow
+import HaskellWorks.Data.Bits.BitWise
+import HaskellWorks.Data.FromByteString
+
+import qualified Data.ByteString as BS
 
 -- | Tag for a value describe the value as being able to be shown as a bit string
-newtype BitShown a = BitShown a deriving (Eq, BitRead, BitShow)
+newtype BitShown a = BitShown { unBitShown :: a } deriving (Eq, BitRead, BitShow)
 
 deriving instance Functor BitShown
 
