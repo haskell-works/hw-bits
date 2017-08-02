@@ -11,13 +11,15 @@ module HaskellWorks.Data.Bits.BitShow
   , bitShow
   ) where
 
-import qualified Data.ByteString                as BS
-import qualified Data.Vector                    as DV
-import qualified Data.Vector.Storable           as DVS
-import           Data.Word
-import           GHC.Exts
-import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.Bits.Word
+import Data.Word
+import GHC.Exts
+import HaskellWorks.Data.Bits.BitWise
+import HaskellWorks.Data.Bits.Word
+
+import qualified Data.ByteString      as BS
+import qualified Data.ByteString.Lazy as BSL
+import qualified Data.Vector          as DV
+import qualified Data.Vector.Storable as DVS
 
 -- | Shower of a value as a bit string
 class BitShow a where
@@ -57,7 +59,12 @@ instance BitShow [Bool] where
 instance BitShow BS.ByteString where
   bitShows bs | BS.length bs == 0 = id
   bitShows bs | BS.length bs == 1 = bitShows (BS.head bs)
-  bitShows bs                     = bitShows (BS.head bs) . (' ':) . bitShows (BS.tail bs)
+  bitShows bs = bitShows (BS.head bs) . (' ':) . bitShows (BS.tail bs)
+
+instance BitShow BSL.ByteString where
+  bitShows bs | BSL.length bs == 0 = id
+  bitShows bs | BSL.length bs == 1 = bitShows (BSL.head bs)
+  bitShows bs = bitShows (BSL.head bs) . (' ':) . bitShows (BSL.tail bs)
 
 instance BitShow [Word8] where
   bitShows []     = id
