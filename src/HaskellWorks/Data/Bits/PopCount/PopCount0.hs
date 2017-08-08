@@ -82,10 +82,34 @@ instance PopCount0 a => PopCount0 [a] where
   popCount0 = P.sum . fmap popCount0
   {-# INLINE popCount0 #-}
 
-instance PopCount0 a => PopCount0 (DV.Vector a) where
+instance PopCount0 (DV.Vector Word8) where
   popCount0 = DV.foldl' (\c -> (c +) . popCount0) 0
   {-# INLINE popCount0 #-}
 
-instance (DVS.Storable a, PopCount0 a) => PopCount0 (DVS.Vector a) where
+instance PopCount0 (DV.Vector Word16) where
+  popCount0 = DV.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DV.Vector Word32) where
+  popCount0 = DV.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DV.Vector Word64) where
+  popCount0 = DV.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVS.Vector Word8) where
+  popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVS.Vector Word16) where
+  popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVS.Vector Word32) where
+  popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVS.Vector Word64) where
   popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
   {-# INLINE popCount0 #-}
