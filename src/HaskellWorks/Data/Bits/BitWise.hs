@@ -233,36 +233,36 @@ instance BitWise Word64 where
   {-# INLINE all1s #-}
 
 instance Shift Int  where
-  (.<.) w n = B.shiftL w (fromIntegral n)
+  (.<.) w n = B.unsafeShiftL w (fromIntegral n)
   {-# INLINE (.<.) #-}
 
-  (.>.) w n = B.shiftR w (fromIntegral n)
+  (.>.) w n = B.unsafeShiftR w (fromIntegral n)
   {-# INLINE (.>.) #-}
 
 instance Shift Word8  where
-  (.<.) w n = B.shiftL w (fromIntegral n)
+  (.<.) w n = B.unsafeShiftL w (fromIntegral n)
   {-# INLINE (.<.) #-}
 
-  (.>.) w n = B.shiftR w (fromIntegral n)
+  (.>.) w n = B.unsafeShiftR w (fromIntegral n)
   {-# INLINE (.>.) #-}
 
 instance Shift Word16 where
-  (.<.) w n = B.shiftL w (fromIntegral n)
+  (.<.) w n = B.unsafeShiftL w (fromIntegral n)
   {-# INLINE (.<.) #-}
 
-  (.>.) w n = B.shiftR w (fromIntegral n)
+  (.>.) w n = B.unsafeShiftR w (fromIntegral n)
   {-# INLINE (.>.) #-}
 
 instance Shift Word32 where
-  (.<.) w n = B.shiftL w (fromIntegral n)
+  (.<.) w n = B.unsafeShiftL w (fromIntegral n)
   {-# INLINE (.<.) #-}
 
-  (.>.) w n = B.shiftR w (fromIntegral n)
+  (.>.) w n = B.unsafeShiftR w (fromIntegral n)
   {-# INLINE (.>.) #-}
 
 instance Shift Word64 where
-  (.<.) w n = B.shiftL w (fromIntegral n)
+  (.<.) w n = B.unsafeShiftL w (fromIntegral n)
   {-# INLINE (.<.) #-}
 
-  (.>.) w n = B.shiftR w (fromIntegral n)
+  (.>.) w n = B.unsafeShiftR w (fromIntegral n)
   {-# INLINE (.>.) #-}
