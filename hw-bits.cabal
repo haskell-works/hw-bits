@@ -41,7 +41,6 @@ library
                       , HaskellWorks.Data.Bits.PopCount.PopCount1
                       , HaskellWorks.Data.Bits.Types.Broadword
                       , HaskellWorks.Data.Bits.Types.Builtin
-                      , HaskellWorks.Data.Bits.Unmatched
                       , HaskellWorks.Data.Bits.Word
   build-depends:        base                          >= 4          && < 5
                       , bytestring
@@ -66,7 +65,6 @@ test-suite hw-bits-test
                       , HaskellWorks.Data.Bits.BitWiseSpec
                       , HaskellWorks.Data.Bits.FromBitTextByteStringSpec
                       , HaskellWorks.Data.Bits.Log2Spec
-                      , HaskellWorks.Data.Bits.UnmatchedSpec
   build-depends:        base                          >= 4          && < 5
                       , bytestring
                       , hspec
