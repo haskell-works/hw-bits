@@ -1,11 +1,6 @@
 {-# LANGUAGE FlexibleInstances   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
--- |
--- Copyright: 2016 John Ky
--- License: MIT
---
--- Succinct operations.
 module HaskellWorks.Data.Bits.BitShow
   ( BitShow(..)
   , bitShow

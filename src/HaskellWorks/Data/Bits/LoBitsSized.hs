@@ -7,6 +7,7 @@ import HaskellWorks.Data.Bits.BitWise
 import HaskellWorks.Data.Positioning
 
 class LoBitsSized a where
+  -- | Value with the n least significant bits set to 1.
   loBitsSized :: Count -> a
 
 instance LoBitsSized Word64 where

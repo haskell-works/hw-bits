@@ -1,10 +1,5 @@
 {-# LANGUAGE FlexibleInstances     #-}
 
--- |
--- Copyright: 2016 John Ky
--- License: MIT
---
--- Succinct operations.
 module HaskellWorks.Data.Bits.PopCount.PopCount1
     ( PopCount1(..)
     ) where
@@ -26,8 +21,8 @@ fastWord :: a -> FastWord a
 fastWord = Builtin
 {-# INLINE fastWord #-}
 
--- | The number of one bits in the value.
 class PopCount1 v where
+  -- | The number of 0-bits in the value.
   popCount1 :: v -> Count
 
 instance PopCount1 Bool where

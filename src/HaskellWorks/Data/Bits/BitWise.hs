@@ -2,11 +2,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeFamilies          #-}
 
--- |
--- Copyright: 2016 John Ky
--- License: MIT
---
--- Succinct operations.
 module HaskellWorks.Data.Bits.BitWise
     ( -- * Bit map
       BitWise(..)
@@ -14,15 +9,16 @@ module HaskellWorks.Data.Bits.BitWise
     , TestBit(..)
     ) where
 
-import qualified Data.Bits                           as B
-import qualified Data.Vector                         as DV
-import qualified Data.Vector.Storable                as DVS
-import           Data.Word
-import           HaskellWorks.Data.AtIndex
-import           HaskellWorks.Data.Bits.BitLength
-import           HaskellWorks.Data.Naive
-import           HaskellWorks.Data.Positioning
-import           Prelude                             as P
+import Data.Word
+import HaskellWorks.Data.AtIndex
+import HaskellWorks.Data.Bits.BitLength
+import HaskellWorks.Data.Naive
+import HaskellWorks.Data.Positioning
+import Prelude                          as P
+
+import qualified Data.Bits            as B
+import qualified Data.Vector          as DV
+import qualified Data.Vector.Storable as DVS
 
 -- We pervasively use precedence to avoid excessive parentheses, and we use
 -- the same precedence conventions of the C programming language: arithmetic
@@ -48,13 +44,13 @@ class TestBit a where
 
 -- | Class of values that have bit wise logical operations
 class BitWise a where
-  -- | Bit wise AND
+  -- | Bit-wise AND
   (.&.) :: a -> a -> a
-  -- | Bit wise OR
+  -- | Bit-wise OR
   (.|.) :: a -> a -> a
-  -- | Bit wise XOR
+  -- | Bit-wise XOR
   (.^.) :: a -> a -> a
-  -- | Bit wise complement
+  -- | Bit-wise complement
   comp  :: a -> a
   -- | Bit-wise value of the given type with all bits set to zero
   all0s :: a

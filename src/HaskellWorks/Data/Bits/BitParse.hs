@@ -1,24 +1,20 @@
 {-# LANGUAGE FlexibleInstances   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
--- |
--- Copyright: 2016 John Ky
--- License: MIT
---
--- Succinct operations.
 module HaskellWorks.Data.Bits.BitParse
   ( BitParse(..)
   ) where
 
-import           Control.Applicative
-import qualified Data.ByteString                  as BS
-import qualified Data.Vector                      as DV
-import qualified Data.Vector.Storable             as DVS
-import           Data.Word
-import           GHC.Exts
-import           HaskellWorks.Data.Bits.BitLength
-import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.String.Parse
+import Control.Applicative
+import Data.Word
+import GHC.Exts
+import HaskellWorks.Data.Bits.BitLength
+import HaskellWorks.Data.Bits.BitWise
+import HaskellWorks.Data.String.Parse
+
+import qualified Data.ByteString      as BS
+import qualified Data.Vector          as DV
+import qualified Data.Vector.Storable as DVS
 
 -- | Parsers for bit strings
 class BitParse a where

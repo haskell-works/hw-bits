@@ -8,6 +8,7 @@ import           HaskellWorks.Data.AtIndex
 import           HaskellWorks.Data.Bits.BitWise
 
 class Log2 a where
+  -- | Log base of the given value rounded down to the nearest integer
   log2 :: a -> Int
 
 log2_64_tab :: DVS.Vector Int

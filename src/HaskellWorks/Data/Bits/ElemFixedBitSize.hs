@@ -1,20 +1,15 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeFamilies      #-}
 
--- |
--- Copyright: 2016 John Ky
--- License: MIT
---
--- Succinct operations.
-
 module HaskellWorks.Data.Bits.ElemFixedBitSize
     ( ElemFixedBitSize(..)
     ) where
 
-import qualified Data.Vector                   as DV
-import qualified Data.Vector.Storable          as DVS
-import           Data.Word
-import           HaskellWorks.Data.Positioning
+import Data.Word
+import HaskellWorks.Data.Positioning
+
+import qualified Data.Vector          as DV
+import qualified Data.Vector.Storable as DVS
 
 -- | Class of values that have elements of a fixed bit size
 --
