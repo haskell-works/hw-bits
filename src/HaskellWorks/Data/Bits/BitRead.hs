@@ -6,13 +6,14 @@ module HaskellWorks.Data.Bits.BitRead
   ( BitRead(..)
   ) where
 
-import qualified Data.ByteString                 as BS
-import           Data.Maybe
-import qualified Data.Vector                     as DV
-import qualified Data.Vector.Storable            as DVS
-import           Data.Word
-import           HaskellWorks.Data.Bits.BitParse
-import           HaskellWorks.Data.String.Parse
+import Data.Maybe
+import Data.Word
+import HaskellWorks.Data.Bits.BitParse
+import HaskellWorks.Data.String.Parse
+
+import qualified Data.ByteString      as BS
+import qualified Data.Vector          as DV
+import qualified Data.Vector.Storable as DVS
 
 -- | Bit string reader that produces a value of a type
 class BitRead a where

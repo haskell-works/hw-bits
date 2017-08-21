@@ -2,14 +2,15 @@
 
 module HaskellWorks.Data.Bits.AllExcess.AllExcess1 where
 
-import           Data.Word
-import qualified Data.Vector                                as DV
-import qualified Data.Vector.Storable                       as DVS
-import           HaskellWorks.Data.Bits.PopCount.PopCount0
-import           HaskellWorks.Data.Bits.PopCount.PopCount1
+import Data.Word
+import HaskellWorks.Data.Bits.PopCount.PopCount0
+import HaskellWorks.Data.Bits.PopCount.PopCount1
 
--- TODO Optimise these instances
+import qualified Data.Vector          as DV
+import qualified Data.Vector.Storable as DVS
+
 class AllExcess1 a where
+  -- | Number of 1-bits minues the number of 0-bits.
   allExcess1 :: a -> Int
 
 instance AllExcess1 [Bool] where

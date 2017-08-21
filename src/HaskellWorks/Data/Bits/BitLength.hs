@@ -2,11 +2,6 @@
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
--- |
--- Copyright: 2016 John Ky
--- License: MIT
---
--- Succinct operations.
 module HaskellWorks.Data.Bits.BitLength
     ( -- * Bit map
       BitLength(..)
@@ -14,18 +9,20 @@ module HaskellWorks.Data.Bits.BitLength
     , elemBitEnd
     ) where
 
-import qualified Data.Vector                         as DV
-import qualified Data.Vector.Storable                as DVS
-import           Data.Word
-import           HaskellWorks.Data.AtIndex
-import           HaskellWorks.Data.Naive
-import           HaskellWorks.Data.Positioning
-import           Prelude hiding (length)
+import Data.Word
+import HaskellWorks.Data.AtIndex
+import HaskellWorks.Data.Naive
+import HaskellWorks.Data.Positioning
+import Prelude                       hiding (length)
 
--- | Number of bits in a value including ones and zeros.
+import qualified Data.Vector          as DV
+import qualified Data.Vector.Storable as DVS
+
 class BitLength v where
+  -- | Number of bits in a value including ones and zeros.
   bitLength :: v -> Count
 
+  -- | Number of bits in a value including ones and zeros as a position.
   endPosition :: v -> Position
   endPosition = toPosition . bitLength
   {-# INLINE endPosition #-}

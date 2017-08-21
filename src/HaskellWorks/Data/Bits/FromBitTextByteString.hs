@@ -1,14 +1,15 @@
-{-# LANGUAGE FlexibleInstances  #-}
-{-# LANGUAGE InstanceSigs       #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE InstanceSigs      #-}
 
 module HaskellWorks.Data.Bits.FromBitTextByteString
     ( FromBitTextByteString(..)
     ) where
 
+import Data.Word
+import HaskellWorks.Data.Bits
+
 import qualified Data.ByteString      as BS
 import qualified Data.Vector.Storable as DVS
-import           Data.Word
-import           HaskellWorks.Data.Bits
 
 class FromBitTextByteString a where
   -- | Convert a binary byte string to a value of type @a
@@ -21,16 +22,16 @@ instance FromBitTextByteString (DVS.Vector Word8) where
           gen cs = case BS.uncons cs of
             Just (d, ds) | d == w0  -> gen' 1 0 ds
             Just (d, ds) | d == w1  -> gen' 1 1 ds
-            Just (_, ds)            -> gen ds
-            Nothing                 -> Nothing
+            Just (_, ds) -> gen ds
+            Nothing      -> Nothing
           gen' :: Int -> Word8 -> BS.ByteString -> Maybe (Word8, BS.ByteString)
           gen' n w cs
             | n >= 8   = Just (w, cs)
             | otherwise = case BS.uncons cs of
                 Just (d, ds) | d == w0  -> gen' (n + 1) (w .|. (0 .<. fromIntegral n)) ds
                 Just (d, ds) | d == w1  -> gen' (n + 1) (w .|. (1 .<. fromIntegral n)) ds
-                Just (_, ds)            -> gen' n w ds
-                Nothing                 -> Just (w, cs)
+                Just (_, ds) -> gen' n w ds
+                Nothing      -> Just (w, cs)
 
 instance FromBitTextByteString (DVS.Vector Word16) where
   fromBitTextByteString :: BS.ByteString -> DVS.Vector Word16
@@ -39,16 +40,16 @@ instance FromBitTextByteString (DVS.Vector Word16) where
           gen cs = case BS.uncons cs of
             Just (d, ds) | d == w0  -> gen' 1 0 ds
             Just (d, ds) | d == w1  -> gen' 1 1 ds
-            Just (_, ds)            -> gen ds
-            Nothing                 -> Nothing
+            Just (_, ds) -> gen ds
+            Nothing      -> Nothing
           gen' :: Int -> Word16 -> BS.ByteString -> Maybe (Word16, BS.ByteString)
           gen' n w cs
             | n >= 16   = Just (w, cs)
             | otherwise = case BS.uncons cs of
                 Just (d, ds) | d == w0  -> gen' (n + 1) (w .|. (0 .<. fromIntegral n)) ds
                 Just (d, ds) | d == w1  -> gen' (n + 1) (w .|. (1 .<. fromIntegral n)) ds
-                Just (_, ds)            -> gen' n w ds
-                Nothing                 -> Just (w, cs)
+                Just (_, ds) -> gen' n w ds
+                Nothing      -> Just (w, cs)
 
 instance FromBitTextByteString (DVS.Vector Word32) where
   fromBitTextByteString :: BS.ByteString -> DVS.Vector Word32
@@ -57,16 +58,16 @@ instance FromBitTextByteString (DVS.Vector Word32) where
           gen cs = case BS.uncons cs of
             Just (d, ds) | d == w0  -> gen' 1 0 ds
             Just (d, ds) | d == w1  -> gen' 1 1 ds
-            Just (_, ds)            -> gen ds
-            Nothing                 -> Nothing
+            Just (_, ds) -> gen ds
+            Nothing      -> Nothing
           gen' :: Int -> Word32 -> BS.ByteString -> Maybe (Word32, BS.ByteString)
           gen' n w cs
             | n >= 32   = Just (w, cs)
             | otherwise = case BS.uncons cs of
                 Just (d, ds) | d == w0  -> gen' (n + 1) (w .|. (0 .<. fromIntegral n)) ds
                 Just (d, ds) | d == w1  -> gen' (n + 1) (w .|. (1 .<. fromIntegral n)) ds
-                Just (_, ds)            -> gen' n w ds
-                Nothing                 -> Just (w, cs)
+                Just (_, ds) -> gen' n w ds
+                Nothing      -> Just (w, cs)
 
 instance FromBitTextByteString (DVS.Vector Word64) where
   fromBitTextByteString :: BS.ByteString -> DVS.Vector Word64
@@ -75,16 +76,16 @@ instance FromBitTextByteString (DVS.Vector Word64) where
           gen cs = case BS.uncons cs of
             Just (d, ds) | d == w0  -> gen' 1 0 ds
             Just (d, ds) | d == w1  -> gen' 1 1 ds
-            Just (_, ds)            -> gen ds
-            Nothing                 -> Nothing
+            Just (_, ds) -> gen ds
+            Nothing      -> Nothing
           gen' :: Int -> Word64 -> BS.ByteString -> Maybe (Word64, BS.ByteString)
           gen' n w cs
             | n >= 64   = Just (w, cs)
             | otherwise = case BS.uncons cs of
                 Just (d, ds) | d == w0  -> gen' (n + 1) (w .|. (0 .<. fromIntegral n)) ds
                 Just (d, ds) | d == w1  -> gen' (n + 1) (w .|. (1 .<. fromIntegral n)) ds
-                Just (_, ds)            -> gen' n w ds
-                Nothing                 -> Just (w, cs)
+                Just (_, ds) -> gen' n w ds
+                Nothing      -> Just (w, cs)
 
 w0 :: Word8
 w0 = 48

@@ -9,10 +9,13 @@ import           HaskellWorks.Data.Bits.BitWise
 
 class WordConcat a where
   type DoubleWords a
+  -- | Concatenate two words in little-endian order of the same size into a
+  -- word of twice the size.
   leConcat :: a -> a -> DoubleWords a
 
 class WordSplit a where
   type HalfWords a
+  -- | Split a word equally into two smaller words in little-endian order.
   leSplit :: a -> (HalfWords a, HalfWords a)
 
 instance WordConcat Word8 where

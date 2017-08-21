@@ -2,11 +2,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeFamilies          #-}
 
--- |
--- Copyright: 2016 John Ky
--- License: MIT
---
--- Succinct operations.
 module HaskellWorks.Data.Bits.PopCount.PopCount0
     ( PopCount0(..)
     ) where
@@ -21,8 +16,8 @@ import           HaskellWorks.Data.Bits.Types.Builtin
 import           HaskellWorks.Data.Positioning
 import           Prelude                                   as P
 
--- | The number of zero bits in the value.
 class PopCount0 v where
+  -- | The number of 0-bits in the value.
   popCount0 :: v -> Count
 
 instance PopCount0 Bool where

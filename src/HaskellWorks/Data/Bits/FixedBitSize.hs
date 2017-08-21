@@ -1,15 +1,9 @@
--- |
--- Copyright: 2016 John Ky
--- License: MIT
---
--- Succinct operations.
-
 module HaskellWorks.Data.Bits.FixedBitSize
     ( FixedBitSize(..)
     ) where
 
-import           Data.Word
-import           HaskellWorks.Data.Positioning
+import Data.Word
+import HaskellWorks.Data.Positioning
 
 -- | Class of values that have a fix bit size
 class FixedBitSize a where
