@@ -6,15 +6,16 @@ module HaskellWorks.Data.Bits.PopCount.PopCount0
     ( PopCount0(..)
     ) where
 
-import qualified Data.Vector                               as DV
-import qualified Data.Vector.Storable                      as DVS
-import           Data.Word
-import           HaskellWorks.Data.Bits.BitWise
-import           HaskellWorks.Data.Bits.PopCount.PopCount1
-import           HaskellWorks.Data.Bits.Types.Broadword
-import           HaskellWorks.Data.Bits.Types.Builtin
-import           HaskellWorks.Data.Positioning
-import           Prelude                                   as P
+import Data.Word
+import HaskellWorks.Data.Bits.BitWise
+import HaskellWorks.Data.Bits.PopCount.PopCount1
+import HaskellWorks.Data.Bits.Types.Broadword
+import HaskellWorks.Data.Bits.Types.Builtin
+import HaskellWorks.Data.Positioning
+import Prelude                                   as P
+
+import qualified Data.Vector          as DV
+import qualified Data.Vector.Storable as DVS
 
 class PopCount0 v where
   -- | The number of 0-bits in the value.
@@ -106,5 +107,73 @@ instance PopCount0 (DVS.Vector Word32) where
   {-# INLINE popCount0 #-}
 
 instance PopCount0 (DVS.Vector Word64) where
+  popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+-- Vector of Builtin instances
+
+instance PopCount0 (DV.Vector (Builtin Word8)) where
+  popCount0 = DV.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DV.Vector (Builtin Word16)) where
+  popCount0 = DV.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DV.Vector (Builtin Word32)) where
+  popCount0 = DV.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DV.Vector (Builtin Word64)) where
+  popCount0 = DV.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVS.Vector (Builtin Word8)) where
+  popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVS.Vector (Builtin Word16)) where
+  popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVS.Vector (Builtin Word32)) where
+  popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVS.Vector (Builtin Word64)) where
+  popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+-- Vector of Broadword instances
+
+instance PopCount0 (DV.Vector (Broadword Word8)) where
+  popCount0 = DV.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DV.Vector (Broadword Word16)) where
+  popCount0 = DV.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DV.Vector (Broadword Word32)) where
+  popCount0 = DV.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DV.Vector (Broadword Word64)) where
+  popCount0 = DV.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVS.Vector (Broadword Word8)) where
+  popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVS.Vector (Broadword Word16)) where
+  popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVS.Vector (Broadword Word32)) where
+  popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVS.Vector (Broadword Word64)) where
   popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
   {-# INLINE popCount0 #-}
