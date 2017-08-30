@@ -71,7 +71,7 @@ jobs:
 
       - run:
           name: Compiling
-          command: stack --stack-yaml stack-ci.yaml build --test --no-run-tests
+          command: stack --stack-yaml stack-ci.yaml build --test --no-run-tests --bench --no-run-benchmarks
 
       - save_cache:
           key: dot-stack-{{ checksum "stack.yaml" }}-{{ checksum "hw-bits.cabal" }}

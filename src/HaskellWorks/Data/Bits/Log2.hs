@@ -2,10 +2,11 @@ module HaskellWorks.Data.Bits.Log2
   ( Log2(..)
   ) where
 
+import Data.Word
+import HaskellWorks.Data.AtIndex
+import HaskellWorks.Data.Bits.BitWise
+
 import qualified Data.Vector.Storable as DVS
-import           Data.Word
-import           HaskellWorks.Data.AtIndex
-import           HaskellWorks.Data.Bits.BitWise
 
 class Log2 a where
   -- | Log base of the given value rounded down to the nearest integer
