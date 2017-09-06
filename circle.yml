@@ -89,7 +89,7 @@ jobs:
       ##### Running tests
       - run:
           name: Running tests against latest on hackage
-          command: stack --stack-yaml stack-ci.yaml test --bench --no-run-bench
+          command: stack --stack-yaml stack-ci.yaml test
 
       - deploy:
           command: |
