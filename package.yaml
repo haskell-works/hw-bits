@@ -1,0 +1,98 @@
+name: hw-bits
+version: '0.7.0.2'
+synopsis: Bit manipulation
+description: Please see README.md
+category: Data, Bit
+author: John Ky
+maintainer: newhoggy@gmail.com
+copyright: 2016 John Ky
+license: BSD3
+github: haskell-works/hw-bits
+homepage: http://github.com/haskell-works/hw-bits#readme
+extra-source-files:
+- README.md
+dependencies:
+- base >=4 && <5
+- vector
+library:
+  source-dirs: src
+  exposed-modules:
+  - HaskellWorks.Data.Bits
+  - HaskellWorks.Data.Bits.AllExcess
+  - HaskellWorks.Data.Bits.AllExcess.AllExcess0
+  - HaskellWorks.Data.Bits.AllExcess.AllExcess1
+  - HaskellWorks.Data.Bits.BitLength
+  - HaskellWorks.Data.Bits.BitParse
+  - HaskellWorks.Data.Bits.BitRead
+  - HaskellWorks.Data.Bits.BitShow
+  - HaskellWorks.Data.Bits.BitShown
+  - HaskellWorks.Data.Bits.BitWise
+  - HaskellWorks.Data.Bits.Broadword
+  - HaskellWorks.Data.Bits.ElemFixedBitSize
+  - HaskellWorks.Data.Bits.FixedBitSize
+  - HaskellWorks.Data.Bits.FromBitTextByteString
+  - HaskellWorks.Data.Bits.LoBitsSized
+  - HaskellWorks.Data.Bits.Log2
+  - HaskellWorks.Data.Bits.PopCount
+  - HaskellWorks.Data.Bits.PopCount.PopCount0
+  - HaskellWorks.Data.Bits.PopCount.PopCount1
+  - HaskellWorks.Data.Bits.Types.Broadword
+  - HaskellWorks.Data.Bits.Types.Builtin
+  - HaskellWorks.Data.Bits.Word
+  dependencies:
+  - bytestring
+  - hw-int >=0.0.0.1
+  - hw-prim >=0.4.0.3
+  - hw-string-parse >=0.0.0.1
+  - safe
+  when:
+  - condition: flag(sse42)
+    then:
+      ghc-options:
+      - -Wall
+      - -O2
+      - -msse4.2
+    else:
+      ghc-options:
+      - -Wall
+      - -O2
+tests:
+  hw-bits-test:
+    main: Spec.hs
+    source-dirs: test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -Wall
+    dependencies:
+    - bytestring
+    - hspec
+    - hw-bits
+    - hw-prim >=0.4.0.3
+    - QuickCheck
+benchmarks:
+  bench:
+    main: Main.hs
+    source-dirs: bench
+    dependencies:
+    - criterion
+    - hw-bits
+    - hw-prim >=0.4.0.0
+    when:
+    - condition: flag(sse42)
+      then:
+        ghc-options:
+        - -Wall
+        - -O2
+        - -msse4.2
+      else:
+        ghc-options:
+        - -Wall
+        - -O2
+flags:
+  sse42:
+    description: Enable SSE 4.2 optimisations.
+    manual: false
+    default: true
+stability: Experimental
