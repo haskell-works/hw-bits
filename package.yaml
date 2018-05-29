@@ -12,7 +12,7 @@ homepage: http://github.com/haskell-works/hw-bits#readme
 extra-source-files:
 - README.md
 dependencies:
-- base >=4 && <5
+- base >=4.8 && <5
 - vector
 library:
   source-dirs: src
