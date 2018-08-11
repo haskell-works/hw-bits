@@ -10,42 +10,23 @@ license: BSD3
 github: haskell-works/hw-bits
 homepage: http://github.com/haskell-works/hw-bits#readme
 tested-with: GHC == 8.4.2, GHC == 8.2.2, GHC == 8.0.2, GHC == 7.10.3
+
 extra-source-files:
 - README.md
+
 dependencies:
 - base        >= 4.8        && < 5
 - vector      >= 0.12       && < 0.13
+
 library:
   source-dirs: src
-  exposed-modules:
-  - HaskellWorks.Data.Bits
-  - HaskellWorks.Data.Bits.AllExcess
-  - HaskellWorks.Data.Bits.AllExcess.AllExcess0
-  - HaskellWorks.Data.Bits.AllExcess.AllExcess1
-  - HaskellWorks.Data.Bits.BitLength
-  - HaskellWorks.Data.Bits.BitParse
-  - HaskellWorks.Data.Bits.BitRead
-  - HaskellWorks.Data.Bits.BitShow
-  - HaskellWorks.Data.Bits.BitShown
-  - HaskellWorks.Data.Bits.BitWise
-  - HaskellWorks.Data.Bits.Broadword
-  - HaskellWorks.Data.Bits.ElemFixedBitSize
-  - HaskellWorks.Data.Bits.FixedBitSize
-  - HaskellWorks.Data.Bits.FromBitTextByteString
-  - HaskellWorks.Data.Bits.LoBitsSized
-  - HaskellWorks.Data.Bits.Log2
-  - HaskellWorks.Data.Bits.PopCount
-  - HaskellWorks.Data.Bits.PopCount.PopCount0
-  - HaskellWorks.Data.Bits.PopCount.PopCount1
-  - HaskellWorks.Data.Bits.Types.Broadword
-  - HaskellWorks.Data.Bits.Types.Builtin
-  - HaskellWorks.Data.Bits.Word
   dependencies:
   - bytestring        >= 0.9        && < 0.11
   - hw-int            >= 0.0.0.1    && < 0.1
   - hw-prim           >= 0.4.0.3    && < 0.7
   - hw-string-parse   >= 0.0.0.1    && < 0.1
   - safe
+  - semigroups        >= 0.18       && < 0.19
   when:
   - condition: flag(sse42)
     then:
@@ -57,6 +38,7 @@ library:
       ghc-options:
       - -Wall
       - -O2
+
 tests:
   hw-bits-test:
     main: Spec.hs
@@ -74,6 +56,7 @@ tests:
     - QuickCheck    >= 2.10       && < 2.12
     verbatim:
       build-tool-depends: hspec-discover:hspec-discover
+
 benchmarks:
   bench:
     main: Main.hs
@@ -93,6 +76,7 @@ benchmarks:
         ghc-options:
         - -Wall
         - -O2
+
 flags:
   sse42:
     description: Enable SSE 4.2 optimisations.
