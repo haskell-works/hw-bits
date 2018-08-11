@@ -1,4 +1,4 @@
-resolver: lts-12.0
+resolver: lts-12.5
 
 packages:
 - '.'
@@ -6,3 +6,6 @@ packages:
 flags: {}
 
 extra-package-dbs: []
+
+extra-deps:
+- hw-prim-0.6.2.4

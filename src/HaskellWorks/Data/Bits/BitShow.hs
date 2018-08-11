@@ -36,13 +36,13 @@ instance BitShow Word8 where
     . (if w .?. 7 then ('1':) else ('0':))
 
 instance BitShow Word16 where
-  bitShows w = case leSplit w of (a, b) -> bitShows a . (' ':) . bitShows b
+  bitShows w = case leSplit w of (a, b) -> bitShows a . bitShows b
 
 instance BitShow Word32 where
-  bitShows w = case leSplit w of (a, b) -> bitShows a . (' ':) . bitShows b
+  bitShows w = case leSplit w of (a, b) -> bitShows a . bitShows b
 
 instance BitShow Word64 where
-  bitShows w = case leSplit w of (a, b) -> bitShows a . (' ':) . bitShows b
+  bitShows w = case leSplit w of (a, b) -> bitShows a . bitShows b
 
 instance BitShow [Bool] where
   bitShows ws = ('\"':) . go (0 :: Int) ws . ('\"':)
@@ -54,32 +54,32 @@ instance BitShow [Bool] where
 instance BitShow BS.ByteString where
   bitShows bs | BS.length bs == 0 = id
   bitShows bs | BS.length bs == 1 = bitShows (BS.head bs)
-  bitShows bs = bitShows (BS.head bs) . (' ':) . bitShows (BS.tail bs)
+  bitShows bs = bitShows (BS.head bs) . bitShows (BS.tail bs)
 
 instance BitShow BSL.ByteString where
   bitShows bs | BSL.length bs == 0 = id
   bitShows bs | BSL.length bs == 1 = bitShows (BSL.head bs)
-  bitShows bs = bitShows (BSL.head bs) . (' ':) . bitShows (BSL.tail bs)
+  bitShows bs = bitShows (BSL.head bs) . bitShows (BSL.tail bs)
 
 instance BitShow [Word8] where
   bitShows []     = id
   bitShows [w]    = bitShows w
-  bitShows (w:ws) = bitShows w . (' ':) . bitShows ws
+  bitShows (w:ws) = bitShows w . bitShows ws
 
 instance BitShow [Word16] where
   bitShows []     = id
   bitShows [w]    = bitShows w
-  bitShows (w:ws) = bitShows w . (' ':) . bitShows ws
+  bitShows (w:ws) = bitShows w . bitShows ws
 
 instance BitShow [Word32] where
   bitShows []     = id
   bitShows [w]    = bitShows w
-  bitShows (w:ws) = bitShows w . (' ':) . bitShows ws
+  bitShows (w:ws) = bitShows w . bitShows ws
 
 instance BitShow [Word64] where
   bitShows []     = id
   bitShows [w]    = bitShows w
-  bitShows (w:ws) = bitShows w . (' ':) . bitShows ws
+  bitShows (w:ws) = bitShows w . bitShows ws
 
 instance BitShow (DV.Vector Word8) where
   bitShows = bitShows . toList
@@ -106,4 +106,10 @@ instance BitShow (DVS.Vector Word64) where
   bitShows = bitShows . toList
 
 bitShow :: BitShow a => a -> String
-bitShow a = bitShows a ""
+bitShow a = group8 0 (bitShows a "") ""
+{-# INLINE bitShow #-}
+
+group8 :: Int -> String -> (String -> String)
+group8 i t = case t  of
+  b:bs -> (if i > 0 && i `mod` 8 == 0 then (' ':) else id) . (b:) . group8 (i + 1) bs
+  []   -> id
