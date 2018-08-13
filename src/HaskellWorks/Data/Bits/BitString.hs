@@ -1,8 +1,8 @@
 {-# LANGUAGE FlexibleInstances #-}
 
 module HaskellWorks.Data.Bits.BitString
-  ( module X
-  , ToBitString(..)
+  ( ToBitString(..)
+  , BitString(BitString)
   , empty
   , zero
   , one
@@ -21,7 +21,6 @@ module HaskellWorks.Data.Bits.BitString
 import Data.Bool
 import Data.Word
 import HaskellWorks.Data.Bits.BitString.Type
-import HaskellWorks.Data.Bits.BitString.Type as X (BitString)
 import HaskellWorks.Data.Vector.AsVector8
 import Prelude                               hiding (length)
 
