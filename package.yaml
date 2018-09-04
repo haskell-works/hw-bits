@@ -70,7 +70,7 @@ tests:
     - bytestring    >= 0.9        && < 0.11
     - hspec         >= 2.4        && < 2.6
     - hw-bits
-    - hw-prim       >= 0.4.0.3    && < 0.7
+    - hw-prim       >= 0.6.2.14   && < 0.7
     - QuickCheck    >= 2.10       && < 2.12
     verbatim:
       build-tool-depends: hspec-discover:hspec-discover

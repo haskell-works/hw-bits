@@ -16,9 +16,14 @@ import HaskellWorks.Data.Naive
 import HaskellWorks.Data.Positioning
 import Prelude                          as P
 
-import qualified Data.Bits            as B
-import qualified Data.Vector          as DV
-import qualified Data.Vector.Storable as DVS
+import qualified Data.Bits                           as B
+import qualified Data.ByteString                     as BS
+import qualified Data.Vector                         as DV
+import qualified Data.Vector.Storable                as DVS
+import qualified HaskellWorks.Data.AtIndex           as HW
+import qualified HaskellWorks.Data.ByteString        as BS
+import qualified HaskellWorks.Data.Vector.AsVector64 as DVS
+import qualified HaskellWorks.Data.Vector.AsVector8  as DVS
 
 -- We pervasively use precedence to avoid excessive parentheses, and we use
 -- the same precedence conventions of the C programming language: arithmetic
@@ -230,6 +235,105 @@ instance BitWise Word64 where
   {-# INLINE all0s #-}
 
   all1s = 0xffffffffffffffff
+  {-# INLINE all1s #-}
+
+instance BitWise (DVS.Vector Word8) where
+  as .&. bs = DVS.constructN (fromIntegral len) go
+    where len = DVS.length as `min` DVS.length bs
+          go v = (vas !!! vi) .&. (vbs !!! vi)
+            where vi = HW.end v
+                  vas = DVS.asVector8 as
+                  vbs = DVS.asVector8 bs
+  {-# INLINE (.&.) #-}
+
+  as .|. bs = DVS.constructN (fromIntegral len) go
+    where len = DVS.length as `min` DVS.length bs
+          go v = (vas !!! vi) .|. (vbs !!! vi)
+            where vi = HW.end v
+                  vas = DVS.asVector8 as
+                  vbs = DVS.asVector8 bs
+  {-# INLINE (.|.) #-}
+
+  as .^. bs = DVS.constructN (fromIntegral len) go
+    where len = DVS.length as `min` DVS.length bs
+          go v = (vas !!! vi) .^. (vbs !!! vi)
+            where vi = HW.end v
+                  vas = DVS.asVector8 as
+                  vbs = DVS.asVector8 bs
+  {-# INLINE (.^.) #-}
+
+  comp = DVS.map comp
+  {-# INLINE comp #-}
+
+  all0s = DVS.empty
+  {-# INLINE all0s #-}
+
+  all1s = DVS.empty
+  {-# INLINE all1s #-}
+
+instance BitWise (DVS.Vector Word64) where
+  as .&. bs = DVS.constructN (fromIntegral len) go
+    where len = DVS.length as `min` DVS.length bs
+          go v = (vas !!! vi) .&. (vbs !!! vi)
+            where vi = HW.end v
+                  vas = DVS.asVector64 as
+                  vbs = DVS.asVector64 bs
+  {-# INLINE (.&.) #-}
+
+  as .|. bs = DVS.constructN (fromIntegral len) go
+    where len = DVS.length as `min` DVS.length bs
+          go v = (vas !!! vi) .|. (vbs !!! vi)
+            where vi = HW.end v
+                  vas = DVS.asVector64 as
+                  vbs = DVS.asVector64 bs
+  {-# INLINE (.|.) #-}
+
+  as .^. bs = DVS.constructN (fromIntegral len) go
+    where len = DVS.length as `min` DVS.length bs
+          go v = (vas !!! vi) .^. (vbs !!! vi)
+            where vi = HW.end v
+                  vas = DVS.asVector64 as
+                  vbs = DVS.asVector64 bs
+  {-# INLINE (.^.) #-}
+
+  comp = DVS.map comp
+  {-# INLINE comp #-}
+
+  all0s = DVS.empty
+  {-# INLINE all0s #-}
+
+  all1s = DVS.empty
+  {-# INLINE all1s #-}
+
+instance BitWise BS.ByteString where
+  as .&. bs = if (len `div` 8) * 8 == len
+    then BS.toByteString (DVS.asVector64 as .&. DVS.asVector64 bs)
+    else BS.toByteString (DVS.asVector8  as .&. DVS.asVector8  bs)
+    where len = BS.length as `min` BS.length bs
+  {-# INLINE (.&.) #-}
+
+  as .|. bs = if (len `div` 8) * 8 == len
+    then BS.toByteString (DVS.asVector64 as .|. DVS.asVector64 bs)
+    else BS.toByteString (DVS.asVector8  as .|. DVS.asVector8  bs)
+    where len = BS.length as `min` BS.length bs
+  {-# INLINE (.|.) #-}
+
+  as .^. bs = if (len `div` 8) * 8 == len
+    then BS.toByteString (DVS.asVector64 as .^. DVS.asVector64 bs)
+    else BS.toByteString (DVS.asVector8  as .^. DVS.asVector8  bs)
+    where len = BS.length as `min` BS.length bs
+  {-# INLINE (.^.) #-}
+
+  comp as = if (len `div` 8) * 8 == len
+    then BS.toByteString (comp (DVS.asVector64 as))
+    else BS.toByteString (comp (DVS.asVector8  as))
+    where len = BS.length as
+  {-# INLINE comp #-}
+
+  all0s = BS.empty
+  {-# INLINE all0s #-}
+
+  all1s = BS.empty
   {-# INLINE all1s #-}
 
 instance Shift Int  where
