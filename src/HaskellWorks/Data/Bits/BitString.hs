@@ -5,6 +5,7 @@ module HaskellWorks.Data.Bits.BitString
   , defaultChunkSize
   ) where
 
+import HaskellWorks.Data.Bits.BitPatterns
 import HaskellWorks.Data.Bits.BitWise
 
 import qualified Data.ByteString as BS
@@ -29,6 +30,7 @@ instance BitWise BitString where
   comp  :: BitString -> BitString
   comp (BitString as) = BitString (comp <$> as)
 
+instance BitPatterns BitString where
   all0s :: BitString
   all0s = BitString (repeat chunkOf0s)
   {-# INLINE all0s #-}

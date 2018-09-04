@@ -57,10 +57,6 @@ class BitWise a where
   (.^.) :: a -> a -> a
   -- | Bit-wise complement
   comp  :: a -> a
-  -- | Bit-wise value of the given type with all bits set to zero
-  all0s :: a
-  -- | Bit-wise value of the given type with all bits set to one
-  all1s :: a
 
 --------------------------------------------------------------------------------
 -- Instances
@@ -155,12 +151,6 @@ instance BitWise Int where
   comp  = B.complement
   {-# INLINE comp #-}
 
-  all0s = 0
-  {-# INLINE all0s #-}
-
-  all1s = -1
-  {-# INLINE all1s #-}
-
 instance BitWise Word8 where
   (.&.) = (B..&.)
   {-# INLINE (.&.) #-}
@@ -173,12 +163,6 @@ instance BitWise Word8 where
 
   comp  = B.complement
   {-# INLINE comp #-}
-
-  all0s = 0
-  {-# INLINE all0s #-}
-
-  all1s = 0xff
-  {-# INLINE all1s #-}
 
 instance BitWise Word16 where
   (.&.) = (B..&.)
@@ -193,12 +177,6 @@ instance BitWise Word16 where
   comp  = B.complement
   {-# INLINE comp #-}
 
-  all0s = 0
-  {-# INLINE all0s #-}
-
-  all1s = 0xffff
-  {-# INLINE all1s #-}
-
 instance BitWise Word32 where
   (.&.) = (B..&.)
   {-# INLINE (.&.) #-}
@@ -212,12 +190,6 @@ instance BitWise Word32 where
   comp  = B.complement
   {-# INLINE comp #-}
 
-  all0s = 0
-  {-# INLINE all0s #-}
-
-  all1s = 0xffffffff
-  {-# INLINE all1s #-}
-
 instance BitWise Word64 where
   (.&.) = (B..&.)
   {-# INLINE (.&.) #-}
@@ -230,12 +202,6 @@ instance BitWise Word64 where
 
   comp  = B.complement
   {-# INLINE comp #-}
-
-  all0s = 0
-  {-# INLINE all0s #-}
-
-  all1s = 0xffffffffffffffff
-  {-# INLINE all1s #-}
 
 instance BitWise (DVS.Vector Word8) where
   as .&. bs = DVS.constructN (fromIntegral len) go
@@ -265,12 +231,6 @@ instance BitWise (DVS.Vector Word8) where
   comp = DVS.map comp
   {-# INLINE comp #-}
 
-  all0s = DVS.empty
-  {-# INLINE all0s #-}
-
-  all1s = DVS.empty
-  {-# INLINE all1s #-}
-
 instance BitWise (DVS.Vector Word64) where
   as .&. bs = DVS.constructN (fromIntegral len) go
     where len = DVS.length as `min` DVS.length bs
@@ -299,12 +259,6 @@ instance BitWise (DVS.Vector Word64) where
   comp = DVS.map comp
   {-# INLINE comp #-}
 
-  all0s = DVS.empty
-  {-# INLINE all0s #-}
-
-  all1s = DVS.empty
-  {-# INLINE all1s #-}
-
 instance BitWise BS.ByteString where
   as .&. bs = if (len `div` 8) * 8 == len
     then BS.toByteString (DVS.asVector64 as .&. DVS.asVector64 bs)
@@ -329,12 +283,6 @@ instance BitWise BS.ByteString where
     else BS.toByteString (comp (DVS.asVector8  as))
     where len = BS.length as
   {-# INLINE comp #-}
-
-  all0s = BS.empty
-  {-# INLINE all0s #-}
-
-  all1s = BS.empty
-  {-# INLINE all1s #-}
 
 instance Shift Int  where
   (.<.) w n = B.shiftL w (fromIntegral n)
