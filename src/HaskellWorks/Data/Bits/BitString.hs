@@ -1,21 +1,62 @@
-{-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE InstanceSigs      #-}
 
 module HaskellWorks.Data.Bits.BitString
   ( BitString(..)
-  , defaultChunkSize
+  , ToBitString(..)
+  , defaultChunkBytes
   ) where
 
+import Data.Word
 import HaskellWorks.Data.Bits.BitPatterns
 import HaskellWorks.Data.Bits.BitWise
 
-import qualified Data.ByteString as BS
+import qualified Data.ByteString              as BS
+import qualified Data.ByteString.Lazy         as LBS
+import qualified Data.Vector.Storable         as DVS
+import qualified HaskellWorks.Data.ByteString as BS
 
-defaultChunkSize :: Int
-defaultChunkSize = 512
+defaultChunkBytes :: Int
+defaultChunkBytes = 512
 
 newtype BitString = BitString
   { bits :: [BS.ByteString]
   } deriving (Eq)
+
+class ToBitString a where
+  toBitString :: a -> BitString
+
+instance ToBitString BitString where
+  toBitString = id
+  {-# INLINE toBitString #-}
+
+instance ToBitString [BS.ByteString] where
+  toBitString = BitString . BS.rechunk defaultChunkBytes
+  {-# INLINE toBitString #-}
+
+instance ToBitString BS.ByteString where
+  toBitString = toBitString . (:[])
+  {-# INLINE toBitString #-}
+
+instance ToBitString LBS.ByteString where
+  toBitString = toBitString . LBS.toChunks
+  {-# INLINE toBitString #-}
+
+instance ToBitString (DVS.Vector Word8) where
+  toBitString = toBitString . BS.toByteString
+  {-# INLINE toBitString #-}
+
+instance ToBitString (DVS.Vector Word64) where
+  toBitString = toBitString . BS.toByteString
+  {-# INLINE toBitString #-}
+
+instance ToBitString [DVS.Vector Word8] where
+  toBitString = toBitString . fmap BS.toByteString
+  {-# INLINE toBitString #-}
+
+instance ToBitString [DVS.Vector Word64] where
+  toBitString = toBitString . fmap BS.toByteString
+  {-# INLINE toBitString #-}
 
 instance BitWise BitString where
   (.&.) :: BitString -> BitString -> BitString
@@ -40,9 +81,9 @@ instance BitPatterns BitString where
   {-# INLINE all1s #-}
 
 chunkOf0s :: BS.ByteString
-chunkOf0s = BS.replicate defaultChunkSize 0x00
+chunkOf0s = BS.replicate defaultChunkBytes 0x00
 {-# NOINLINE chunkOf0s #-}
 
 chunkOf1s :: BS.ByteString
-chunkOf1s = BS.replicate defaultChunkSize 0xff
+chunkOf1s = BS.replicate defaultChunkBytes 0xff
 {-# NOINLINE chunkOf1s #-}
