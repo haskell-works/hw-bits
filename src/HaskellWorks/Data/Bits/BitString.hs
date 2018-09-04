@@ -112,7 +112,22 @@ instance Shift BitString where
                     where ui = HW.end u
   {-# INLINE (.<.) #-}
 
-  BitString ass .>. n = undefined
+  BitString ass .>. n = if n >= 0 && n <= 64
+    then BitString (go 0 ass)
+    else error $ "Invalid shift" <> show n
+    where go :: Word64 -> [BS.ByteString] -> [BS.ByteString]
+          go w bss = case bss of
+            (cs:css) -> buildChunk w cs:go (DVS.last (DVS.asVector64 (chunkPaddedByteString cs))) css
+            []       -> []
+          buildChunk :: Word64 -> BS.ByteString -> BS.ByteString
+          buildChunk w bs = BS.take (BS.length bs) (BS.toByteString (buildChunk64 w (DVS.asVector64 (chunkPaddedByteString bs))))
+          buildChunk64 :: Word64 -> DVS.Vector Word64 -> DVS.Vector Word64
+          buildChunk64 w v = DVS.constructN defaultChunkWord64s buildGo
+            where buildGo :: DVS.Vector Word64 -> Word64
+                  buildGo u = ((v !!! ui) .>. n) .|. if ui > 0
+                    then (v !!! (ui - 1)) .<. (64 - n)
+                    else w                .<. (64 - n)
+                    where ui = HW.end u
   {-# INLINE (.>.) #-}
 
 chunkOf0s :: BS.ByteString
@@ -123,18 +138,7 @@ chunkOf1s :: BS.ByteString
 chunkOf1s = BS.replicate defaultChunkBytes 0xff
 {-# NOINLINE chunkOf1s #-}
 
-chunkPadded :: DVS.Vector Word8 -> DVS.Vector Word8
-chunkPadded v = if DVS.length v >= defaultChunkBytes
-  then v
-  else v <> DVS.replicate ((defaultChunkBytes - DVS.length v) `max` 0) 0
-
-chunkPadded64 :: DVS.Vector Word8 -> DVS.Vector Word8
-chunkPadded64 v = if DVS.length v >= defaultChunkBytes
-  then v
-  else v <> DVS.replicate ((defaultChunkBytes - DVS.length v) `max` 0) 0
-
 chunkPaddedByteString :: BS.ByteString -> BS.ByteString
 chunkPaddedByteString v = if BS.length v >= defaultChunkBytes
   then v
   else v <> BS.replicate ((defaultChunkBytes - BS.length v) `max` 0) 0
-
