@@ -11,7 +11,10 @@ module HaskellWorks.Data.Bits.BitString
 import Data.Semigroup                     ((<>))
 import Data.Word
 import HaskellWorks.Data.AtIndex          ((!!!))
+import HaskellWorks.Data.Bits.BitLength
 import HaskellWorks.Data.Bits.BitPatterns
+import HaskellWorks.Data.Bits.BitRead
+import HaskellWorks.Data.Bits.BitShow
 import HaskellWorks.Data.Bits.BitWise
 import HaskellWorks.Data.Positioning
 
@@ -132,6 +135,15 @@ instance Shift BitString where
                     else w                .<. (64 - n)
                     where ui = HW.end u
   {-# INLINE (.>.) #-}
+
+instance BitLength BitString where
+  bitLength (BitString bss) = fromIntegral (sum (BS.length <$> bss)) * 8
+
+instance BitShow BitString where
+  bitShows (BitString bss) = mconcat (bitShows <$> bss)
+
+instance BitRead BitString where
+  bitRead s = toBitString <$> (bitRead s :: Maybe BS.ByteString)
 
 chunkOf0s :: BS.ByteString
 chunkOf0s = BS.replicate defaultChunkBytes 0x00
