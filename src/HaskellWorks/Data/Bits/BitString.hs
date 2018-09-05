@@ -32,7 +32,7 @@ defaultChunkWord64s = defaultChunkBytes `div` 8
 
 newtype BitString = BitString
   { bits :: [BS.ByteString]
-  } deriving (Eq)
+  } deriving (Eq, Show)
 
 class ToBitString a where
   toBitString :: a -> BitString
@@ -68,6 +68,9 @@ instance ToBitString [DVS.Vector Word8] where
 instance ToBitString [DVS.Vector Word64] where
   toBitString = toBitString . fmap BS.toByteString
   {-# INLINE toBitString #-}
+
+instance BS.ToByteStrings BitString where
+  toByteStrings (BitString bs) = bs
 
 instance BitWise BitString where
   (.&.) :: BitString -> BitString -> BitString
