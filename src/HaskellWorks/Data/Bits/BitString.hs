@@ -78,15 +78,19 @@ instance BS.ToByteStrings BitString where
 instance BitWise BitString where
   (.&.) :: BitString -> BitString -> BitString
   BitString as .&. BitString bs = BitString (uncurry (.&.) <$> zip as bs)
+  {-# INLINE (.&.) #-}
 
   (.|.) :: BitString -> BitString -> BitString
   BitString as .|. BitString bs = BitString (uncurry (.|.) <$> zip as bs)
+  {-# INLINE (.|.) #-}
 
   (.^.) :: BitString -> BitString -> BitString
   BitString as .^. BitString bs = BitString (uncurry (.^.) <$> zip as bs)
+  {-# INLINE (.^.) #-}
 
   comp  :: BitString -> BitString
   comp (BitString as) = BitString (comp <$> as)
+  {-# INLINE comp #-}
 
 instance BitPatterns BitString where
   all0s :: BitString
@@ -137,13 +141,16 @@ instance Shift BitString where
   {-# INLINE (.>.) #-}
 
 instance BitLength BitString where
-  bitLength (BitString bss) = fromIntegral (sum (BS.length <$> bss)) * 8
+  bitLength bs = byteLength bs * 8
+  {-# INLINE bitLength #-}
 
 instance BitShow BitString where
   bitShows (BitString bss) = mconcat (bitShows <$> bss)
+  {-# INLINE bitShows #-}
 
 instance BitRead BitString where
   bitRead s = toBitString <$> (bitRead s :: Maybe BS.ByteString)
+  {-# INLINE bitRead #-}
 
 chunkOf0s :: BS.ByteString
 chunkOf0s = BS.replicate defaultChunkBytes 0x00
@@ -157,3 +164,8 @@ chunkPaddedByteString :: BS.ByteString -> BS.ByteString
 chunkPaddedByteString v = if BS.length v >= defaultChunkBytes
   then v
   else v <> BS.replicate ((defaultChunkBytes - BS.length v) `max` 0) 0
+{-# INLINE chunkPaddedByteString #-}
+
+byteLength :: BitString -> Count
+byteLength (BitString bss) = fromIntegral (sum (BS.length <$> bss))
+{-# INLINE byteLength #-}
