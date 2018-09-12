@@ -22,7 +22,8 @@ library:
   - hw-int            >= 0.0.0.1    && < 0.1
   - hw-prim           >= 0.4.0.3    && < 0.7
   - hw-string-parse   >= 0.0.0.1    && < 0.1
-  - safe
+  - safe              >= 0.3        && < 0.4
+  - semigroups        >= 0.18       && < 0.19
   when:
   - condition: flag(sse42)
     then:
