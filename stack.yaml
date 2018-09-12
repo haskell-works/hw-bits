@@ -8,4 +8,4 @@ flags: {}
 extra-package-dbs: []
 
 extra-deps:
-- hw-prim-0.6.2.14
+- hw-prim-0.6.2.15

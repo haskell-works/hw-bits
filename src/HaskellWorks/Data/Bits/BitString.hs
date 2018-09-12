@@ -6,6 +6,8 @@ module HaskellWorks.Data.Bits.BitString
   , ToBitString(..)
   , defaultChunkBytes
   , defaultChunkWord64s
+  , lengthBytes
+  , takeBytes
   ) where
 
 import Data.Semigroup                     ((<>))
@@ -23,6 +25,7 @@ import qualified Data.ByteString.Lazy                as LBS
 import qualified Data.Vector.Storable                as DVS
 import qualified HaskellWorks.Data.AtIndex           as HW
 import qualified HaskellWorks.Data.ByteString        as BS
+import qualified HaskellWorks.Data.Take              as HW
 import qualified HaskellWorks.Data.Vector.AsVector64 as DVS
 
 defaultChunkBytes :: Int
@@ -141,7 +144,7 @@ instance Shift BitString where
   {-# INLINE (.>.) #-}
 
 instance BitLength BitString where
-  bitLength bs = byteLength bs * 8
+  bitLength bs = lengthBytes bs * 8
   {-# INLINE bitLength #-}
 
 instance BitShow BitString where
@@ -166,6 +169,13 @@ chunkPaddedByteString v = if BS.length v >= defaultChunkBytes
   else v <> BS.replicate ((defaultChunkBytes - BS.length v) `max` 0) 0
 {-# INLINE chunkPaddedByteString #-}
 
-byteLength :: BitString -> Count
-byteLength (BitString bss) = fromIntegral (sum (BS.length <$> bss))
-{-# INLINE byteLength #-}
+lengthBytes :: BitString -> Count
+lengthBytes (BitString bss) = fromIntegral (sum (BS.length <$> bss))
+{-# INLINE lengthBytes #-}
+
+takeBytes :: Count -> BitString -> BitString
+takeBytes n (BitString bss) = BitString (go n bss)
+  where go :: Count -> [BS.ByteString] -> [BS.ByteString]
+        go 0 _        = []
+        go i (cs:css) = if i < HW.length cs then [HW.take i cs] else cs:go (i - HW.length cs) css
+        go _ []       = []

@@ -2,6 +2,7 @@ module HaskellWorks.Data.Bits.Gen where
 
 import Data.Word
 import HaskellWorks.Data.Bits.BitString
+import HaskellWorks.Data.Positioning
 import Hedgehog
 
 import qualified Data.ByteString as BS
@@ -12,3 +13,6 @@ bytestring r g = BS.pack <$> G.list r g
 
 bitstring :: MonadGen m => Range Int -> m Word8 -> m BitString
 bitstring r g = toBitString <$> bytestring r g
+
+count :: MonadGen m => Range Word -> m Count
+count r = fromIntegral <$> G.word r
