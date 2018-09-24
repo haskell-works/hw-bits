@@ -2,6 +2,7 @@
 {-# LANGUAGE InstanceSigs      #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms   #-}
+{-# LANGUAGE ViewPatterns      #-}
 
 module HaskellWorks.Data.Bits.Bits
   ( pattern Empty
@@ -10,6 +11,7 @@ module HaskellWorks.Data.Bits.Bits
   , defaultChunkWord64s
   ) where
 
+import Data.String                        (IsString (..))
 import Data.Word
 import HaskellWorks.Data.AtIndex          ((!!!))
 import HaskellWorks.Data.Bits.BitPatterns
@@ -25,15 +27,19 @@ import qualified HaskellWorks.Data.ByteString        as BS
 import qualified HaskellWorks.Data.ByteString.Lazy   as LBS
 import qualified HaskellWorks.Data.Vector.AsVector64 as DVS
 
-pattern (:~) :: BS.ByteString -> LBS.ByteString -> LBS.ByteString
-pattern (:~) bs bss = LBSI.Chunk bs bss
+pattern (:~:) :: BS.ByteString -> LBS.ByteString -> LBS.ByteString
+pattern (:~:) bs bss = LBSI.Chunk bs bss
 
-pattern Nil :: LBS.ByteString
-pattern Nil = LBSI.Empty
+pattern (:-:) :: Word8 -> BS.ByteString -> BS.ByteString
+pattern (:-:) b bs <- (BS.uncons -> Just (b, bs))
 
-{-# COMPLETE Nil, (:~) #-}
+pattern Nil :: (Eq a, IsString a) => a
+pattern Nil = ""
 
-infixr 6 :~
+{-# COMPLETE Nil, (:~:) #-}
+
+infixr 6 :~:
+infixr 6 :-:
 
 pattern Empty :: BitString
 pattern Empty = BitString LBSI.Empty
@@ -113,9 +119,9 @@ instance Shift BitString where
     else error $ "Invalid shift" <> show n
     where go :: LBS.ByteString -> LBS.ByteString
           go bss = case bss of
-            cs:~css@(ds:~_) -> buildChunk cs (DVS.head (DVS.asVector64 ds)):~go css
-            cs:~Nil         -> buildChunk cs 0                             :~Nil
-            Nil             -> Nil
+            cs:~:css@(ds:~:_) -> buildChunk cs (DVS.head (DVS.asVector64 ds)):~:go css
+            cs:~:Nil          -> buildChunk cs 0                             :~:Nil
+            Nil               -> Nil
           buildChunk :: BS.ByteString -> Word64 -> BS.ByteString
           buildChunk bs w = BS.take (BS.length bs) (BS.toByteString (buildChunk64 (DVS.asVector64 (chunkPaddedByteString bs)) w))
           buildChunk64 :: DVS.Vector Word64 -> Word64 -> DVS.Vector Word64
@@ -133,8 +139,8 @@ instance Shift BitString where
     else error $ "Invalid shift" <> show n
     where go :: Word64 -> LBS.ByteString -> LBS.ByteString
           go w bss = case bss of
-            cs:~css -> buildChunk w cs:~go (DVS.last (DVS.asVector64 (chunkPaddedByteString cs))) css
-            Nil     -> Nil
+            cs:~:css -> buildChunk w cs:~:go (DVS.last (DVS.asVector64 (chunkPaddedByteString cs))) css
+            Nil      -> Nil
           buildChunk :: Word64 -> BS.ByteString -> BS.ByteString
           buildChunk w bs = BS.take (BS.length bs) (BS.toByteString (buildChunk64 w (DVS.asVector64 (chunkPaddedByteString bs))))
           buildChunk64 :: Word64 -> DVS.Vector Word64 -> DVS.Vector Word64
