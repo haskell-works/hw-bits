@@ -184,21 +184,3 @@ takeBytes n (BitString bss) = BitString (go n bss)
         go 0 _        = []
         go i (cs:css) = if i < HW.length cs then [HW.take i cs] else cs:go (i - HW.length cs) css
         go _ []       = []
-
-edgesFrom0 :: [Count] -> [BS.ByteString]
-edgesFrom0 [] = repeat chunkOf0s
-edgesFrom0 cs = bs:ds
-  where (bs, ds) = IO.unsafePerformIO $ BSI.createAndTrim' defaultChunkBytes (edgesFrom0' defaultChunkBytes cs)
-
-edgesFrom0' :: Int -> [Count] -> F.Ptr Word8 -> IO (Int, Int, [BS.ByteString])
-edgesFrom0' unwritten [] p = do
-  BSI.memset p 0 (fromIntegral unwritten)
-  return (0, defaultChunkBytes, repeat chunkOf0s)
-
-edgesFrom1 :: [Count] -> [BS.ByteString]
-edgesFrom1 [] = repeat chunkOf0s
-edgesFrom1 cs = bs:ds
-  where (bs, ds) = IO.unsafePerformIO $ BSI.createAndTrim' defaultChunkBytes (edgesFrom1' cs)
-
-edgesFrom1' :: [Count] -> F.Ptr Word8 -> IO (Int, Int, [BS.ByteString])
-edgesFrom1' [] = undefined
