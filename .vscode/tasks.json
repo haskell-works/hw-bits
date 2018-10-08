@@ -54,6 +54,13 @@
           }
         ]
       }
+    },
+    {
+      "taskName": "stylish-haskell",
+      "args": ["stylish-haskell -i ${relativeFile}"],
+      "problemMatcher": [
+
+      ]
     }
   ]
 }

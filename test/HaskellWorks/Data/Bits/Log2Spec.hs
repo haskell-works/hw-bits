@@ -3,10 +3,10 @@
 
 module HaskellWorks.Data.Bits.Log2Spec (spec) where
 
-import           Data.Word
-import           HaskellWorks.Data.Bits.Log2
-import           Test.Hspec
-import           Test.QuickCheck
+import Data.Word
+import HaskellWorks.Data.Bits.Log2
+import Test.Hspec
+import Test.QuickCheck
 
 {-# ANN module ("HLint: Ignore Redundant do" :: String) #-}
 

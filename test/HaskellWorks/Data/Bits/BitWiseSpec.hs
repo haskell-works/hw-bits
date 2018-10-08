@@ -3,14 +3,15 @@
 
 module HaskellWorks.Data.Bits.BitWiseSpec (spec) where
 
-import qualified Data.Bits                                 as B
-import qualified Data.Vector.Storable                      as DVS
-import           Data.Word
-import           HaskellWorks.Data.Bits.BitLength
-import           HaskellWorks.Data.Bits.PopCount.PopCount0
-import           HaskellWorks.Data.Bits.PopCount.PopCount1
-import           Test.Hspec
-import           Test.QuickCheck
+import Data.Word
+import HaskellWorks.Data.Bits.BitLength
+import HaskellWorks.Data.Bits.PopCount.PopCount0
+import HaskellWorks.Data.Bits.PopCount.PopCount1
+import Test.Hspec
+import Test.QuickCheck
+
+import qualified Data.Bits            as B
+import qualified Data.Vector.Storable as DVS
 
 {-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 

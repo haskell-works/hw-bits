@@ -6,11 +6,12 @@
 
 module HaskellWorks.Data.Bits.FromBitTextByteStringSpec (spec) where
 
-import qualified Data.ByteString                              as BS
-import qualified Data.Vector.Storable                         as DVS
-import           Data.Word
-import           HaskellWorks.Data.Bits.FromBitTextByteString
-import           Test.Hspec
+import Data.Word
+import HaskellWorks.Data.Bits.FromBitTextByteString
+import Test.Hspec
+
+import qualified Data.ByteString      as BS
+import qualified Data.Vector.Storable as DVS
 
 {-# ANN module ("HLint: Ignore Redundant do" :: String) #-}
 

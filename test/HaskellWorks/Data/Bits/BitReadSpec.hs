@@ -1,14 +1,15 @@
 {-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE OverloadedLists     #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module HaskellWorks.Data.Bits.BitReadSpec (spec) where
 
-import qualified Data.Vector                    as DV
-import           Data.Word
-import           HaskellWorks.Data.Bits.BitRead
-import           HaskellWorks.Data.Bits.BitShow
-import           Test.Hspec
+import Data.Word
+import HaskellWorks.Data.Bits.BitRead
+import HaskellWorks.Data.Bits.BitShow
+import Test.Hspec
+
+import qualified Data.Vector as DV
 
 {-# ANN module ("HLint: Ignore Redundant do" :: String) #-}
 
