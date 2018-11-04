@@ -17,29 +17,6 @@ dependencies:
 - vector      >= 0.12       && < 0.13
 library:
   source-dirs: src
-  exposed-modules:
-  - HaskellWorks.Data.Bits
-  - HaskellWorks.Data.Bits.AllExcess
-  - HaskellWorks.Data.Bits.AllExcess.AllExcess0
-  - HaskellWorks.Data.Bits.AllExcess.AllExcess1
-  - HaskellWorks.Data.Bits.BitLength
-  - HaskellWorks.Data.Bits.BitParse
-  - HaskellWorks.Data.Bits.BitRead
-  - HaskellWorks.Data.Bits.BitShow
-  - HaskellWorks.Data.Bits.BitShown
-  - HaskellWorks.Data.Bits.BitWise
-  - HaskellWorks.Data.Bits.Broadword
-  - HaskellWorks.Data.Bits.ElemFixedBitSize
-  - HaskellWorks.Data.Bits.FixedBitSize
-  - HaskellWorks.Data.Bits.FromBitTextByteString
-  - HaskellWorks.Data.Bits.LoBitsSized
-  - HaskellWorks.Data.Bits.Log2
-  - HaskellWorks.Data.Bits.PopCount
-  - HaskellWorks.Data.Bits.PopCount.PopCount0
-  - HaskellWorks.Data.Bits.PopCount.PopCount1
-  - HaskellWorks.Data.Bits.Types.Broadword
-  - HaskellWorks.Data.Bits.Types.Builtin
-  - HaskellWorks.Data.Bits.Word
   dependencies:
   - bytestring        >= 0.9        && < 0.11
   - hw-int            >= 0.0.0.1    && < 0.1
@@ -67,11 +44,13 @@ tests:
     - -with-rtsopts=-N
     - -Wall
     dependencies:
-    - bytestring    >= 0.9        && < 0.11
-    - hspec         >= 2.4        && < 2.6
+    - bytestring              >= 0.9        && < 0.11
+    - hedgehog                >= 0.5        && < 0.7
+    - hspec                   >= 2.4        && < 3
+    - hw-hspec-hedgehog       >= 0.1.0.4    && < 0.2
     - hw-bits
-    - hw-prim       >= 0.4.0.3    && < 0.7
-    - QuickCheck    >= 2.10       && < 2.12
+    - hw-prim                 >= 0.4.0.3    && < 0.7
+    - QuickCheck              >= 2.10       && < 2.12
     verbatim:
       build-tool-depends: hspec-discover:hspec-discover
 benchmarks:
