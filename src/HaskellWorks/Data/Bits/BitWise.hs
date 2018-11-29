@@ -5,6 +5,7 @@
 module HaskellWorks.Data.Bits.BitWise
     ( -- * Bit map
       BitWise(..)
+    , Bit(..)
     , Shift(..)
     , TestBit(..)
     ) where
@@ -56,6 +57,9 @@ class BitWise a where
   all0s :: a
   -- | Bit-wise value of the given type with all bits set to one
   all1s :: a
+
+class Bit a where
+  bit :: Position -> a
 
 --------------------------------------------------------------------------------
 -- Instances
@@ -266,3 +270,46 @@ instance Shift Word64 where
 
   (.>.) w n = B.shiftR w (fromIntegral n)
   {-# INLINE (.>.) #-}
+
+-----
+
+instance Bit Bool where
+  bit 1 = True
+  bit _ = False
+  {-# INLINE bit #-}
+
+instance Bit Int where
+  bit n = 1 .<. toCount n
+  {-# INLINE bit #-}
+
+instance Bit Word8 where
+  bit n = 1 .<. toCount n
+  {-# INLINE bit #-}
+
+instance Bit Word16 where
+  bit n = 1 .<. toCount n
+  {-# INLINE bit #-}
+
+instance Bit Word32 where
+  bit n = 1 .<. toCount n
+  {-# INLINE bit #-}
+
+instance Bit Word64 where
+  bit n = 1 .<. toCount n
+  {-# INLINE bit #-}
+
+instance Bit (Naive Word8) where
+  bit n = Naive (bit n)
+  {-# INLINE bit #-}
+
+instance Bit (Naive Word16) where
+  bit n = Naive (bit n)
+  {-# INLINE bit #-}
+
+instance Bit (Naive Word32) where
+  bit n = Naive (bit n)
+  {-# INLINE bit #-}
+
+instance Bit (Naive Word64) where
+  bit n = Naive (bit n)
+  {-# INLINE bit #-}
