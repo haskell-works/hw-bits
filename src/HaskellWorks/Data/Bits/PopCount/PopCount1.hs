@@ -23,7 +23,7 @@ fastWord = Builtin
 {-# INLINE fastWord #-}
 
 class PopCount1 v where
-  -- | The number of 0-bits in the value.
+  -- | The number of 1-bits in the value.
   popCount1 :: v -> Count
 
 instance PopCount1 Bool where
