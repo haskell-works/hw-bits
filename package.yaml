@@ -9,7 +9,7 @@ copyright: 2016 John Ky
 license: BSD3
 github: haskell-works/hw-bits
 homepage: http://github.com/haskell-works/hw-bits#readme
-tested-with: GHC == 8.4.2, GHC == 8.2.2, GHC == 8.0.2, GHC == 7.10.3
+tested-with: GHC == 8.6.3, GHC == 8.4.2, GHC == 8.2.2, GHC == 8.0.2
 extra-source-files:
 - README.md
 dependencies:
