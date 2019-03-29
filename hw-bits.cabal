@@ -118,7 +118,7 @@ benchmark bench
   build-depends:      hw-bits
   type:               exitcode-stdio-1.0
   main-is:            Main.hs
-  build-depends:      hw-prim
+  build-depends:      hw-bits
   other-modules:      Paths_hw_bits
   autogen-modules:    Paths_hw_bits
   hs-source-dirs:     bench
