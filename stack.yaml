@@ -1,7 +1,0 @@
-resolver: lts-12.10
-
-packages:
-- '.'
-
-extra-deps:
-- hw-prim-0.6.2.17
