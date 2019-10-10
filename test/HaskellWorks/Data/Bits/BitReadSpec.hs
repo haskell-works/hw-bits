@@ -1,49 +1,52 @@
 {-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE OverloadedLists     #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module HaskellWorks.Data.Bits.BitReadSpec (spec) where
 
-import qualified Data.Vector                    as DV
-import           Data.Word
-import           HaskellWorks.Data.Bits.BitRead
-import           HaskellWorks.Data.Bits.BitShow
-import           Test.Hspec
+import Data.Word
+import HaskellWorks.Data.Bits.BitRead
+import HaskellWorks.Data.Bits.BitShow
+import HaskellWorks.Hspec.Hedgehog
+import Hedgehog
+import Test.Hspec
+
+import qualified Data.Vector as DV
 
 {-# ANN module ("HLint: Ignore Redundant do" :: String) #-}
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.BitReadSpec" $ do
-  it "bitRead \"10000000 101\" :: Maybe [Word8]" $
-    let w = bitRead "10000000 101" :: Maybe [Bool] in
-    w `shouldBe` Just [True, False, False, False, False, False, False, False, True, False, True]
-  it "bitRead \"10000000 101\" :: Maybe [Word8]"$
-    let w = bitRead "10000000 101" :: Maybe [Word8] in
-    w `shouldBe` Just [1, 5]
-  it "bitRead \"11100100 10101111 1\" :: Maybe [Word8]" $
-    let ws = bitRead "11100100 10101111 1" :: Maybe [Word8] in
-    ws `shouldBe` Just [39, 245, 1]
-  it "bitRead \"\" :: Maybe [Word8]" $
-    let ws = bitRead "" :: Maybe [Word8] in
-    ws `shouldBe` Just []
-  it "bitRead \"10000000 101\" :: Maybe (DV.Vector Word8)" $
-    let v = bitRead "10000000 101" :: Maybe (DV.Vector Word8) in
-    v `shouldBe` Just [1, 5]
-  it "bitRead \"11100100 10101111 1\" :: Maybe (DV.Vector Word8)" $
-    let v = bitRead "11100100 10101111 1" :: Maybe (DV.Vector Word8) in
-    v `shouldBe` Just [39, 245, 1]
-  it "bitRead \"11100100 10101111 1\" :: Maybe (DV.Vector Word16)" $
-    let v = bitRead "11100100 10101111 1" :: Maybe (DV.Vector Word16) in
-    v `shouldBe` Just [39 + 62720, 1]
-  it "bitRead \"\" :: Maybe (DV.Vector Word8)" $
-    let v = bitRead "" :: Maybe (DV.Vector Word8) in
-    v `shouldBe` Just []
-  it "bitShow (8 :: Word8)" $
-    let bs = bitShow (8 :: Word8) in
-    bs `shouldBe` "00010000"
-  it "bitShow (8 :: Word64)" $
-    let bs = bitShow (8 :: Word64) in
-    bs `shouldBe` "00010000 00000000 00000000 00000000 00000000 00000000 00000000 00000000"
-  it "bitShow [0x0102040810204080 :: Word64]" $
-    let bs = bitShow ([0x0102040810204080] :: [Word64]) in
-    bs `shouldBe` "00000001 00000010 00000100 00001000 00010000 00100000 01000000 10000000"
+  it "bitRead \"10000000 101\" :: Maybe [Word8]" . requireTest $ do
+    let w = bitRead "10000000 101" :: Maybe [Bool]
+    w === Just [True, False, False, False, False, False, False, False, True, False, True]
+  it "bitRead \"10000000 101\" :: Maybe [Word8]" $ requireTest $ do
+    let w = bitRead "10000000 101" :: Maybe [Word8]
+    w === Just [1, 5]
+  it "bitRead \"11100100 10101111 1\" :: Maybe [Word8]" . requireTest $ do
+    let ws = bitRead "11100100 10101111 1" :: Maybe [Word8]
+    ws === Just [39, 245, 1]
+  it "bitRead \"\" :: Maybe [Word8]" . requireTest $ do
+    let ws = bitRead "" :: Maybe [Word8]
+    ws === Just []
+  it "bitRead \"10000000 101\" :: Maybe (DV.Vector Word8)" . requireTest $ do
+    let v = bitRead "10000000 101" :: Maybe (DV.Vector Word8)
+    v === Just [1, 5]
+  it "bitRead \"11100100 10101111 1\" :: Maybe (DV.Vector Word8)" . requireTest $ do
+    let v = bitRead "11100100 10101111 1" :: Maybe (DV.Vector Word8)
+    v === Just [39, 245, 1]
+  it "bitRead \"11100100 10101111 1\" :: Maybe (DV.Vector Word16)" . requireTest $ do
+    let v = bitRead "11100100 10101111 1" :: Maybe (DV.Vector Word16)
+    v === Just [39 + 62720, 1]
+  it "bitRead \"\" :: Maybe (DV.Vector Word8)" . requireTest $ do
+    let v = bitRead "" :: Maybe (DV.Vector Word8)
+    v === Just []
+  it "bitShow (8 :: Word8)" . requireTest $ do
+    let bs = bitShow (8 :: Word8)
+    bs === "00010000"
+  it "bitShow (8 :: Word64)" . requireTest $ do
+    let bs = bitShow (8 :: Word64)
+    bs === "00010000 00000000 00000000 00000000 00000000 00000000 00000000 00000000"
+  it "bitShow [0x0102040810204080 :: Word64]" . requireTest $ do
+    let bs = bitShow ([0x0102040810204080] :: [Word64])
+    bs === "00000001 00000010 00000100 00001000 00010000 00100000 01000000 10000000"

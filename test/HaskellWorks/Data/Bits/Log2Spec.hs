@@ -3,16 +3,21 @@
 
 module HaskellWorks.Data.Bits.Log2Spec (spec) where
 
-import           Data.Word
-import           HaskellWorks.Data.Bits.Log2
-import           Test.Hspec
-import           Test.QuickCheck
+import HaskellWorks.Data.Bits.Log2
+import HaskellWorks.Hspec.Hedgehog
+import Hedgehog
+import Test.Hspec
+
+import qualified Hedgehog.Gen   as G
+import qualified Hedgehog.Range as R
 
 {-# ANN module ("HLint: Ignore Redundant do" :: String) #-}
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Bits.Log2Spec" $ do
-  it "Log2 Word64" $ property $
-    \(NonZero (w :: Word64)) -> log2 w == floor (log (fromIntegral w) / log 2 :: Double)
-  it "Log2 Word32" $ property $
-    \(NonZero (w :: Word32)) -> log2 w == floor (log (fromIntegral w) / log 2 :: Double)
+  it "Log2 Word64" . requireProperty $ do
+    w <- forAll $ G.word64 (R.constant 1 maxBound)
+    log2 w === floor (log (fromIntegral w) / log 2 :: Double)
+  it "Log2 Word32" . requireProperty $ do
+    w <- forAll $ G.word64 (R.constant 1 maxBound)
+    log2 w === floor (log (fromIntegral w) / log 2 :: Double)
