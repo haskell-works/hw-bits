@@ -1,7 +1,7 @@
 cabal-version:  2.2
 
 name:                   hw-bits
-version:                0.7.0.7
+version:                0.7.0.8
 synopsis:               Bit manipulation
 description:            Please see README.md
 category:               Data, Bit
