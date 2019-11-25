@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass        #-}
+{-# LANGUAGE DeriveFunctor         #-}
 {-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -15,13 +17,14 @@ module HaskellWorks.Data.Bits.Broadword
   , kBitDiffUnsafe
   ) where
 
+import Control.DeepSeq
 import Data.Word
 import GHC.Generics
 import HaskellWorks.Data.Bits.BitWise
 
 import qualified Data.Bits as DB
 
-newtype Broadword a = Broadword a deriving (Eq, Show, Generic)
+newtype Broadword a = Broadword a deriving (Eq, Show, Generic, NFData)
 
 broadword :: Broadword Word64 -> Word64
 broadword (Broadword a) = a
