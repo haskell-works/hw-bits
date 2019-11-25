@@ -9,6 +9,7 @@ module HaskellWorks.Data.Bits.BitShown
   , bitShown
   ) where
 
+import Control.DeepSeq
 import Data.Maybe
 import Data.String
 import Data.Word
@@ -21,7 +22,7 @@ import HaskellWorks.Data.FromByteString
 import qualified Data.ByteString as BS
 
 -- | Tag for a value describe the value as being able to be shown as a bit string
-newtype BitShown a = BitShown { unBitShown :: a } deriving (Eq, BitRead, BitShow, Generic)
+newtype BitShown a = BitShown { unBitShown :: a } deriving (Eq, BitRead, BitShow, Generic, NFData)
 
 deriving instance Functor BitShown
 
