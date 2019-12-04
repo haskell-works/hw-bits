@@ -10,8 +10,10 @@ import HaskellWorks.Hspec.Hedgehog
 import Hedgehog
 import Test.Hspec
 
+import qualified Data.Bit             as Bit
 import qualified Data.Bits            as B
 import qualified Data.Vector.Storable as DVS
+import qualified Data.Vector.Unboxed  as DVU
 import qualified Hedgehog.Gen         as G
 import qualified Hedgehog.Range       as R
 
@@ -56,6 +58,9 @@ spec = describe "HaskellWorks.Data.Bits.BitWiseSpec" $ do
     it "for [Word64] matches Data.Bits implementation" $ requireProperty $ do
       w <- forAll $ G.list (R.constant 0 10) (G.word64 R.constantBounded)
       popCount0 w === popCount0 (DVS.fromList w)
+    it "for [Bool] matches DVU Bit.Bit" $ requireProperty $ do
+      w <- forAll $ G.list (R.constant 0 1000) G.bool
+      popCount0 w === popCount0 (DVU.fromList (fmap Bit.Bit w))
   describe "for popCount1" $ do
     it "for Word8 matches Data.Bits implementation" $ requireProperty $ do
       w <- forAll $ G.word8 R.constantBounded
@@ -93,3 +98,6 @@ spec = describe "HaskellWorks.Data.Bits.BitWiseSpec" $ do
     it "for [Word64] matches Data.Bits implementation" $ requireProperty $ do
       w <- forAll $ G.list (R.constant 0 10) (G.word64 R.constantBounded)
       popCount1 w === popCount1 (DVS.fromList w)
+    it "for [Bool] matches DVU Bit.Bit" $ requireProperty $ do
+      w <- forAll $ G.list (R.constant 0 1000) G.bool
+      popCount1 w === popCount1 (DVU.fromList (fmap Bit.Bit w))

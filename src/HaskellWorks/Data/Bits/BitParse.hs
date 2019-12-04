@@ -12,9 +12,12 @@ import HaskellWorks.Data.Bits.BitLength
 import HaskellWorks.Data.Bits.BitWise
 import HaskellWorks.Data.String.Parse
 
+import qualified Data.Bit             as Bit
+import qualified Data.Bit.ThreadSafe  as BitTS
 import qualified Data.ByteString      as BS
 import qualified Data.Vector          as DV
 import qualified Data.Vector.Storable as DVS
+import qualified Data.Vector.Unboxed  as DVU
 
 -- | Parsers for bit strings
 class BitParse a where
@@ -126,3 +129,11 @@ instance BitParse (DVS.Vector Word32) where
 instance BitParse (DVS.Vector Word64) where
   bitParse0 = bitParse1 <|> return DVS.empty
   bitParse1 = fromList `fmap` bitParse0
+
+instance BitParse (DVU.Vector Bit.Bit) where
+  bitParse0 = bitParse1 <|> return DVU.empty
+  bitParse1 = fromList . map Bit.Bit <$> many bitParse1
+
+instance BitParse (DVU.Vector BitTS.Bit) where
+  bitParse0 = bitParse1 <|> return DVU.empty
+  bitParse1 = fromList . map BitTS.Bit <$> many bitParse1

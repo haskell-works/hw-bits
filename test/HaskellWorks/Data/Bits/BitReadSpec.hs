@@ -11,7 +11,9 @@ import HaskellWorks.Hspec.Hedgehog
 import Hedgehog
 import Test.Hspec
 
-import qualified Data.Vector as DV
+import qualified Data.Bit            as Bit
+import qualified Data.Vector         as DV
+import qualified Data.Vector.Unboxed as DVU
 
 {-# ANN module ("HLint: Ignore Redundant do" :: String) #-}
 
@@ -29,6 +31,7 @@ spec = describe "HaskellWorks.Data.BitReadSpec" $ do
   it "bitRead \"\" :: Maybe [Word8]" . requireTest $ do
     let ws = bitRead "" :: Maybe [Word8]
     ws === Just []
+
   it "bitRead \"10000000 101\" :: Maybe (DV.Vector Word8)" . requireTest $ do
     let v = bitRead "10000000 101" :: Maybe (DV.Vector Word8)
     v === Just [1, 5]
@@ -41,6 +44,20 @@ spec = describe "HaskellWorks.Data.BitReadSpec" $ do
   it "bitRead \"\" :: Maybe (DV.Vector Word8)" . requireTest $ do
     let v = bitRead "" :: Maybe (DV.Vector Word8)
     v === Just []
+
+  it "bitRead \"10000000 101\" :: Maybe (DVU.Vector Bit.Bit)" . requireTest $ do
+    let v = bitRead "10000000 101" :: Maybe (DVU.Vector Bit.Bit)
+    v === Just [1,0,0,0,0,0,0,0, 1,0,1]
+  it "bitRead \"11100100 10101111 1\" :: Maybe (DVU.Vector Bit.Bit)" . requireTest $ do
+    let v = bitRead "11100100 10101111 1" :: Maybe (DVU.Vector Bit.Bit)
+    v === Just [1,1,1,0,0,1,0,0, 1,0,1,0,1,1,1,1, 1]
+  it "bitRead \"11100100 10101111 1\" :: Maybe (DVU.Vector Bit.Bit)" . requireTest $ do
+    let v = bitRead "11100100 10101111 1" :: Maybe (DVU.Vector Bit.Bit)
+    v === Just [1,1,1,0,0,1,0,0, 1,0,1,0,1,1,1,1, 1]
+  it "bitRead \"\" :: Maybe (DVU.Vector Bit.Bit)" . requireTest $ do
+    let v = bitRead "" :: Maybe (DVU.Vector Bit.Bit)
+    v === Just []
+
   it "bitShow (8 :: Word8)" . requireTest $ do
     let bs = bitShow (8 :: Word8)
     bs === "00010000"

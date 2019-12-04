@@ -8,8 +8,11 @@ module HaskellWorks.Data.Bits.ElemFixedBitSize
 import Data.Word
 import HaskellWorks.Data.Positioning
 
+import qualified Data.Bit             as Bit
+import qualified Data.Bit.ThreadSafe  as BitTS
 import qualified Data.Vector          as DV
 import qualified Data.Vector.Storable as DVS
+import qualified Data.Vector.Unboxed  as DVU
 
 -- | Class of values that have elements of a fixed bit size
 --
@@ -83,3 +86,11 @@ instance ElemFixedBitSize (DVS.Vector Word32) where
 instance ElemFixedBitSize (DVS.Vector Word64) where
   type Elem (DVS.Vector Word64) = Word64
   elemFixedBitSize _ = 64
+
+instance ElemFixedBitSize (DVU.Vector Bit.Bit) where
+  type Elem (DVU.Vector Bit.Bit) = Bit.Bit
+  elemFixedBitSize _ = 1
+
+instance ElemFixedBitSize (DVU.Vector BitTS.Bit) where
+  type Elem (DVU.Vector BitTS.Bit) = BitTS.Bit
+  elemFixedBitSize _ = 1

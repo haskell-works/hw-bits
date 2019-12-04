@@ -12,8 +12,10 @@ import HaskellWorks.Hspec.Hedgehog
 import Hedgehog
 import Test.Hspec
 
+import qualified Data.Bit             as Bit
 import qualified Data.ByteString      as BS
 import qualified Data.Vector.Storable as DVS
+import qualified Data.Vector.Unboxed  as DVU
 
 {-# ANN module ("HLint: Ignore Redundant do" :: String) #-}
 
@@ -95,3 +97,22 @@ spec = describe "HaskellWorks.Data.Bits.FromBitTextByteStringSpec" $ do
     it "fromBitTextByteString (BS.unpack \"11110000111100001111000011110000111100001111000011110000111100001\") :: DVS.Vector Word64" . requireTest $ do
       let w = fromBitTextByteString "11110000111100001111000011110000111100001111000011110000111100001" :: DVS.Vector Word64
       w === DVS.fromList [0x0f0f0f0f0f0f0f0f, 0x1]
+  describe "For (DVU.Vector Bit.Bit)" $ do
+    it "fromBitTextByteString (BS.unpack []) :: DVU.Vector Bit.Bit" . requireTest $ do
+      let w = fromBitTextByteString (BS.pack []) :: DVU.Vector Bit.Bit
+      w === DVU.fromList []
+    it "fromBitTextByteString (BS.unpack \"0\") :: DVU.Vector Bit.Bit" . requireTest $ do
+      let w = fromBitTextByteString "0" :: DVU.Vector Bit.Bit
+      w === DVU.fromList [0]
+    it "fromBitTextByteString (BS.unpack \"1\") :: DVU.Vector Bit.Bit" . requireTest $ do
+      let w = fromBitTextByteString "1" :: DVU.Vector Bit.Bit
+      w === DVU.fromList [1]
+    it "fromBitTextByteString (BS.unpack \"1111000011110000111100001111000011110000111100001111000011110000\") :: DVU.Vector Bit.Bit" . requireTest $ do
+      let w = fromBitTextByteString "1111000011110000111100001111000011110000111100001111000011110000" :: DVU.Vector Bit.Bit
+      w === DVU.fromList [1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0]
+    it "fromBitTextByteString (BS.unpack \"11110000111100001111000011110000111100001111000011110000111100000\") :: DVU.Vector Bit.Bit" . requireTest $ do
+      let w = fromBitTextByteString "11110000111100001111000011110000111100001111000011110000111100000" :: DVU.Vector Bit.Bit
+      w === DVU.fromList [1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0]
+    it "fromBitTextByteString (BS.unpack \"11110000111100001111000011110000111100001111000011110000111100001\") :: DVU.Vector Bit.Bit" . requireTest $ do
+      let w = fromBitTextByteString "11110000111100001111000011110000111100001111000011110000111100001" :: DVU.Vector Bit.Bit
+      w === DVU.fromList [1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1]

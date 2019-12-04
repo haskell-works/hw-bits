@@ -12,9 +12,12 @@ import HaskellWorks.Data.Int.Widen.Widen64
 import HaskellWorks.Data.Positioning
 import Prelude                                as P
 
+import qualified Data.Bit             as Bit
+import qualified Data.Bit.ThreadSafe  as BitTS
 import qualified Data.Bits            as DB
 import qualified Data.Vector          as DV
 import qualified Data.Vector.Storable as DVS
+import qualified Data.Vector.Unboxed  as DVU
 
 type FastWord a = Builtin a
 
@@ -197,4 +200,12 @@ instance PopCount1 (DVS.Vector (Broadword Word32)) where
 
 instance PopCount1 (DVS.Vector (Broadword Word64)) where
   popCount1 = DVS.foldl' (\c -> (c +) . popCount1) 0
+  {-# INLINE popCount1 #-}
+
+instance PopCount1 (DVU.Vector Bit.Bit) where
+  popCount1 = fromIntegral . Bit.countBits
+  {-# INLINE popCount1 #-}
+
+instance PopCount1 (DVU.Vector BitTS.Bit) where
+  popCount1 = fromIntegral . BitTS.countBits
   {-# INLINE popCount1 #-}
