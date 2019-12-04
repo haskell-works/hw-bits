@@ -17,9 +17,12 @@ import HaskellWorks.Data.Naive
 import HaskellWorks.Data.Positioning
 import Prelude                          as P
 
+import qualified Data.Bit             as Bit
+import qualified Data.Bit.ThreadSafe  as BitTS
 import qualified Data.Bits            as B
 import qualified Data.Vector          as DV
 import qualified Data.Vector.Storable as DVS
+import qualified Data.Vector.Unboxed  as DVU
 
 -- We pervasively use precedence to avoid excessive parentheses, and we use
 -- the same precedence conventions of the C programming language: arithmetic
@@ -139,6 +142,14 @@ instance TestBit (DVS.Vector Word32) where
 
 instance TestBit (DVS.Vector Word64) where
   (.?.) v n = let (q, r) = n `quotRem` elemBitEnd v in (v !!! q) .?. r
+  {-# INLINE (.?.) #-}
+
+instance TestBit (DVU.Vector Bit.Bit) where
+  (.?.) v n = Bit.unBit (v DVU.! fromIntegral n)
+  {-# INLINE (.?.) #-}
+
+instance TestBit (DVU.Vector BitTS.Bit) where
+  (.?.) v n = BitTS.unBit (v DVU.! fromIntegral n)
   {-# INLINE (.?.) #-}
 
 instance BitWise Int where

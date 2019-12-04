@@ -14,8 +14,11 @@ import HaskellWorks.Data.Bits.Types.Builtin
 import HaskellWorks.Data.Positioning
 import Prelude                                   as P
 
+import qualified Data.Bit             as Bit
+import qualified Data.Bit.ThreadSafe  as BitTS
 import qualified Data.Vector          as DV
 import qualified Data.Vector.Storable as DVS
+import qualified Data.Vector.Unboxed  as DVU
 
 class PopCount0 v where
   -- | The number of 0-bits in the value.
@@ -176,4 +179,12 @@ instance PopCount0 (DVS.Vector (Broadword Word32)) where
 
 instance PopCount0 (DVS.Vector (Broadword Word64)) where
   popCount0 = DVS.foldl' (\c -> (c +) . popCount0) 0
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVU.Vector Bit.Bit) where
+  popCount0 v = fromIntegral $ DVU.length v - Bit.countBits v
+  {-# INLINE popCount0 #-}
+
+instance PopCount0 (DVU.Vector BitTS.Bit) where
+  popCount0 v = fromIntegral $ DVU.length v - BitTS.countBits v
   {-# INLINE popCount0 #-}

@@ -8,8 +8,11 @@ module HaskellWorks.Data.Bits.FromBitTextByteString
 import Data.Word
 import HaskellWorks.Data.Bits
 
+import qualified Data.Bit             as Bit
+import qualified Data.Bit.ThreadSafe  as BitTS
 import qualified Data.ByteString      as BS
 import qualified Data.Vector.Storable as DVS
+import qualified Data.Vector.Unboxed  as DVU
 
 class FromBitTextByteString a where
   -- | Convert a binary byte string to a value of type @a
@@ -86,6 +89,26 @@ instance FromBitTextByteString (DVS.Vector Word64) where
                 Just (d, ds) | d == w1  -> gen' (n + 1) (w .|. (1 .<. fromIntegral n)) ds
                 Just (_, ds) -> gen' n w ds
                 Nothing      -> Just (w, cs)
+
+instance FromBitTextByteString (DVU.Vector Bit.Bit) where
+  fromBitTextByteString :: BS.ByteString -> DVU.Vector Bit.Bit
+  fromBitTextByteString bs = DVU.unfoldrN (BS.length bs) gen bs
+    where gen :: BS.ByteString -> Maybe (Bit.Bit, BS.ByteString)
+          gen cs = case BS.uncons cs of
+            Just (d, ds) | d == w0  -> Just (Bit.Bit False, ds)
+            Just (d, ds) | d == w1  -> Just (Bit.Bit True,  ds)
+            Just (_, ds) -> gen ds
+            Nothing      -> Nothing
+
+instance FromBitTextByteString (DVU.Vector BitTS.Bit) where
+  fromBitTextByteString :: BS.ByteString -> DVU.Vector BitTS.Bit
+  fromBitTextByteString bs = DVU.unfoldrN (BS.length bs) gen bs
+    where gen :: BS.ByteString -> Maybe (BitTS.Bit, BS.ByteString)
+          gen cs = case BS.uncons cs of
+            Just (d, ds) | d == w0  -> Just (BitTS.Bit False, ds)
+            Just (d, ds) | d == w1  -> Just (BitTS.Bit True,  ds)
+            Just (_, ds) -> gen ds
+            Nothing      -> Nothing
 
 w0 :: Word8
 w0 = 48

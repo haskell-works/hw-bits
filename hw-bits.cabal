@@ -28,6 +28,7 @@ flag sse42
 
 common base                 { build-depends: base                 >= 4          && < 5      }
 
+common bitvec               { build-depends: bitvec               >= 1.0        && < 1.1    }
 common bytestring           { build-depends: bytestring           >= 0.9        && < 0.11   }
 common criterion            { build-depends: criterion            >= 1.2        && < 1.6    }
 common deepseq              { build-depends: deepseq              >= 1.4        && < 1.5    }
@@ -48,6 +49,7 @@ common common
 library
   import:               base
                       , common
+                      , bitvec
                       , bytestring
                       , deepseq
                       , hw-int
@@ -84,6 +86,7 @@ library
 test-suite hw-bits-test
   import:               base
                       , common
+                      , bitvec
                       , bytestring
                       , hedgehog
                       , hspec
