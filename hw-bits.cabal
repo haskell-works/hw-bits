@@ -26,29 +26,32 @@ flag sse42
   manual: False
   default: True
 
-common base                 { build-depends: base                 >= 4          && < 5      }
+common base                     { build-depends: base                 >= 4          && < 5      }
 
-common bitvec               { build-depends: bitvec               >= 1.0        && < 1.1    }
-common bytestring           { build-depends: bytestring           >= 0.9        && < 0.11   }
-common criterion            { build-depends: criterion            >= 1.2        && < 1.6    }
-common deepseq              { build-depends: deepseq              >= 1.4        && < 1.5    }
-common hedgehog             { build-depends: hedgehog             >= 0.6        && < 1.1    }
-common hspec                { build-depends: hspec                >= 2.4        && < 3      }
-common hw-hspec-hedgehog    { build-depends: hw-hspec-hedgehog    >= 0.1.0.4    && < 0.2    }
-common hw-int               { build-depends: hw-int               >= 0.0.0.1    && < 0.1    }
-common hw-prim              { build-depends: hw-prim              >= 0.4.0.3    && < 0.7    }
-common hw-string-parse      { build-depends: hw-string-parse      >= 0.0.0.1    && < 0.1    }
-common vector               { build-depends: vector               >= 0.12       && < 0.13   }
+common bitvec                   { build-depends: bitvec               >= 1.0        && < 1.1    }
+common bytestring               { build-depends: bytestring           >= 0.9        && < 0.11   }
+common criterion                { build-depends: criterion            >= 1.2        && < 1.6    }
+common deepseq                  { build-depends: deepseq              >= 1.4        && < 1.5    }
+common doctest                  { build-depends: doctest              >= 0.16.2     && < 0.17   }
+common doctest-discover         { build-depends: doctest-discover     >= 0.2        && < 0.3    }common hedgehog             { build-depends: hedgehog             >= 0.6        && < 1.1    }
+common hspec                    { build-depends: hspec                >= 2.4        && < 3      }
+common hw-hspec-hedgehog        { build-depends: hw-hspec-hedgehog    >= 0.1.0.4    && < 0.2    }
+common hw-int                   { build-depends: hw-int               >= 0.0.0.1    && < 0.1    }
+common hw-prim                  { build-depends: hw-prim              >= 0.4.0.3    && < 0.7    }
+common hw-string-parse          { build-depends: hw-string-parse      >= 0.0.0.1    && < 0.1    }
+common vector                   { build-depends: vector               >= 0.12       && < 0.13   }
 
-common common
+common hw-bits
+  build-depends:        hw-bits
+
+common config
   default-language:     Haskell2010
   ghc-options:          -Wall -O2
   if flag(sse42)
     ghc-options:        -msse4.2
 
 library
-  import:               base
-                      , common
+  import:               base, config
                       , bitvec
                       , bytestring
                       , deepseq
@@ -84,19 +87,17 @@ library
   hs-source-dirs:       src
 
 test-suite hw-bits-test
-  import:               base
-                      , common
+  import:               base, config
                       , bitvec
                       , bytestring
                       , hedgehog
                       , hspec
+                      , hw-bits
                       , hw-hspec-hedgehog
                       , hw-prim
                       , vector
-  build-depends:        hw-bits
   type:                 exitcode-stdio-1.0
   main-is:              Spec.hs
-  build-depends:        hw-bits
   other-modules:        HaskellWorks.Data.Bits.BitReadSpec
                         HaskellWorks.Data.Bits.BitWiseSpec
                         HaskellWorks.Data.Bits.FromBitTextByteStringSpec
@@ -109,14 +110,25 @@ test-suite hw-bits-test
   build-tool-depends:   hspec-discover:hspec-discover
 
 benchmark bench
-  import:               base
-                      , common
+  import:               base, config
                       , criterion
+                      , hw-bits
                       , vector
-  build-depends:        hw-bits
   type:                 exitcode-stdio-1.0
   main-is:              Main.hs
-  build-depends:        hw-bits
   other-modules:        Paths_hw_bits
   autogen-modules:      Paths_hw_bits
   hs-source-dirs:       bench
+
+test-suite doctest
+  import:               base, config
+                      , doctest
+                      , doctest-discover
+                      , hw-bits
+                      , vector
+  default-language:     Haskell2010
+  type:                 exitcode-stdio-1.0
+  ghc-options:          -threaded
+  main-is:              DoctestDriver.hs
+  HS-Source-Dirs:       doctest
+  build-tool-depends:   doctest-discover:doctest-discover

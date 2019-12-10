@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TypeApplications  #-}
 {-# LANGUAGE TypeFamilies      #-}
 
 module HaskellWorks.Data.Bits.ElemFixedBitSize
@@ -16,14 +17,14 @@ import qualified Data.Vector.Unboxed  as DVU
 
 -- | Class of values that have elements of a fixed bit size
 --
--- >>> elemFixedBitSize (Vector Word8)
+-- >>> elemFixedBitSize (undefined :: DVS.Vector Word8)
 -- 8
 class ElemFixedBitSize v where
   -- | The element type of the elemnet
   type Elem v
   -- | Get the bit size of an element for a given composite bit-string type.
   --
-  -- >>> elemFixedBitSize (Vector Word8)
+  -- >>> elemFixedBitSize (undefined :: DVS.Vector Word8)
   -- 8
   elemFixedBitSize :: v -> Count
 

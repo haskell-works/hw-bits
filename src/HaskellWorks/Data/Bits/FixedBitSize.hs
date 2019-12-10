@@ -9,7 +9,7 @@ import HaskellWorks.Data.Positioning
 class FixedBitSize a where
   -- | Get the bit size of a value of given type.
   --
-  -- >>> fixedBitSize Word8
+  -- >>> fixedBitSize (undefined :: Word8)
   -- 8
   fixedBitSize :: a -> Count
 
