@@ -11,7 +11,7 @@ import Test.Hspec
 import qualified Data.Vector.Storable                   as DVS
 import qualified HaskellWorks.Data.Bits.Writer.Storable as WS
 
-{-# ANN module ("HLint: Ignore Redundant do" :: String) #-}
+{-# ANN module ("HLint: ignore Redundant do" :: String) #-}
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Bits.Writer.StorableSpec" $ do
