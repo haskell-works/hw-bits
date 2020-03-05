@@ -71,6 +71,8 @@ library
                         HaskellWorks.Data.Bits.BitShown
                         HaskellWorks.Data.Bits.BitWise
                         HaskellWorks.Data.Bits.Broadword
+                        HaskellWorks.Data.Bits.Broadword.Type
+                        HaskellWorks.Data.Bits.Broadword.Word64
                         HaskellWorks.Data.Bits.ElemFixedBitSize
                         HaskellWorks.Data.Bits.FixedBitSize
                         HaskellWorks.Data.Bits.FromBitTextByteString
@@ -82,6 +84,7 @@ library
                         HaskellWorks.Data.Bits.Types.Broadword
                         HaskellWorks.Data.Bits.Types.Builtin
                         HaskellWorks.Data.Bits.Word
+                        HaskellWorks.Data.Bits.Word64
                         HaskellWorks.Data.Bits.Writer.Storable
   other-modules:        Paths_hw_bits
   autogen-modules:      Paths_hw_bits
