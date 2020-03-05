@@ -15,7 +15,7 @@ import Control.DeepSeq
 import Data.Word
 import GHC.Generics
 
-newtype Broadword a = Broadword a deriving (Eq, Show, Generic, NFData)
+newtype Broadword a = Broadword a deriving (Eq, Show, Functor, Generic, NFData)
 
 broadword :: Broadword Word64 -> Word64
 broadword (Broadword a) = a
