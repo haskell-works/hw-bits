@@ -72,6 +72,9 @@ library
                         HaskellWorks.Data.Bits.BitWise
                         HaskellWorks.Data.Bits.Broadword
                         HaskellWorks.Data.Bits.Broadword.Type
+                        HaskellWorks.Data.Bits.Broadword.Word8
+                        HaskellWorks.Data.Bits.Broadword.Word16
+                        HaskellWorks.Data.Bits.Broadword.Word32
                         HaskellWorks.Data.Bits.Broadword.Word64
                         HaskellWorks.Data.Bits.ElemFixedBitSize
                         HaskellWorks.Data.Bits.FixedBitSize

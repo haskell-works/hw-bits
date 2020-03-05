@@ -1,6 +1,3 @@
-{-# LANGUAGE DeriveAnyClass        #-}
-{-# LANGUAGE DeriveFunctor         #-}
-{-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE ScopedTypeVariables   #-}
@@ -103,7 +100,7 @@ kBitDiffPos k x y = let d = kBitDiff k x y in d .&. kBitDiff k 0 ((comp d .&. h 
 -- "403030202010100"
 -- >>> showHex (kBitDiffUnsafe 8 0x0807060504030201 0x0102030405060708) ""
 -- "7050301fffdfbf9"
--- >>> showHex (kBitDiffUnsafe 8 0x20000000000000ff 0x10000000000000ff) ""
+-- >>> showHex (kBitDiffUnsafe 8 0x20000000000000ff 0x10000000000000ff) "" -- produces nonsense in the last sub-word
 -- "1000000000000080"
 kBitDiffUnsafe :: Int -> Word64 -> Word64 -> Word64
 kBitDiffUnsafe k x y = ((x .|. h k) - y) .^. h k
