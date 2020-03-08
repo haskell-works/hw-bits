@@ -6,6 +6,11 @@
 module HaskellWorks.Data.Bits.Broadword.Word16
   ( h
   , l
+  , μ0
+  , μ1
+  , μ2
+  , μ3
+  , μ4
   , kBitDiff
   , kBitDiffPos
   , kBitDiffUnsafe
@@ -93,3 +98,28 @@ kBitDiffPos k x y = let d = kBitDiff k x y in d .&. kBitDiff k 0 ((comp d .&. h 
 kBitDiffUnsafe :: Int -> Word16 -> Word16 -> Word16
 kBitDiffUnsafe k x y = ((x .|. h k) - y) .^. h k
 {-# INLINE kBitDiffUnsafe #-}
+
+-- | Subwords of size 2 ^ 0 alternating between all bits cleared and all bits
+μ0 :: Word16
+μ0 = 0x5555
+{-# INLINE μ0 #-}
+
+-- | Subwords of size 2 ^ 1 alternating between all bits cleared and all bits
+μ1 :: Word16
+μ1 = 0x3333
+{-# INLINE μ1 #-}
+
+-- | Subwords of size 2 ^ 2 alternating between all bits cleared and all bits
+μ2 :: Word16
+μ2 = 0x0f0f
+{-# INLINE μ2 #-}
+
+-- | Subwords of size 2 ^ 3 alternating between all bits cleared and all bits
+μ3 :: Word16
+μ3 = 0x00ff
+{-# INLINE μ3 #-}
+
+-- | Subwords of size 2 ^ 4 alternating between all bits cleared and all bits
+μ4 :: Word16
+μ4 = 0x0000
+{-# INLINE μ4 #-}

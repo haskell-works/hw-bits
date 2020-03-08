@@ -6,6 +6,10 @@
 module HaskellWorks.Data.Bits.Broadword.Word8
   ( h
   , l
+  , μ0
+  , μ1
+  , μ2
+  , μ3
   , kBitDiff
   , kBitDiffPos
   , kBitDiffUnsafe
@@ -87,3 +91,23 @@ kBitDiffPos k x y = let d = kBitDiff k x y in d .&. kBitDiff k 0 ((comp d .&. h 
 kBitDiffUnsafe :: Int -> Word8 -> Word8 -> Word8
 kBitDiffUnsafe k x y = ((x .|. h k) - y) .^. h k
 {-# INLINE kBitDiffUnsafe #-}
+
+-- | Subwords of size 2 ^ 0 alternating between all bits cleared and all bits
+μ0 :: Word8
+μ0 = 0x55
+{-# INLINE μ0 #-}
+
+-- | Subwords of size 2 ^ 1 alternating between all bits cleared and all bits
+μ1 :: Word8
+μ1 = 0x33
+{-# INLINE μ1 #-}
+
+-- | Subwords of size 2 ^ 2 alternating between all bits cleared and all bits
+μ2 :: Word8
+μ2 = 0x0f
+{-# INLINE μ2 #-}
+
+-- | Subwords of size 2 ^ 3 alternating between all bits cleared and all bits
+μ3 :: Word8
+μ3 = 0x00
+{-# INLINE μ3 #-}

@@ -6,6 +6,13 @@
 module HaskellWorks.Data.Bits.Broadword.Word64
   ( h
   , l
+  , μ0
+  , μ1
+  , μ2
+  , μ3
+  , μ4
+  , μ5
+  , μ6
   , kBitDiff
   , kBitDiffPos
   , kBitDiffUnsafe
@@ -105,3 +112,38 @@ kBitDiffPos k x y = let d = kBitDiff k x y in d .&. kBitDiff k 0 ((comp d .&. h 
 kBitDiffUnsafe :: Int -> Word64 -> Word64 -> Word64
 kBitDiffUnsafe k x y = ((x .|. h k) - y) .^. h k
 {-# INLINE kBitDiffUnsafe #-}
+
+-- | Subwords of size 2 ^ 0 alternating between all bits cleared and all bits
+μ0 :: Word64
+μ0 = 0x5555555555555555
+{-# INLINE μ0 #-}
+
+-- | Subwords of size 2 ^ 1 alternating between all bits cleared and all bits
+μ1 :: Word64
+μ1 = 0x3333333333333333
+{-# INLINE μ1 #-}
+
+-- | Subwords of size 2 ^ 2 alternating between all bits cleared and all bits
+μ2 :: Word64
+μ2 = 0x0f0f0f0f0f0f0f0f
+{-# INLINE μ2 #-}
+
+-- | Subwords of size 2 ^ 3 alternating between all bits cleared and all bits
+μ3 :: Word64
+μ3 = 0x00ff00ff00ff00ff
+{-# INLINE μ3 #-}
+
+-- | Subwords of size 2 ^ 4 alternating between all bits cleared and all bits
+μ4 :: Word64
+μ4 = 0x0000ffff0000ffff
+{-# INLINE μ4 #-}
+
+-- | Subwords of size 2 ^ 5 alternating between all bits cleared and all bits
+μ5 :: Word64
+μ5 = 0x00000000ffffffff
+{-# INLINE μ5 #-}
+
+-- | Subwords of size 2 ^ 6 alternating between all bits cleared and all bits
+μ6 :: Word64
+μ6 = 0xffffffffffffffff
+{-# INLINE μ6 #-}
