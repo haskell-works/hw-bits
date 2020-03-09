@@ -107,6 +107,10 @@ test-suite hw-bits-test
   main-is:              Spec.hs
   other-modules:        HaskellWorks.Data.Bits.BitReadSpec
                         HaskellWorks.Data.Bits.BitWiseSpec
+                        HaskellWorks.Data.Bits.Broadword.Word8Spec
+                        HaskellWorks.Data.Bits.Broadword.Word16Spec
+                        HaskellWorks.Data.Bits.Broadword.Word32Spec
+                        HaskellWorks.Data.Bits.Broadword.Word64Spec
                         HaskellWorks.Data.Bits.FromBitTextByteStringSpec
                         HaskellWorks.Data.Bits.Log2Spec
                         HaskellWorks.Data.Bits.Writer.StorableSpec
