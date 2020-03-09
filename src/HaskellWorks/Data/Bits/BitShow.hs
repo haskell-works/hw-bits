@@ -1,11 +1,13 @@
 {-# LANGUAGE FlexibleInstances   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications    #-}
 
 module HaskellWorks.Data.Bits.BitShow
   ( BitShow(..)
   , bitShow
   ) where
 
+import Data.Int
 import Data.Word
 import GHC.Exts
 import HaskellWorks.Data.Bits.BitWise
@@ -46,6 +48,18 @@ instance BitShow Word32 where
 
 instance BitShow Word64 where
   bitShows w = case leSplit w of (a, b) -> bitShows a . (' ':) . bitShows b
+
+instance BitShow Int8 where
+  bitShows = bitShows . fromIntegral @Int8 @Word8
+
+instance BitShow Int16 where
+  bitShows = bitShows . fromIntegral @Int16 @Word16
+
+instance BitShow Int32 where
+  bitShows = bitShows . fromIntegral @Int32 @Word32
+
+instance BitShow Int64 where
+  bitShows = bitShows . fromIntegral @Int64 @Word64
 
 instance BitShow [Bool] where
   bitShows ws = ('\"':) . go (0 :: Int) ws . ('\"':)
