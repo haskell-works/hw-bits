@@ -10,6 +10,7 @@ module HaskellWorks.Data.Bits.BitWise
     , TestBit(..)
     ) where
 
+import Data.Int
 import Data.Word
 import HaskellWorks.Data.AtIndex
 import HaskellWorks.Data.Bits.BitLength
@@ -248,6 +249,34 @@ instance BitWise Word64 where
   {-# INLINE all1s #-}
 
 instance Shift Int  where
+  (.<.) w n = B.shiftL w (fromIntegral n)
+  {-# INLINE (.<.) #-}
+
+  (.>.) w n = B.shiftR w (fromIntegral n)
+  {-# INLINE (.>.) #-}
+
+instance Shift Int8  where
+  (.<.) w n = B.shiftL w (fromIntegral n)
+  {-# INLINE (.<.) #-}
+
+  (.>.) w n = B.shiftR w (fromIntegral n)
+  {-# INLINE (.>.) #-}
+
+instance Shift Int16  where
+  (.<.) w n = B.shiftL w (fromIntegral n)
+  {-# INLINE (.<.) #-}
+
+  (.>.) w n = B.shiftR w (fromIntegral n)
+  {-# INLINE (.>.) #-}
+
+instance Shift Int32  where
+  (.<.) w n = B.shiftL w (fromIntegral n)
+  {-# INLINE (.<.) #-}
+
+  (.>.) w n = B.shiftR w (fromIntegral n)
+  {-# INLINE (.>.) #-}
+
+instance Shift Int64  where
   (.<.) w n = B.shiftL w (fromIntegral n)
   {-# INLINE (.<.) #-}
 
