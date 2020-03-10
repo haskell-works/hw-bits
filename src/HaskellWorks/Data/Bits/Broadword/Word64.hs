@@ -89,7 +89,13 @@ kBitDiff k x y = ((x .|. h k) - (y .&. comp (h k))) .^. ((x .^. comp y) .&. h k)
 -- >>> showHex (kBitDiffPos 8 0x20000000000000ff 0x10000000000000ff) ""
 -- "1000000000000000"
 kBitDiffPos :: Int -> Word64 -> Word64 -> Word64
-kBitDiffPos k x y = let d = kBitDiff k x y in d .&. kBitDiff k 0 ((comp d .&. h 8) .>. fromIntegral (k - 1))
+kBitDiffPos k x y =
+                                                                        -- let !_ = trace (">> x = " <> bitShow x) x in
+                                                                        -- let !_ = trace (">> y = " <> bitShow y) y in
+  let d = kBitDiff k x y                                            in  -- let !_ = trace (">> d = " <> bitShow d) d in
+  let s = kBitDiff k 0 ((comp d .&. h k) .>. fromIntegral (k - 1))  in  -- let !_ = trace (">> s = " <> bitShow s) s in
+  let r = d .&. s                                                   in  -- let !_ = trace (">> r = " <> bitShow r) r in
+  r
 {-# INLINE kBitDiffPos #-}
 
 -- | Broadword subtraction of sub-words of size 'k' where 'k' ∈ { 2, 4, 8, 16, 32, 64 } where all the sub-words of 'x' and 'y' must
