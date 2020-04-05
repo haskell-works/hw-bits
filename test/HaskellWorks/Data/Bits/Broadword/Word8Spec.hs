@@ -4,7 +4,6 @@
 
 module HaskellWorks.Data.Bits.Broadword.Word8Spec where
 
-import Data.Semigroup                 ((<>))
 import Data.Word
 import HaskellWorks.Data.Bits.BitShow
 import HaskellWorks.Data.Bits.BitWise
