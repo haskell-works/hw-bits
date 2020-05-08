@@ -51,14 +51,19 @@ class TestBit a where
 class BitWise a where
   -- | Bit-wise AND
   (.&.) :: a -> a -> a
+
   -- | Bit-wise OR
   (.|.) :: a -> a -> a
+
   -- | Bit-wise XOR
   (.^.) :: a -> a -> a
+
   -- | Bit-wise complement
-  comp  :: a -> a
+  comp :: a -> a
+
   -- | Bit-wise value of the given type with all bits set to zero
   all0s :: a
+
   -- | Bit-wise value of the given type with all bits set to one
   all1s :: a
 
