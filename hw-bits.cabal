@@ -70,12 +70,16 @@ library
                         HaskellWorks.Data.Bits.BitShow
                         HaskellWorks.Data.Bits.BitShown
                         HaskellWorks.Data.Bits.BitWise
+                        HaskellWorks.Data.Bits.Branchless.TestBit.Word8
+                        HaskellWorks.Data.Bits.Branchless.TestBit.Word16
+                        HaskellWorks.Data.Bits.Branchless.TestBit.Word32
+                        HaskellWorks.Data.Bits.Branchless.TestBit.Word64
                         HaskellWorks.Data.Bits.Broadword
                         HaskellWorks.Data.Bits.Broadword.Type
-                        HaskellWorks.Data.Bits.Broadword.Word8
                         HaskellWorks.Data.Bits.Broadword.Word16
                         HaskellWorks.Data.Bits.Broadword.Word32
                         HaskellWorks.Data.Bits.Broadword.Word64
+                        HaskellWorks.Data.Bits.Broadword.Word8
                         HaskellWorks.Data.Bits.ElemFixedBitSize
                         HaskellWorks.Data.Bits.FixedBitSize
                         HaskellWorks.Data.Bits.FromBitTextByteString
