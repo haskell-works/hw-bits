@@ -9,7 +9,7 @@ import HaskellWorks.Data.Bits.BitWise
 import qualified Data.STRef                   as ST
 import qualified Data.Vector.Storable.Mutable as DVSM
 
-{-# ANN module ("HLint: ignore Reduce duplication" :: String) #-}
+{- HLINT ignore "Reduce duplication"  -}
 
 data Writer s = Writer
   { vector   :: DVSM.MVector s Word64
