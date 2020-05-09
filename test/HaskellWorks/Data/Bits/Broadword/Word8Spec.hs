@@ -15,7 +15,7 @@ import qualified HaskellWorks.Data.Bits.Broadword.Word8 as W8
 import qualified Hedgehog.Gen                           as G
 import qualified Hedgehog.Range                         as R
 
-{-# ANN module ("HLint: ignore Redundant do" :: String) #-}
+{- HLINT ignore "Reduce duplication"  -}
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Bits.Broadword.Word8" $ do

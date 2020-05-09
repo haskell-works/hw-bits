@@ -17,7 +17,7 @@ import qualified Data.ByteString      as BS
 import qualified Data.Vector.Storable as DVS
 import qualified Data.Vector.Unboxed  as DVU
 
-{-# ANN module ("HLint: ignore Redundant do" :: String) #-}
+{- HLINT ignore "Reduce duplication"  -}
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.Bits.FromBitTextByteStringSpec" $ do

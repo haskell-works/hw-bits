@@ -15,7 +15,7 @@ import qualified Data.Bit            as Bit
 import qualified Data.Vector         as DV
 import qualified Data.Vector.Unboxed as DVU
 
-{-# ANN module ("HLint: ignore Redundant do" :: String) #-}
+{- HLINT ignore "Reduce duplication"  -}
 
 spec :: Spec
 spec = describe "HaskellWorks.Data.BitReadSpec" $ do
