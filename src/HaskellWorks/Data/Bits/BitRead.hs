@@ -4,6 +4,7 @@
 
 module HaskellWorks.Data.Bits.BitRead
   ( BitRead(..)
+  , unsafeBitRead
   ) where
 
 import Data.Maybe
@@ -22,6 +23,12 @@ import qualified Data.Vector.Unboxed  as DVU
 class BitRead a where
   -- | Read a bit string into a value
   bitRead :: String -> Maybe a
+
+-- | Read a bit string into a value.
+--
+-- This function is unsafe because it is a partial function that errors if the input string is an invaild bit string
+unsafeBitRead :: BitRead a => String -> a
+unsafeBitRead s = fromMaybe (error "Invalid bit string") (bitRead s)
 
 bitRead' :: BitParse a => String -> Maybe a
 bitRead' s = fst `fmap` listToMaybe (parse bitParse0 (filter (/= ' ') s))
