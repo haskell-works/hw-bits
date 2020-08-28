@@ -96,4 +96,4 @@ instance BitRead (DVU.Vector BitTS.Bit) where
   bitRead = bitRead'
 
 instance BitRead [Bool] where
-  bitRead = sequence . fmap bitCharToBool . filter (/= ' ')
+  bitRead = mapM bitCharToBool . filter (/= ' ')

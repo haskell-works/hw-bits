@@ -1,6 +1,5 @@
 {-# LANGUAGE BinaryLiterals      #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeApplications    #-}
 
 module HaskellWorks.Data.Bits.Broadword.Word8Spec where
 

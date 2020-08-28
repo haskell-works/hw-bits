@@ -17,7 +17,7 @@ spec :: Spec
 spec = describe "HaskellWorks.Data.Bits.Log2Spec" $ do
   it "Log2 Word64" . requireProperty $ do
     w <- forAll $ G.word64 (R.constant 1 maxBound)
-    log2 w === floor (log (fromIntegral w) / log 2 :: Double)
+    log2 w === floor (logBase 2 (fromIntegral w) :: Double)
   it "Log2 Word32" . requireProperty $ do
     w <- forAll $ G.word64 (R.constant 1 maxBound)
-    log2 w === floor (log (fromIntegral w) / log 2 :: Double)
+    log2 w === floor (logBase (fromIntegral w) :: Double)
