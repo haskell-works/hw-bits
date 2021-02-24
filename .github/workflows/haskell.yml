@@ -7,7 +7,7 @@ defaults:
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
@@ -17,8 +17,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ["8.10.3", "8.8.4", "8.6.5"]
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+        ghc: ["8.10.4", "8.8.4", "8.6.5"]
+        os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
         run: |
           case "$OS" in
             Windows_NT)   echo "CABAL_VERSION=3.4.0.0-rc5"  >> $GITHUB_ENV;;
-            *)            echo "CABAL_VERSION=3.4.0.0-rc4"  >> $GITHUB_ENV;;
+            *)            echo "CABAL_VERSION=3.4.0.0"      >> $GITHUB_ENV;;
           esac
 
       - uses: haskell/actions/setup@v1
@@ -106,7 +106,7 @@ jobs:
 
       - name: Tag new version
         id: tag
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         env:
           server: http://hackage.haskell.org
           username: ${{ secrets.HACKAGE_USER }}
