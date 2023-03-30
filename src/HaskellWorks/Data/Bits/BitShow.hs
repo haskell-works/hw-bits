@@ -23,7 +23,10 @@ import qualified Data.Vector.Unboxed  as DVU
 
 -- | Shower of a value as a bit string
 class BitShow a where
-  -- | Show a value as a bit string
+  -- | Show a value as a bit string.  Note that the bit string will be shown
+  -- in little-endian which means the least significant bit comes first.  This
+  -- because this library is meant to support succinct data structures and
+  -- arbitrary length strings of bits (for example vectors of words).
   bitShows :: a -> String -> String
 
 instance BitShow Bool where
@@ -128,5 +131,9 @@ instance BitShow (DVU.Vector Bit.Bit) where
 instance BitShow (DVU.Vector BitTS.Bit) where
   bitShows = bitShows . fmap BitTS.unBit . toList
 
+-- | Show a value as a bit string.  Note that the bit string will be shown
+-- in little-endian which means the least significant bit comes first.  This
+-- because this library is meant to support succinct data structures and
+-- arbitrary length strings of bits (for example vectors of words).
 bitShow :: BitShow a => a -> String
 bitShow a = bitShows a ""
